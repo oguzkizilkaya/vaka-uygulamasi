@@ -3,818 +3,488 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hasta Vaka Hikayesi - Atipik Hemolitik Üremik Sendrom</title>
+    <title>İnteraktif Vaka: aHÜS Yönetimi</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%); /* Koyu mavi-kırmızı (Kan ve damar teması) */
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: #333;
         }
 
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.98);
             border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 900px;
             width: 100%;
             padding: 40px;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .screen {
-            display: none;
-        }
-
-        .screen.active {
-            display: block;
-            animation: slideIn 0.4s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 24px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .case-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            border-left: 4px solid #667eea;
-        }
-
-        .case-info h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .case-info p {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
-
-        .question {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 25px;
-            font-weight: 500;
-            line-height: 1.5;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .option-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 18px 25px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .option-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .error-screen {
-            background: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .error-screen h2 {
-            color: #856404;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-
-        .error-screen p {
-            color: #856404;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        .success-screen {
-            background: #d4edda;
-            border: 2px solid #28a745;
-            border-radius: 10px;
-            padding: 25px;
-            text-align: center;
-        }
-
-        .success-screen h2 {
-            color: #155724;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-
-        .success-screen p {
-            color: #155724;
-            line-height: 1.6;
-            font-size: 18px;
-        }
-
-        .back-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-        }
-
-        .back-btn:hover {
-            background: #5a6268;
-            transform: translateY(-2px);
-        }
-
-        .progress {
-            background: #e9ecef;
-            height: 8px;
-            border-radius: 10px;
-            margin-bottom: 30px;
+            position: relative;
             overflow: hidden;
         }
 
-        .progress-bar {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            height: 100%;
-            transition: width 0.5s ease;
-            border-radius: 10px;
+        /* Screen Transitions */
+        .screen { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        .screen.active { display: block; opacity: 1; animation: slideUp 0.6s ease-out; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .admin-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #343a40;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 14px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .admin-btn:hover {
-            background: #23272b;
-            transform: translateY(-2px);
-        }
-
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .admin-panel.active {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .admin-content {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 1200px;
-            width: 100%;
-            margin-top: 50px;
-            margin-bottom: 50px;
-        }
-
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 15px;
-        }
-
-        .close-admin {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-card h3 {
-            font-size: 14px;
-            margin-bottom: 10px;
-            opacity: 0.9;
-        }
-
-        .stat-card .number {
-            font-size: 32px;
-            font-weight: bold;
-        }
-
-        .export-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-right: 10px;
-        }
-
-        .clear-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .attempt-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            margin: 2px;
-            font-weight: bold;
-        }
-
-        .attempt-correct {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .attempt-incorrect {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .user-detail-card {
-            background: #f8f9fa;
+        h1 { color: #b21f1f; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        
+        .case-header {
+            background: #f1f3f5;
             padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #1a2a6c;
         }
 
-        .user-detail-card h4 {
-            color: #667eea;
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
             margin-bottom: 10px;
         }
+        .status-stable { background: #28a745; }
+        .status-critical { background: #dc3545; }
+        .status-chronic { background: #ffc107; color: #333; }
 
-        .attempt-timeline {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-top: 8px;
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .lab-item { font-size: 14px; }
+        .lab-val { font-weight: bold; color: #b21f1f; }
+
+        .question { font-size: 19px; font-weight: 600; margin-bottom: 25px; color: #2c3e50; }
+
+        .options { display: flex; flex-direction: column; gap: 15px; }
+        
+        .option-btn {
+            background: white;
+            border: 2px solid #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option-btn:hover { border-color: #1a2a6c; background: #f8f9fa; transform: translateX(5px); }
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; height: 100%; width: 5px;
+            background: #1a2a6c;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .option-btn:hover::before { opacity: 1; }
+
+        /* Outcomes */
+        .outcome-screen { text-align: center; padding: 20px; }
+        .outcome-icon { font-size: 60px; margin-bottom: 20px; display: block; }
+        .outcome-title { font-size: 24px; font-weight: bold; margin-bottom: 15px; }
+        .outcome-desc { font-size: 16px; line-height: 1.6; color: #555; margin-bottom: 30px; }
+        
+        .outcome-good { color: #28a745; }
+        .outcome-moderate { color: #fd7e14; }
+        .outcome-bad { color: #dc3545; }
+
+        /* Admin & Controls */
+        .admin-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #343a40; color: white; border: none;
+            padding: 12px 25px; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 100;
         }
 
-        .correct { color: #28a745; font-weight: bold; }
-        .incorrect { color: #dc3545; font-weight: bold; }
-
-        @media (max-width: 600px) {
-            .container { padding: 25px; }
-            h1 { font-size: 20px; }
-            .question { font-size: 16px; }
-            .option-btn { padding: 15px 20px; font-size: 15px; }
-            .admin-content { padding: 20px; }
-            .stats-grid { grid-template-columns: 1fr; }
+        .restart-btn {
+            background: #1a2a6c; color: white; border: none;
+            padding: 15px 40px; border-radius: 8px; font-size: 16px;
+            cursor: pointer; transition: background 0.3s;
         }
+        .restart-btn:hover { background: #2c3e50; }
+
+        /* Admin Panel Overlay */
+        .admin-panel {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
+            z-index: 1000; overflow-y: auto; padding: 40px;
+        }
+        .admin-panel.active { display: block; }
+        .admin-content {
+            background: white; max-width: 1000px; margin: 0 auto;
+            padding: 30px; border-radius: 10px;
+        }
+        .data-table {
+            width: 100%; border-collapse: collapse; margin-top: 20px;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #ddd; padding: 12px; text-align: left;
+        }
+        .data-table th { background: #f8f9fa; }
+        
+        /* Timeline visual for admin */
+        .path-visual { font-family: monospace; font-size: 12px; color: #666; }
+
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="progress">
-            <div class="progress-bar" id="progressBar" style="width: 33%"></div>
-        </div>
-
-        <!-- Soru 1 -->
-        <div class="screen active" id="soru1">
-            <h1>Vaka Değerlendirmesi - Adım 1</h1>
+        <!-- SAHNE 1: BAŞLANGIÇ -->
+        <div class="screen active" id="scene1">
+            <h1>Vaka Başlangıcı</h1>
+            <span class="status-badge status-stable">Klinik Durum: Stabil Başlangıç</span>
             
-            <div class="case-info">
-                <h3>Hasta Bilgileri</h3>
-                <p><strong>Öykü:</strong> 28 yaşında kadın hasta, 1 haftadır devam eden halsizlik, solukluk ve idrar miktarında azalma şikayeti ile başvurdu. Son günlerde koyu renkli idrar çıkardığını belirtiyor.</p>
-                <p><strong>Muayene:</strong> TA: 165/95 mmHg, Nabız: 102/dk, Ateş: 36.8°C, Belirgin solukluk mevcut, pretibial ödem (+), bilinç açık ancak letarjik görünümde.</p>
-                <p><strong>Laboratuar:</strong> Hemoglobin: 7.2 g/dL, Trombosit: 42.000/mm³, Kreatinin: 4.8 mg/dL, LDH: 1850 U/L, Haptoglobin: düşük, Periferik yayma: şistosit (+), Direkt Coombs: negatif</p>
+            <div class="case-header">
+                <h3>32 Yaşında Kadın Hasta</h3>
+                <p>Acil servise 5 gündür devam eden halsizlik, bulantı ve idrar miktarında azalma şikayeti ile başvurdu. Öyküsünde bilinen bir hastalık yok. 1 hafta önce hafif bir ÜYE benzeri tablo geçirmiş.</p>
             </div>
 
-            <p class="question">Mikroanjiyopatik hemolitik anemi, trombositopeni ve akut böbrek hasarı triadı ile başvuran bu hastada ayırıcı tanı için hangi tetkiki istersiniz?</p>
-            
+            <div class="lab-grid">
+                <div class="lab-item">Hb: <span class="lab-val">8.1 g/dL</span></div>
+                <div class="lab-item">Plt: <span class="lab-val">32.000/mm³</span></div>
+                <div class="lab-item">Kreatinin: <span class="lab-val">2.4 mg/dL</span></div>
+                <div class="lab-item">LDH: <span class="lab-val">1250 U/L</span></div>
+                <div class="lab-item">Periferik Yayma: <span class="lab-val">Şistositler (+)</span></div>
+            </div>
+
+            <p class="question">TMA (Trombotik Mikroanjiyopati) tablosu mevcut. İlk yaklaşımınız ve tetkik isteğiniz ne olur?</p>
+
             <div class="options">
-                <button class="option-btn" onclick="handleChoice('soru1', 'A', true, 'soru2')">
-                    <strong>A)</strong> ADAMTS13 aktivitesi ve kompleman düzeyleri (C3, C4, CH50)
+                <button class="option-btn" onclick="makeDecision(1, 'A')">
+                    <strong>A)</strong> Plazmaferez hazırlığı yaparım, ADAMTS13 ve Kompleman paneli gönderirim.
                 </button>
-                <button class="option-btn" onclick="handleChoice('soru1', 'B', false, 'hata1')">
-                    <strong>B)</strong> Sadece böbrek biyopsisi
+                <button class="option-btn" onclick="makeDecision(1, 'B')">
+                    <strong>B)</strong> Enfeksiyon kaynaklı olabilir, geniş spektrumlu antibiyotik ve hidrasyon ile 24 saat izlerim.
                 </button>
             </div>
         </div>
 
-        <!-- Hata 1 -->
-        <div class="screen" id="hata1">
-            <div class="error-screen">
-                <h2>❌ Seçiminiz Yanlış</h2>
-                <p><strong>Literatür Bilgisi:</strong></p>
-                <p>Trombotik mikroanjiyopati (TMA) tablosu ile başvuran hastalarda öncelikle trombotik trombositopenik purpura (TTP) ve hemolitik üremik sendrom (HUS) ayrımı yapılmalıdır.</p>
-                <p><strong>ADAMTS13 aktivitesi:</strong> TTP tanısı için kritiktir. Aktivite <%10 ise TTP, normal ise HUS düşünülür.</p>
-                <p><strong>Kompleman düzeyleri:</strong> Tipik HUS'ta normal, atipik HUS'ta (aHUS) düşük bulunur. C3, C4 ve CH50 düzeyleri alternatif kompleman yolak disregülasyonunu gösterir.</p>
-                <p>Böbrek biyopsisi invaziv bir işlemdir ve TMA tanısında ilk basamak tetkik değildir.</p>
-            </div>
-            <button class="back-btn" onclick="goToScreen('soru1')">⬅ Geri Dön</button>
-        </div>
-
-        <!-- Soru 2 -->
-        <div class="screen" id="soru2">
-            <h1>Vaka Değerlendirmesi - Adım 2</h1>
+        <!-- SAHNE 2A: ERKEN TANI (Doğru Yol) -->
+        <div class="screen" id="scene2a">
+            <h1>Tanısal Değerlendirme</h1>
+            <span class="status-badge status-stable">Durum: Kontrol Altında</span>
             
-            <div class="case-info">
-                <h3>Tetkik Sonuçları</h3>
-                <p><strong>ADAMTS13 Aktivitesi:</strong> %45 (normal: >%50) - TTP ekarte</p>
-                <p><strong>Kompleman Düzeyleri:</strong> C3: 62 mg/dL (düşük), C4: normal, CH50: düşük</p>
-                <p><strong>Shiga toksin ve diare öyküsü:</strong> Negatif (tipik HUS ekarte)</p>
-                <p><strong>Genetik Panel:</strong> Kompleman faktör H (CFH) mutasyonu saptandı</p>
+            <div class="case-header">
+                <h3>Sonuçlar Geldi</h3>
+                <p>ADAMTS13 aktivitesi: <strong>%65 (Normal)</strong> (TTP Ekarte).<br>
+                STEC (Shiga Toksin): <strong>Negatif</strong>.<br>
+                Hasta anürik hale gelmeye başladı. Kreatinin: 3.1 mg/dL'ye yükseldi.</p>
             </div>
 
-            <p class="question">Bu tetkik sonuçları ile hastada hangi tanıyı düşünürsünüz?</p>
-            
+            <p class="question">ADAMTS13 normal, STEC negatif. TTP ve Tipik HÜS ekarte edildi. Tanınız aHÜS. Tedavi planınız?</p>
+
             <div class="options">
-                <button class="option-btn" onclick="handleChoice('soru2', 'A', true, 'soru3')">
-                    <strong>A)</strong> Atipik hemolitik üremik sendrom (aHUS)
+                <button class="option-btn" onclick="makeDecision(2, 'A')">
+                    <strong>A)</strong> Hemen Eculizumab (C5 İnhibitörü) tedavisi başla + Menenjit aşısı yap.
                 </button>
-                <button class="option-btn" onclick="handleChoice('soru2', 'B', false, 'hata2')">
-                    <strong>B)</strong> Trombotik trombositopenik purpura (TTP)
+                <button class="option-btn" onclick="makeDecision(2, 'B')">
+                    <strong>B)</strong> Plazma değişimine (TPE) devam et, Eculizumab pahalı olduğu için sona sakla.
                 </button>
             </div>
         </div>
 
-        <!-- Hata 2 -->
-        <div class="screen" id="hata2">
-            <div class="error-screen">
-                <h2>❌ Seçiminiz Yanlış</h2>
-                <p><strong>Literatür Bilgisi:</strong></p>
-                <p>Trombotik trombositopenik purpura (TTP) tanısı için ADAMTS13 aktivitesinin <%10 olması gerekir. Bu hastada ADAMTS13 aktivitesi %45 olarak saptanmış olup TTP tanısını ekarte eder.</p>
-                <p><strong>Bu hastada aHUS lehine bulgular:</strong></p>
-                <p>• Normal ADAMTS13 aktivitesi</p>
-                <p>• Düşük C3 ve CH50 düzeyleri</p>
-                <p>• Belirgin böbrek tutulumu</p>
-                <p>• Kompleman faktör H (CFH) mutasyonu</p>
-            </div>
-            <button class="back-btn" onclick="goToScreen('soru2')">⬅ Geri Dön</button>
-        </div>
-
-        <!-- Soru 3 -->
-        <div class="screen" id="soru3">
-            <h1>Vaka Değerlendirmesi - Adım 3</h1>
+        <!-- SAHNE 2B: GECİKMİŞ TANI (Riskli Yol) -->
+        <div class="screen" id="scene2b">
+            <h1>Klinik Kötüleşme</h1>
+            <span class="status-badge status-critical">Durum: Kritik</span>
             
-            <div class="case-info">
-                <h3>Tanı</h3>
-                <p><strong>Kesin Tanı:</strong> Atipik Hemolitik Üremik Sendrom (aHUS)</p>
-                <p><strong>Klinik Durum:</strong> Akut böbrek hasarı, mikroanjiyopatik hemolitik anemi, trombositopeni</p>
+            <div class="case-header">
+                <h3>24 Saat Sonra</h3>
+                <p>Hastanın idrar çıkışı tamamen durdu (Anüri). Bilinci bulanıklaşmaya başladı.<br>
+                <strong>Yeni Lab:</strong> Hb: 6.5 g/dL, Plt: 18.000, <strong>Kreatinin: 5.8 mg/dL</strong>.<br>
+                Destek tedavisi yanıt vermedi.</p>
             </div>
 
-            <p class="question">Bu tanılı hastada tedaviniz ne olurdu?</p>
-            
+            <p class="question">Zaman kaybettiniz. Böbrek hasarı ilerledi. Şimdi ne yapacaksınız?</p>
+
             <div class="options">
-                <button class="option-btn" onclick="handleChoice('soru3', 'A', true, 'sonuc')">
-                    <strong>A)</strong> Eculizumab (kompleman C5 inhibitörü) tedavisi ve destekleyici bakım
+                <button class="option-btn" onclick="makeDecision(2, 'C')">
+                    <strong>A)</strong> Acil Hemodiyaliz + Eculizumab tedavisi başla.
                 </button>
-                <button class="option-btn" onclick="handleChoice('soru3', 'B', false, 'hata3')">
-                    <strong>B)</strong> Sadece plazma değişimi ve kortikosteroid tedavisi
+                <button class="option-btn" onclick="makeDecision(2, 'D')">
+                    <strong>B)</strong> Sadece Diyaliz ve Plazmaferez ile devam et.
                 </button>
             </div>
         </div>
 
-        <!-- Hata 3 -->
-        <div class="screen" id="hata3">
-            <div class="error-screen">
-                <h2>❌ Seçiminiz Yanlış</h2>
-                <p><strong>Literatür Bilgisi:</strong></p>
-                <p>Atipik HUS tedavisinde altın standart <strong>eculizumab (Soliris®)</strong> gibi kompleman C5 inhibitörleridir.</p>
-                <p><strong>Eculizumab tedavisinin önemi:</strong></p>
-                <p>• Terminal kompleman aktivasyonunu bloke eder</p>
-                <p>• Hemolizi durdurur ve trombosit sayısını düzeltir</p>
-                <p>• Böbrek fonksiyonlarını korur/iyileştirir</p>
-                <p>• Mortaliteyi %90'dan %10'un altına düşürür</p>
+        <!-- SAHNE 3: KRONİK DÖNEM / NAKİL (Diyaliz Yolu) -->
+        <div class="screen" id="scene3_dialysis">
+            <h1>6 Ay Sonra...</h1>
+            <span class="status-badge status-chronic">Durum: Kronik Böbrek Yetmezliği (SDBY)</span>
+            
+            <div class="case-header">
+                <h3>Poliklinik Kontrolü</h3>
+                <p>Hasta haftada 3 gün hemodiyalize giriyor. Hematolojik tablosu düzeldi ancak böbrekler geri dönmedi (ESRD).<br>
+                Canlı vericiden (annesinden) böbrek nakli planlanıyor.</p>
             </div>
-            <button class="back-btn" onclick="goToScreen('soru3')">⬅ Geri Dön</button>
+
+            <p class="question">aHÜS tanılı hastada böbrek nakli öncesi stratejiniz ne olmalı?</p>
+
+            <div class="options">
+                <button class="option-btn" onclick="makeDecision(3, 'A')">
+                    <strong>A)</strong> Profilaktik Eculizumab başla, sonra nakil yap.
+                </button>
+                <button class="option-btn" onclick="makeDecision(3, 'B')">
+                    <strong>B)</strong> Sadece nakil yap, nüks ederse ilaç başlarız.
+                </button>
+            </div>
         </div>
 
-        <!-- Sonuç -->
-        <div class="screen" id="sonuc">
-            <div class="success-screen">
-                <h2>🎉 Tebrikler!</h2>
-                <p><strong>Tedavi Yanıtı:</strong></p>
-                <p>Hastanıza eculizumab tedavisi başlandı.</p>
-                <p style="margin-top: 15px;"><strong>Klinik Seyir:</strong></p>
-                <p>• 1. hafta: Hemoliz belirteçleri düzelmeye başladı</p>
-                <p>• 2. hafta: Trombosit sayısı normale döndü</p>
-                <p>• 4. hafta: Hemoglobin 11.8 g/dL'ye yükseldi</p>
-                <p>• 8. hafta: Böbrek fonksiyonları tam düzelme gösterdi</p>
-                <p style="margin-top: 20px; font-weight: bold;">Vakayı başarıyla tamamladınız! ✅</p>
+        <!-- SONUÇ EKRANLARI -->
+
+        <!-- 1. Mükemmel Sonuç -->
+        <div class="screen outcome-screen" id="outcome_perfect">
+            <span class="outcome-icon outcome-good">🌟</span>
+            <h2 class="outcome-title outcome-good">Mükemmel Klinik Yanıt</h2>
+            <p class="outcome-desc">
+                Erken tanı ve doğru tedavi (Eculizumab) sayesinde hematolojik değerler 1 haftada düzeldi.<br>
+                Böbrek fonksiyonları tamamen normale döndü (Kreatinin: 0.8 mg/dL).<br>
+                Hasta diyalize girmeden taburcu edildi.
+            </p>
+            <div style="background:#eee; padding:10px; border-radius:5px; margin-bottom:20px;">
+                <strong>Öğrenim Hedefi:</strong> TMA'da erken ADAMTS13 ayrımı ve hızlı aHÜS tedavisi organ kurtarıcıdır.
             </div>
-            <button class="back-btn" onclick="resetCase()" style="background: #28a745; margin-top: 25px;">
-                🔄 Vakayı Yeniden Başlat
-            </button>
+            <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
+
+        <!-- 2. Geç Tanı - KBY -->
+        <div class="screen outcome-screen" id="outcome_ckd">
+            <span class="outcome-icon outcome-moderate">⚠️</span>
+            <h2 class="outcome-title outcome-moderate">Kısmi Düzelme (KBY)</h2>
+            <p class="outcome-desc">
+                İlk baştaki gecikme veya plazmaferez ısrarı nedeniyle böbreklerde kalıcı hasar oluştu.<br>
+                Hematolojik remisyon sağlandı ancak hasta Evre 3-4 KBY ile takip ediliyor (Kreatinin: 2.1 mg/dL).<br>
+                Diyalizden kurtuldu ama ömür boyu yakın nefroloji takibi gerekecek.
+            </p>
+            <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
+        </div>
+
+        <!-- 3. Nakil Başarısı -->
+        <div class="screen outcome-screen" id="outcome_transplant_success">
+            <span class="outcome-icon outcome-good">✅</span>
+            <h2 class="outcome-title outcome-good">Başarılı Nakil</h2>
+            <p class="outcome-desc">
+                Hasta diyaliz sürecinden sonra nakile hazırlandı.<br>
+                <strong>Profilaktik Eculizumab</strong> kullanımı sayesinde greftte hastalık nüksü önlendi.<br>
+                Böbrek fonksiyonları şu an mükemmel çalışıyor.
+            </p>
+            <div style="background:#eee; padding:10px; border-radius:5px; margin-bottom:20px;">
+                <strong>Bilgi:</strong> aHÜS'te profilaksi yapılmadan yapılan nakillerde nüks riski %50-80'dir.
+            </div>
+            <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
+        </div>
+
+        <!-- 4. Nakil Başarısızlığı (Rejeksiyon) -->
+        <div class="screen outcome-screen" id="outcome_transplant_fail">
+            <span class="outcome-icon outcome-bad">❌</span>
+            <h2 class="outcome-title outcome-bad">Greft Kaybı ve Nüks</h2>
+            <p class="outcome-desc">
+                Nakil öncesi profilaksi yapılmadığı için cerrahi stres ve iskemi, kompleman sistemini tetikledi.<br>
+                Nakilden 1 hafta sonra aHÜS nüks etti ve takılan böbrekte trombotik mikroanjiyopati gelişti.<br>
+                Greft kaybedildi, hasta tekrar diyalize döndü.
+            </p>
+            <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
+        </div>
+
     </div>
 
-    <!-- Admin Butonu -->
-    <button class="admin-btn" onclick="openAdminPanel()">📊 Veri Analizi</button>
-
-    <!-- Admin Panel -->
+    <!-- ADMIN PANEL -->
+    <button class="admin-btn" onclick="toggleAdmin()">📊 Vaka Analizi</button>
+    
     <div class="admin-panel" id="adminPanel">
         <div class="admin-content">
-            <div class="admin-header">
-                <h1>Kullanıcı Seçim Analizi</h1>
-                <button class="close-admin" onclick="closeAdminPanel()">✕ Kapat</button>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>Kullanıcı Karar Analizi</h2>
+                <button onclick="toggleAdmin()" style="background:red; color:white; border:none; padding:5px 15px; cursor:pointer;">X</button>
             </div>
-
-            <div class="stats-grid" id="statsGrid"></div>
-
-            <div style="margin-bottom: 20px;">
-                <button class="export-btn" onclick="exportToCSV()">📥 CSV İndir</button>
-                <button class="export-btn" onclick="exportToJSON()">📥 JSON İndir</button>
-                <button class="clear-btn" onclick="clearAllData()">🗑️ Tüm Verileri Temizle</button>
+            <p>Github Pages üzerinde çalışır (LocalStorage kullanır).</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tarih</th>
+                        <th>Kullanıcı ID</th>
+                        <th>İzlenen Yol</th>
+                        <th>Sonuç (Outcome)</th>
+                    </tr>
+                </thead>
+                <tbody id="dataTableBody">
+                    <!-- JS ile dolacak -->
+                </tbody>
+            </table>
+            
+            <div style="margin-top:20px;">
+                <button onclick="exportCSV()" style="background:#28a745; color:white; border:none; padding:10px; cursor:pointer;">CSV İndir</button>
+                <button onclick="clearData()" style="background:#dc3545; color:white; border:none; padding:10px; cursor:pointer;">Verileri Temizle</button>
             </div>
-
-            <h2 style="margin-bottom: 15px; color: #333;">Detaylı Kullanıcı Denemeleri</h2>
-            <div id="userDetailsContainer"></div>
-
-            <h2 style="margin-top: 30px; margin-bottom: 15px; color: #333;">Soru Bazlı Analiz</h2>
-            <div id="questionAnalysis"></div>
         </div>
     </div>
 
     <script>
+        // --- State Management ---
         let currentSession = {
-            userId: generateUserId(),
-            timestamp: new Date().toISOString(),
-            questions: {
-                soru1: { attempts: [] },
-                soru2: { attempts: [] },
-                soru3: { attempts: [] }
-            }
+            id: 'user_' + Math.random().toString(36).substr(2, 9),
+            startTime: new Date().toISOString(),
+            path: [], // İzlenen adımlar: ['S1_Correct', 'S2_Late', etc.]
+            outcome: ''
         };
 
-        function generateUserId() {
-            return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
+        // --- Navigation Logic (Decision Tree) ---
+        function makeDecision(step, choice) {
+            // Log choice
+            currentSession.path.push(`Step${step}:${choice}`);
 
-        function handleChoice(questionId, choice, isCorrect, nextScreen) {
-            currentSession.questions[questionId].attempts.push({
-                choice: choice,
-                isCorrect: isCorrect,
-                timestamp: new Date().toISOString()
-            });
-            goToScreen(nextScreen);
-        }
+            // Hide all screens first
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
 
-        function goToScreen(screenId) {
-            const screens = document.querySelectorAll('.screen');
-            screens.forEach(screen => screen.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            updateProgress(screenId);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            if (screenId === 'sonuc') saveSession();
-        }
-
-        function updateProgress(screenId) {
-            const progressBar = document.getElementById('progressBar');
-            const widths = {
-                'soru1': '33%', 'hata1': '33%',
-                'soru2': '66%', 'hata2': '66%',
-                'soru3': '100%', 'hata3': '100%', 'sonuc': '100%'
-            };
-            progressBar.style.width = widths[screenId] || '33%';
-        }
-
-        function saveSession() {
-            try {
-                let sessions = JSON.parse(localStorage.getItem('caseSessions') || '[]');
-                sessions.push(currentSession);
-                localStorage.setItem('caseSessions', JSON.stringify(sessions));
-                console.log('Veri kaydedildi. Toplam:', sessions.length);
-            } catch(e) {
-                console.error('Kayıt hatası:', e);
+            // Branching Logic
+            if (step === 1) {
+                if (choice === 'A') {
+                    // Doğru başlangıç -> Erken Tanı Yolu
+                    document.getElementById('scene2a').classList.add('active');
+                } else {
+                    // Yanlış başlangıç -> Kötüleşme Yolu
+                    document.getElementById('scene2b').classList.add('active');
+                }
             }
+            else if (step === 2) {
+                // Sahne 2A (Erken) Kararları
+                if (document.getElementById('scene2a').style.display !== 'none' || currentSession.path.includes('Step1:A')) {
+                    if (choice === 'A') {
+                        finishCase('Mükemmel İyileşme', 'outcome_perfect');
+                    } else {
+                        // Erken tanı koydu ama yanlış tedavi (Plazma) -> KBY'ye gidiş veya Diyaliz
+                        // Basitleştirmek için: Plazma yetersiz kalır -> Diyalize gider
+                        document.getElementById('scene3_dialysis').classList.add('active');
+                    }
+                } 
+                // Sahne 2B (Geç) Kararları
+                else {
+                    if (choice === 'C') { // Eculizumab (Geç de olsa)
+                        finishCase('Kalıcı Hasarlı İyileşme (KBY)', 'outcome_ckd');
+                    } else { // Sadece Diyaliz/Plazma
+                        document.getElementById('scene3_dialysis').classList.add('active');
+                    }
+                }
+            }
+            else if (step === 3) {
+                // Diyaliz sonrası Nakil kararları
+                if (choice === 'A') {
+                    finishCase('Başarılı Nakil', 'outcome_transplant_success');
+                } else {
+                    finishCase('Greft Rejeksiyonu', 'outcome_transplant_fail');
+                }
+            }
+        }
+
+        function finishCase(outcomeName, screenId) {
+            currentSession.outcome = outcomeName;
+            currentSession.endTime = new Date().toISOString();
+            
+            // Show outcome screen
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+
+            saveData();
         }
 
         function resetCase() {
             currentSession = {
-                userId: generateUserId(),
-                timestamp: new Date().toISOString(),
-                questions: {
-                    soru1: { attempts: [] },
-                    soru2: { attempts: [] },
-                    soru3: { attempts: [] }
-                }
+                id: 'user_' + Math.random().toString(36).substr(2, 9),
+                startTime: new Date().toISOString(),
+                path: [],
+                outcome: ''
             };
-            goToScreen('soru1');
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('scene1').classList.add('active');
         }
 
-        function openAdminPanel() {
-            document.getElementById('adminPanel').classList.add('active');
-            loadAdminData();
+        // --- Data & Admin Functions ---
+
+        function saveData() {
+            let history = JSON.parse(localStorage.getItem('ahus_case_history') || '[]');
+            history.push(currentSession);
+            localStorage.setItem('ahus_case_history', JSON.stringify(history));
         }
 
-        function closeAdminPanel() {
-            document.getElementById('adminPanel').classList.remove('active');
+        function toggleAdmin() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('active');
+            if (panel.classList.contains('active')) loadAdminData();
         }
 
         function loadAdminData() {
-            const sessions = JSON.parse(localStorage.getItem('caseSessions') || '[]');
-            displayStats(sessions);
-            displayUserDetails(sessions);
-            displayQuestionAnalysis(sessions);
-        }
+            const history = JSON.parse(localStorage.getItem('ahus_case_history') || '[]');
+            const tbody = document.getElementById('dataTableBody');
+            tbody.innerHTML = '';
 
-        function displayStats(sessions) {
-            const statsGrid = document.getElementById('statsGrid');
-            if (sessions.length === 0) {
-                statsGrid.innerHTML = '<div class="stat-card"><h3>Henüz Veri Yok</h3><div class="number">0</div></div>';
-                return;
-            }
+            history.slice().reverse().forEach(session => {
+                const row = document.createElement('tr');
+                const date = new Date(session.startTime).toLocaleString('tr-TR');
+                
+                // Renkli outcome
+                let color = 'black';
+                if(session.outcome.includes('Mükemmel') || session.outcome.includes('Başarılı')) color = 'green';
+                else if(session.outcome.includes('KBY')) color = 'orange';
+                else color = 'red';
 
-            const totalUsers = sessions.length;
-            const q1FirstCorrect = sessions.filter(s => s.questions.soru1.attempts[0]?.isCorrect).length;
-            const q2FirstCorrect = sessions.filter(s => s.questions.soru2.attempts[0]?.isCorrect).length;
-            const q3FirstCorrect = sessions.filter(s => s.questions.soru3.attempts[0]?.isCorrect).length;
-
-            const avgQ1 = (sessions.reduce((sum, s) => sum + s.questions.soru1.attempts.length, 0) / totalUsers).toFixed(1);
-            const avgQ2 = (sessions.reduce((sum, s) => sum + s.questions.soru2.attempts.length, 0) / totalUsers).toFixed(1);
-            const avgQ3 = (sessions.reduce((sum, s) => sum + s.questions.soru3.attempts.length, 0) / totalUsers).toFixed(1);
-
-            statsGrid.innerHTML = `
-                <div class="stat-card">
-                    <h3>Toplam Kullanıcı</h3>
-                    <div class="number">${totalUsers}</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Soru 1 İlk Deneme Başarı</h3>
-                    <div class="number">${((q1FirstCorrect/totalUsers)*100).toFixed(1)}%</div>
-                    <div style="font-size: 12px; margin-top: 5px;">Ort. ${avgQ1} deneme</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Soru 2 İlk Deneme Başarı</h3>
-                    <div class="number">${((q2FirstCorrect/totalUsers)*100).toFixed(1)}%</div>
-                    <div style="font-size: 12px; margin-top: 5px;">Ort. ${avgQ2} deneme</div>
-                </div>
-                <div class="stat-card">
-                    <h3>Soru 3 İlk Deneme Başarı</h3>
-                    <div class="number">${((q3FirstCorrect/totalUsers)*100).toFixed(1)}%</div>
-                    <div style="font-size: 12px; margin-top: 5px;">Ort. ${avgQ3} deneme</div>
-                </div>
-            `;
-        }
-
-        function displayUserDetails(sessions) {
-            const container = document.getElementById('userDetailsContainer');
-            if (sessions.length === 0) {
-                container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Henüz kayıtlı kullanıcı verisi bulunmamaktadır.</p>';
-                return;
-            }
-
-            container.innerHTML = '';
-            sessions.slice().reverse().forEach((session, index) => {
-                const date = new Date(session.timestamp).toLocaleString('tr-TR');
-                const card = document.createElement('div');
-                card.className = 'user-detail-card';
-
-                let html = `<h4>Kullanıcı #${sessions.length - index} - ${date}</h4>`;
-                html += `<p style="font-size: 12px; color: #666; margin-bottom: 15px;">ID: ${session.userId}</p>`;
-
-                ['soru1', 'soru2', 'soru3'].forEach((qId, qIndex) => {
-                    const questionTitles = ['Soru 1: Tetkik Seçimi', 'Soru 2: Tanı Koyma', 'Soru 3: Tedavi Seçimi'];
-                    const attempts = session.questions[qId].attempts;
-
-                    html += `<div style="margin-bottom: 12px;"><strong>${questionTitles[qIndex]}:</strong> `;
-
-                    if (attempts.length === 0) {
-                        html += `<span style="color: #999;">Cevaplanmadı</span>`;
-                    } else {
-                        html += `<div class="attempt-timeline">`;
-                        attempts.forEach((attempt, attemptIndex) => {
-                            const badgeClass = attempt.isCorrect ? 'attempt-correct' : 'attempt-incorrect';
-                            const icon = attempt.isCorrect ? '✓' : '✗';
-                            html += `<span class="attempt-badge ${badgeClass}">${attemptIndex + 1}. ${attempt.choice} ${icon}</span>`;
-                        });
-                        html += `</div>`;
-
-                        const firstCorrect = attempts[0].isCorrect;
-                        html += `<div style="font-size: 12px; color: #666; margin-top: 5px;">`;
-                        html += `${attempts.length} deneme - `;
-                        html += firstCorrect ? 
-                            '<span style="color: #28a745;">İlk denemede doğru ✓</span>' : 
-                            `<span style="color: #dc3545;">${attempts.length}. denemede doğru</span>`;
-                        html += `</div>`;
-                    }
-                    html += `</div>`;
-                });
-
-                const totalAttempts = 
-                    session.questions.soru1.attempts.length +
-                    session.questions.soru2.attempts.length +
-                    session.questions.soru3.attempts.length;
-
-                const firstTimeCorrect = 
-                    (session.questions.soru1.attempts[0]?.isCorrect ? 1 : 0) +
-                    (session.questions.soru2.attempts[0]?.isCorrect ? 1 : 0) +
-                    (session.questions.soru3.attempts[0]?.isCorrect ? 1 : 0);
-
-                html += `<div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">`;
-                html += `<strong>Genel Performans:</strong> ${firstTimeCorrect}/3 soru ilk denemede doğru, Toplam ${totalAttempts} deneme</div>`;
-
-                card.innerHTML = html;
-                container.appendChild(card);
-            });
-        }
-
-        function displayQuestionAnalysis(sessions) {
-            const analysisDiv = document.getElementById('questionAnalysis');
-            if (sessions.length === 0) {
-                analysisDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Henüz analiz edilecek veri bulunmamaktadır.</p>';
-                return;
-            }
-
-            const questions = ['soru1', 'soru2', 'soru3'];
-            const questionTitles = ['Soru 1: Tetkik Seçimi', 'Soru 2: Tanı Koyma', 'Soru 3: Tedavi Seçimi'];
-            let html = '';
-
-            questions.forEach((q, index) => {
-                let totalAttempts = 0;
-                let choiceACount = 0;
-                let choiceBCount = 0;
-                let firstTimeCorrect = 0;
-                let secondTimeCorrect = 0;
-                let thirdOrMoreCorrect = 0;
-
-                sessions.forEach(session => {
-                    const attempts = session.questions[q].attempts;
-                    totalAttempts += attempts.length;
-
-                    attempts.forEach(attempt => {
-                        if (attempt.choice === 'A') choiceACount++;
-                        if (attempt.choice === 'B') choiceBCount++;
-                    });
-
-                    const correctAttemptIndex = attempts.findIndex(a => a.isCorrect);
-                    if (correctAttemptIndex === 0) firstTimeCorrect++;
-                    else if (correctAttemptIndex === 1) secondTimeCorrect++;
-                    else if (correctAttemptIndex > 1) thirdOrMoreCorrect++;
-                });
-
-                const totalUsers = sessions.length;
-                const avgAttempts = (totalAttempts / totalUsers).toFixed(2);
-                const firstTimeRate = ((firstTimeCorrect / totalUsers) * 100).toFixed(1);
-
-                html += `
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 15px;">
-                        <h3 style="color: #667eea; margin-bottom: 10px;">${questionTitles[index]}</h3>
-                        <p><strong>Toplam Kullanıcı:</strong> ${totalUsers}</p>
-                        <p><strong>Toplam Deneme:</strong> ${totalAttempts}</p>
-                        <p><strong>Ortalama Deneme:</strong> ${avgAttempts}</p>
-                        <p><strong>A Şıkkı Seçilme:</strong> ${choiceACount} kez</p>
-                        <p><strong>B Şıkkı Seçilme:</strong> ${choiceBCount} kez</p>
-                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
-                            <p><strong>İlk Denemede Başarı:</strong> <span class="correct">${firstTimeCorrect} kullanıcı (${firstTimeRate}%)</span></p>
-                            <p><strong>2. Denemede Başarı:</strong> <span style="color: #ffc107;">${secondTimeCorrect} kullanıcı</span></p>
-                            <p><strong>3+ Denemede Başarı:</strong> <span class="incorrect">${thirdOrMoreCorrect} kullanıcı</span></p>
-                        </div>
-                    </div>
+                row.innerHTML = `
+                    <td>${date}</td>
+                    <td>${session.id}</td>
+                    <td class="path-visual">${session.path.join(' ➝ ')}</td>
+                    <td style="color:${color}; font-weight:bold;">${session.outcome}</td>
                 `;
+                tbody.appendChild(row);
             });
-
-            analysisDiv.innerHTML = html;
         }
 
-        function exportToCSV() {
-            const sessions = JSON.parse(localStorage.getItem('caseSessions') || '[]');
-            if (sessions.length === 0) {
-                alert('Henüz dışa aktarılacak veri bulunmamaktadır.');
-                return;
-            }
-
-            let csv = 'Kullanıcı ID,Tarih,S1 Deneme,S1 İlk,S1 Doğru,S1 Tüm,S2 Deneme,S2 İlk,S2 Doğru,S2 Tüm,S3 Deneme,S3 İlk,S3 Doğru,S3 Tüm\n';
-
-            sessions.forEach(session => {
-                const date = new Date(session.timestamp).toLocaleString('tr-TR');
-                csv += `${session.userId},${date},`;
-
-                ['soru1', 'soru2', 'soru3'].forEach(q => {
-                    const attempts = session.questions[q].attempts;
-                    const attemptCount = attempts.length;
-                    const firstChoice = attempts[0]?.choice || '';
-                    const firstCorrect = attempts[0]?.isCorrect || false;
-                    const allAttempts = attempts.map(a => `${a.choice}${a.isCorrect ? '✓' : '✗'}`).join('→');
-
-                    csv += `${attemptCount},${firstChoice},${firstCorrect},"${allAttempts}",`;
-                });
-
-                csv += '\n';
-            });
-
-            downloadFile(csv, 'vaka-verileri-detayli.csv', 'text/csv;charset=utf-8;');
-        }
-
-        function exportToJSON() {
-            const sessions = JSON.parse(localStorage.getItem('caseSessions') || '[]');
-            if (sessions.length === 0) {
-                alert('Henüz dışa aktarılacak veri bulunmamaktadır.');
-                return;
-            }
-
-            const json = JSON.stringify(sessions, null, 2);
-            downloadFile(json, 'vaka-verileri-detayli.json', 'application/json');
-        }
-
-        function downloadFile(content, filename, contentType) {
-            const BOM = '\uFEFF';
-            const blob = new Blob([BOM + content], { type: contentType });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-        }
-
-        function clearAllData() {
-            if (confirm('Tüm kullanıcı verilerini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.')) {
-                localStorage.removeItem('caseSessions');
+        function clearData() {
+            if(confirm('Tüm kayıtları silmek istediğinize emin misiniz?')) {
+                localStorage.removeItem('ahus_case_history');
                 loadAdminData();
-                alert('Tüm veriler başarıyla silindi.');
             }
+        }
+
+        function exportCSV() {
+            const history = JSON.parse(localStorage.getItem('ahus_case_history') || '[]');
+            if (!history.length) return alert('Veri yok');
+
+            let csv = "ID,Tarih,Yol,Sonuc\n";
+            history.forEach(h => {
+                csv += `${h.id},${h.startTime},"${h.path.join('->')}","${h.outcome}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ahus_vaka_verileri.csv';
+            a.click();
         }
     </script>
 </body>
