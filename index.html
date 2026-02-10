@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İnteraktif Vaka: aHÜS Yönetimi</title>
     <style>
+        /* Tasarım kodların aynen korunmuştur */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%); /* Koyu mavi-kırmızı (Kan ve damar teması) */
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -28,7 +29,6 @@
             overflow: hidden;
         }
 
-        /* Screen Transitions */
         .screen { display: none; opacity: 0; transition: opacity 0.5s ease; }
         .screen.active { display: block; opacity: 1; animation: slideUp 0.6s ease-out; }
 
@@ -101,7 +101,6 @@
         }
         .option-btn:hover::before { opacity: 1; }
 
-        /* Outcomes */
         .outcome-screen { text-align: center; padding: 20px; }
         .outcome-icon { font-size: 60px; margin-bottom: 20px; display: block; }
         .outcome-title { font-size: 24px; font-weight: bold; margin-bottom: 15px; }
@@ -146,15 +145,16 @@
         }
         .data-table th { background: #f8f9fa; }
         
-        /* Timeline visual for admin */
         .path-visual { font-family: monospace; font-size: 12px; color: #666; }
+        
+        /* Yükleniyor animasyonu için */
+        .loading-text { text-align: center; padding: 20px; color: #666; font-style: italic; }
 
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- SAHNE 1: BAŞLANGIÇ -->
         <div class="screen active" id="scene1">
             <h1>Vaka Başlangıcı</h1>
             <span class="status-badge status-stable">Klinik Durum: Stabil Başlangıç</span>
@@ -184,7 +184,6 @@
             </div>
         </div>
 
-        <!-- SAHNE 2A: ERKEN TANI (Doğru Yol) -->
         <div class="screen" id="scene2a">
             <h1>Tanısal Değerlendirme</h1>
             <span class="status-badge status-stable">Durum: Kontrol Altında</span>
@@ -208,7 +207,6 @@
             </div>
         </div>
 
-        <!-- SAHNE 2B: GECİKMİŞ TANI (Riskli Yol) -->
         <div class="screen" id="scene2b">
             <h1>Klinik Kötüleşme</h1>
             <span class="status-badge status-critical">Durum: Kritik</span>
@@ -232,7 +230,6 @@
             </div>
         </div>
 
-        <!-- SAHNE 3: KRONİK DÖNEM / NAKİL (Diyaliz Yolu) -->
         <div class="screen" id="scene3_dialysis">
             <h1>6 Ay Sonra...</h1>
             <span class="status-badge status-chronic">Durum: Kronik Böbrek Yetmezliği (SDBY)</span>
@@ -255,9 +252,6 @@
             </div>
         </div>
 
-        <!-- SONUÇ EKRANLARI -->
-
-        <!-- 1. Mükemmel Sonuç -->
         <div class="screen outcome-screen" id="outcome_perfect">
             <span class="outcome-icon outcome-good">🌟</span>
             <h2 class="outcome-title outcome-good">Mükemmel Klinik Yanıt</h2>
@@ -272,7 +266,6 @@
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
-        <!-- 2. Geç Tanı - KBY -->
         <div class="screen outcome-screen" id="outcome_ckd">
             <span class="outcome-icon outcome-moderate">⚠️</span>
             <h2 class="outcome-title outcome-moderate">Kısmi Düzelme (KBY)</h2>
@@ -284,7 +277,6 @@
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
-        <!-- 3. Nakil Başarısı -->
         <div class="screen outcome-screen" id="outcome_transplant_success">
             <span class="outcome-icon outcome-good">✅</span>
             <h2 class="outcome-title outcome-good">Başarılı Nakil</h2>
@@ -299,7 +291,6 @@
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
-        <!-- 4. Nakil Başarısızlığı (Rejeksiyon) -->
         <div class="screen outcome-screen" id="outcome_transplant_fail">
             <span class="outcome-icon outcome-bad">❌</span>
             <h2 class="outcome-title outcome-bad">Greft Kaybı ve Nüks</h2>
@@ -313,7 +304,6 @@
 
     </div>
 
-    <!-- ADMIN PANEL -->
     <button class="admin-btn" onclick="toggleAdmin()">📊 Vaka Analizi</button>
     
     <div class="admin-panel" id="adminPanel">
@@ -322,7 +312,7 @@
                 <h2>Kullanıcı Karar Analizi</h2>
                 <button onclick="toggleAdmin()" style="background:red; color:white; border:none; padding:5px 15px; cursor:pointer;">X</button>
             </div>
-            <p>Github Pages üzerinde çalışır (LocalStorage kullanır).</p>
+            <p><strong>Veriler Firebase Veritabanında (Firestore) Tutulmaktadır.</strong></p>
             
             <table class="data-table">
                 <thead>
@@ -334,28 +324,46 @@
                     </tr>
                 </thead>
                 <tbody id="dataTableBody">
-                    <!-- JS ile dolacak -->
-                </tbody>
+                    </tbody>
             </table>
+            <div id="loadingMsg" class="loading-text" style="display:none;">Veriler Firebase'den yükleniyor...</div>
             
             <div style="margin-top:20px;">
                 <button onclick="exportCSV()" style="background:#28a745; color:white; border:none; padding:10px; cursor:pointer;">CSV İndir</button>
-                <button onclick="clearData()" style="background:#dc3545; color:white; border:none; padding:10px; cursor:pointer;">Verileri Temizle</button>
             </div>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // 1. Firebase Kütüphanelerini Import Et
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, orderBy, query, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // 2. Senin Verdiğin Firebase Config Bilgileri
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
+            authDomain: "medicom-ai.firebaseapp.com",
+            projectId: "medicom-ai",
+            storageBucket: "medicom-ai.firebasestorage.app",
+            messagingSenderId: "330987426994",
+            appId: "1:330987426994:web:587bc3e397ec376e5565ab"
+        };
+
+        // 3. Firebase'i Başlat
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // --- State Management ---
         let currentSession = {
             id: 'user_' + Math.random().toString(36).substr(2, 9),
             startTime: new Date().toISOString(),
-            path: [], // İzlenen adımlar: ['S1_Correct', 'S2_Late', etc.]
+            path: [],
             outcome: ''
         };
 
         // --- Navigation Logic (Decision Tree) ---
-        function makeDecision(step, choice) {
+        // Global scope'a fonksiyonları tanımlıyoruz ki HTML onclick görebilsin
+        window.makeDecision = function(step, choice) {
             // Log choice
             currentSession.path.push(`Step${step}:${choice}`);
 
@@ -378,8 +386,6 @@
                     if (choice === 'A') {
                         finishCase('Mükemmel İyileşme', 'outcome_perfect');
                     } else {
-                        // Erken tanı koydu ama yanlış tedavi (Plazma) -> KBY'ye gidiş veya Diyaliz
-                        // Basitleştirmek için: Plazma yetersiz kalır -> Diyalize gider
                         document.getElementById('scene3_dialysis').classList.add('active');
                     }
                 } 
@@ -393,27 +399,37 @@
                 }
             }
             else if (step === 3) {
-                // Diyaliz sonrası Nakil kararları
                 if (choice === 'A') {
                     finishCase('Başarılı Nakil', 'outcome_transplant_success');
                 } else {
                     finishCase('Greft Rejeksiyonu', 'outcome_transplant_fail');
                 }
             }
-        }
+        };
 
-        function finishCase(outcomeName, screenId) {
+        async function finishCase(outcomeName, screenId) {
             currentSession.outcome = outcomeName;
-            currentSession.endTime = new Date().toISOString();
+            currentSession.endTime = new Date().toISOString(); // String olarak tarih
             
             // Show outcome screen
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
 
-            saveData();
+            // --- FIREBASE'E KAYIT ---
+            try {
+                // "vaka_kayitlari" koleksiyonuna yazıyoruz
+                await addDoc(collection(db, "vaka_kayitlari"), {
+                    ...currentSession,
+                    createdAt: Timestamp.now() // Sıralama yapmak için Firestore zaman damgası
+                });
+                console.log("Kayıt Firebase'e gönderildi.");
+            } catch (error) {
+                console.error("Firebase Hatası:", error);
+                alert("Veri kaydedilemedi. İnternet bağlantınızı kontrol edin.");
+            }
         }
 
-        function resetCase() {
+        window.resetCase = function() {
             currentSession = {
                 id: 'user_' + Math.random().toString(36).substr(2, 9),
                 startTime: new Date().toISOString(),
@@ -422,69 +438,89 @@
             };
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('scene1').classList.add('active');
-        }
+        };
 
         // --- Data & Admin Functions ---
 
-        function saveData() {
-            let history = JSON.parse(localStorage.getItem('ahus_case_history') || '[]');
-            history.push(currentSession);
-            localStorage.setItem('ahus_case_history', JSON.stringify(history));
-        }
-
-        function toggleAdmin() {
+        window.toggleAdmin = function() {
             const panel = document.getElementById('adminPanel');
             panel.classList.toggle('active');
             if (panel.classList.contains('active')) loadAdminData();
-        }
+        };
 
-        function loadAdminData() {
-            const history = JSON.parse(localStorage.getItem('ahus_case_history') || '[]');
+        async function loadAdminData() {
             const tbody = document.getElementById('dataTableBody');
+            const loadingMsg = document.getElementById('loadingMsg');
+            
             tbody.innerHTML = '';
+            loadingMsg.style.display = 'block';
 
-            history.slice().reverse().forEach(session => {
-                const row = document.createElement('tr');
-                const date = new Date(session.startTime).toLocaleString('tr-TR');
-                
-                // Renkli outcome
-                let color = 'black';
-                if(session.outcome.includes('Mükemmel') || session.outcome.includes('Başarılı')) color = 'green';
-                else if(session.outcome.includes('KBY')) color = 'orange';
-                else color = 'red';
+            try {
+                // Firebase'den verileri çek (Tarihe göre tersten sırala)
+                const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
 
-                row.innerHTML = `
-                    <td>${date}</td>
-                    <td>${session.id}</td>
-                    <td class="path-visual">${session.path.join(' ➝ ')}</td>
-                    <td style="color:${color}; font-weight:bold;">${session.outcome}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
+                loadingMsg.style.display = 'none';
 
-        function clearData() {
-            if(confirm('Tüm kayıtları silmek istediğinize emin misiniz?')) {
-                localStorage.removeItem('ahus_case_history');
-                loadAdminData();
+                querySnapshot.forEach((doc) => {
+                    const session = doc.data();
+                    const row = document.createElement('tr');
+                    
+                    // Tarihi formatla
+                    let dateStr = "Belirsiz";
+                    if(session.createdAt && session.createdAt.toDate) {
+                        dateStr = session.createdAt.toDate().toLocaleString('tr-TR');
+                    } else if (session.startTime) {
+                        dateStr = new Date(session.startTime).toLocaleString('tr-TR');
+                    }
+                    
+                    // Renkli outcome
+                    let color = 'black';
+                    if(session.outcome.includes('Mükemmel') || session.outcome.includes('Başarılı')) color = 'green';
+                    else if(session.outcome.includes('KBY')) color = 'orange';
+                    else color = 'red';
+
+                    row.innerHTML = `
+                        <td>${dateStr}</td>
+                        <td>${session.id}</td>
+                        <td class="path-visual">${session.path.join(' ➝ ')}</td>
+                        <td style="color:${color}; font-weight:bold;">${session.outcome}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                loadingMsg.innerText = "Veri çekilemedi: " + error.message;
+                console.error(error);
             }
         }
 
-        function exportCSV() {
-            const history = JSON.parse(localStorage.getItem('ahus_case_history') || '[]');
-            if (!history.length) return alert('Veri yok');
+        window.exportCSV = async function() {
+            // Firebase'den güncel veriyi çekip CSV yapalım
+            try {
+                const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) return alert('Veri yok');
 
-            let csv = "ID,Tarih,Yol,Sonuc\n";
-            history.forEach(h => {
-                csv += `${h.id},${h.startTime},"${h.path.join('->')}","${h.outcome}"\n`;
-            });
+                let csv = "ID,Tarih,Yol,Sonuc\n";
+                querySnapshot.forEach((doc) => {
+                    const h = doc.data();
+                    const dateStr = h.startTime || "N/A";
+                    // CSV formatını bozmamak için tırnak içine al
+                    const pathStr = `"${h.path.join('->')}"`;
+                    csv += `${h.id},${dateStr},${pathStr},"${h.outcome}"\n`;
+                });
 
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'ahus_vaka_verileri.csv';
-            a.click();
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ahus_vaka_verileri_firebase.csv';
+                a.click();
+            } catch (e) {
+                console.error(e);
+                alert("CSV oluşturulurken hata oluştu.");
+            }
         }
     </script>
 </body>
