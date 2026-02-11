@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com; img-src 'self' https://raw.githubusercontent.com data:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pediatrik Vaka: aHÜS Yönetimi</title>
@@ -29,7 +29,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            min-height: 600px; /* Footer'ın aşağıda durması için min yükseklik */
+            min-height: 650px;
         }
 
         .screen { display: none; opacity: 0; transition: opacity 0.5s ease; flex-grow: 1; }
@@ -113,7 +113,6 @@
         .outcome-moderate { color: #fd7e14; }
         .outcome-bad { color: #dc3545; }
 
-        /* Referans Kutusu Stili */
         .ref-citation {
             background-color: #f8f9fa;
             border-left: 4px solid #1a2a6c;
@@ -161,10 +160,10 @@
         }
         .admin-btn:hover { transform: scale(1.05); background: #23272b; }
 
-        /* --- YENİ EKLENEN FOOTER STİLLERİ --- */
+        /* FOOTER STİLLERİ */
         .footer-row {
-            margin-top: auto; /* İçeriğin en altına iter */
-            padding-top: 20px;
+            margin-top: auto;
+            padding-top: 25px;
             border-top: 1px solid #e9ecef;
             display: flex;
             justify-content: space-between;
@@ -177,31 +176,40 @@
             color: #666;
             font-family: 'Segoe UI', sans-serif;
             display: flex;
-            gap: 15px;
-            align-items: center;
+            flex-direction: column;
+            gap: 5px;
         }
 
         .footer-links a {
             color: #1a2a6c;
             text-decoration: none;
             font-weight: 600;
+            display: flex;
+            align-items: center;
         }
         
         .footer-links a:hover {
             text-decoration: underline;
         }
 
+        .footer-logo {
+            text-align: right;
+        }
+
         .footer-logo img {
-            height: 40px; /* Logonun yüksekliği, duruma göre 30px-50px arası ayarlanabilir */
+            max-height: 50px; /* Logo boyutunu buradan ayarlayabilirsiniz */
             width: auto;
-            display: block;
+            object-fit: contain;
         }
         
         @media (max-width: 600px) {
             .footer-row {
-                flex-direction: column-reverse;
-                gap: 15px;
-                text-align: center;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
+            .footer-logo img {
+                max-height: 35px;
             }
         }
     </style>
@@ -375,7 +383,7 @@
                 <span>M/TR/UNB-a/0174</span>
             </div>
             <div class="footer-logo">
-                <img src="https://az.box.com/shared/static/qzc32ve2j3vdjf1aa7qfvoffsovdxc3k" alt="Logo">
+                <img src="https://raw.githubusercontent.com/oguzkizilkaya/vaka-uygulamasi/975869699dcc9ab42518c7e13c0720dd082a5689/Alexion%20Logo.png" alt="Alexion Logo">
             </div>
         </div>
         </div>
