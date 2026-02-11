@@ -183,27 +183,27 @@
 
     <div class="container">
         <div class="screen active" id="scene1">
-            <h1>Vaka Başlangıcı</h1>
+            <h1>Vaka Sunumu</h1>
             <span class="status-badge status-stable">Pediatrik Acil Başvurusu</span>
             
             <div class="case-header">
                 <h3>4 Yaşında Erkek Hasta</h3>
-                <p>Annesi tarafından "çocuğun renginin solması, huzursuzluk ve son 24 saattir idrar yapmama" şikayetiyle getirildi. Öyküde 1 hafta önce ateşli üst solunum yolu enfeksiyonu var. <strong>Kanlı ishal öyküsü yok.</strong></p>
+                <p>Annesi tarafından "solukluk, huzursuzluk ve son 24 saattir idrar çıkışı olmaması" şikayetiyle getirildi. Öyküde 1 hafta önce ateşli üst solunum yolu enfeksiyonu var. <strong>Kanlı ishal öyküsü yok.</strong></p>
             </div>
 
             <div class="lab-grid">
-                <div class="lab-item">Hb: <span class="lab-val">7.2 g/dL</span> (Düşük)</div>
-                <div class="lab-item">Plt: <span class="lab-val">45.000/mm³</span> (Trombositopeni)</div>
-                <div class="lab-item">Kreatinin: <span class="lab-val">1.9 mg/dL</span> (Yaşına göre ABY)</div>
-                <div class="lab-item">LDH: <span class="lab-val">1800 U/L</span> (Hemoliz)</div>
-                <div class="lab-item">Periferik Yayma: <span class="lab-val">Şistositler (+)</span></div>
+                <div class="lab-item">Hb: <span class="lab-val">7.2 g/dL</span> </div>
+                <div class="lab-item">Plt: <span class="lab-val">45.000/mm³</span> </div>
+                <div class="lab-item">Kreatinin: <span class="lab-val">1.9 mg/dL</span> (Yaşa göre ABY)</div>
+                <div class="lab-item">LDH: <span class="lab-val">1800 U/L</span> </div>
+                <div class="lab-item">Periferik Yayma: <span class="lab-val">Şistosit (+)</span></div>
             </div>
 
-            <p class="question">TMA (Trombotik Mikroanjiyopati) tablosu mevcut. 4 yaşındaki hastada ilk yaklaşımınız ne olur?</p>
+            <p class="question"> Mevcut bulgular ile hastaya ilk yaklaşımınız nasıl olur?</p>
 
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(1, 'A')">
-                    <strong>A)</strong> STEC-HÜS ve aHÜS ayrımı için tetkik (Gaita PCR, ADAMTS13) isterim, hidrasyona başlarım.
+                    <strong>A)</strong> STEC-HÜS ve aHÜS ayrımı için tetkik (Gaita kültürü, ADAMTS13) isterim, hidrasyona başlarım.
                 </button>
                 <button class="option-btn" onclick="makeDecision(1, 'B')">
                     <strong>B)</strong> Viral enfeksiyon sonrası geçici bir tablodur, destek tedavisi ve antibiyotik ile izlerim.
@@ -217,19 +217,19 @@
             
             <div class="case-header">
                 <h3>Kritik Ayrım</h3>
-                <p>Gaita STEC PCR: <strong>Negatif</strong> (Tipik HÜS değil).<br>
-                ADAMTS13 aktivitesi: <strong>%70 (Normal)</strong> (TTP değil).<br>
-                Hasta halen anürik. Kreatinin 2.4 mg/dL'ye yükseldi ve hipertansif (130/90 mmHg).</p>
+                <p>Gaita kültürü: <strong>Negatif</strong> <br>
+                ADAMTS13 aktivitesi: <strong>%70 (Normal)</strong> <br>
+                Hasta halen anürik. Kreatinin 2.4 mg/dL'ye yükseldi ve yaşa göre hipertansif (130/90 mmHg).</p>
             </div>
 
-            <p class="question">Tanınız aHÜS (Atipik HÜS). Pediatrik hasta için en uygun tedavi planı nedir?</p>
+            <p class="question"> Bu hasta için tedavi planınız nasıl olur?</p>
 
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(2, 'A')">
-                    <strong>A)</strong> Santral kateter takarak Plazma Değişimi (TPE) yapalım, yanıt alamazsak ilaç düşünelim.
+                    <strong>A)</strong> Santral kateterizasyon ile plazma değişimi başlayalım, yanıt alamazsak ilaç düşünelim.
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'B')">
-                    <strong>B)</strong> Hemen Eculizumab (Anti-C5) başla + Meningokok aşısı ve profilaksisi yap.
+                    <strong>B)</strong> Eculizumab başla + Meningokok aşısı ve profilaksisi yap.
                 </button>
             </div>
             <div style="font-size:12px; color:#666; margin-top:10px;">*Not: TPE çocuklarda teknik zorluklar içerir ve aHÜS'te etkinliği sınırlıdır.</div>
@@ -241,19 +241,19 @@
             
             <div class="case-header">
                 <h3>12 Saat Sonra</h3>
-                <p>Hasta nöbet geçirdi (aHÜS santral tutulumu).<br>
+                <p>Hasta nöbet geçirdi (aHÜS santral tutulumu ?).<br>
                 <strong>Yeni Lab:</strong> Hb: 6.0 g/dL, Plt: 20.000, <strong>Kreatinin: 3.5 mg/dL</strong>.<br>
                 Destek tedavisi yetersiz kaldı. Çoklu organ yetmezliği riski var.</p>
             </div>
 
-            <p class="question">Zaman kaybettiniz. Şimdi agresif müdahale gerekiyor. Seçiminiz?</p>
+            <p class="question"> Hastanın kliniği kötüleşiyor, kararınız ne yönde olur? </p>
 
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(2, 'C')">
-                    <strong>A)</strong> Acil Pediatrik Diyaliz + Eculizumab tedavisi (Kurtarma).
+                    <strong>A)</strong> Acil Diyaliz + Eculizumab tedavisi
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'D')">
-                    <strong>B)</strong> Sadece Diyaliz ve Taze Donmuş Plazma (TDP) infüzyonu.
+                    <strong>B)</strong> Sadece Diyaliz ve Taze Donmuş Plazma infüzyonu.
                 </button>
             </div>
         </div>
@@ -264,7 +264,7 @@
             
             <div class="case-header">
                 <h3>Poliklinik Kontrolü</h3>
-                <p>Çocuk periton diyalizi ile takip ediliyor. Büyüme-gelişme geriliği başladı.<br>
+                <p>Hasta periton diyalizi ile takip ediliyor. Büyüme-gelişme geriliği başladı.<br>
                 Annesinden canlı böbrek nakli planlanıyor.</p>
             </div>
 
@@ -275,7 +275,7 @@
                     <strong>A)</strong> Nakil öncesi profilaktik Eculizumab başla, sonra nakil yap.
                 </button>
                 <button class="option-btn" onclick="makeDecision(3, 'B')">
-                    <strong>B)</strong> İlaç çok maliyetli, sadece nakil yapıp nüks ederse tedavi veririz.
+                    <strong>B)</strong> Sadece nakil yapıp nüks gözlenirse Eculizumab tedavisi başlayalım.
                 </button>
             </div>
         </div>
@@ -284,14 +284,14 @@
             <span class="outcome-icon outcome-good">🌟</span>
             <h2 class="outcome-title outcome-good">Tam İyileşme (Renal Recovery)</h2>
             <p class="outcome-desc">
-                Hızlı Eculizumab tedavisi (ilk 24-48 saat) sayesinde böbrek fonksiyonları tamamen döndü.<br>
+                Hızlı Eculizumab tedavisi (ilk 24-48 saat) sayesinde böbrek fonksiyonları tamamen normale döndü<br>
                 Diyaliz ihtiyacı kalmadı. Çocuk normal gelişimine devam ediyor.<br>
                 Genetik panelde <em>CFH</em> mutasyonu saptandı.
             </p>
             
             <div class="ref-citation">
                 <strong>📚 Kanıt Temelli Yaklaşım:</strong>
-                Çocuklarda STEC-Negatif HÜS tanısı konulur konulmaz Eculizumab birinci basamak (first-line) tedavi olmalıdır. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
+                Çocuklarda aHÜS tanısı konulur konulmaz Eculizumab birinci basamak (first-line) tedavi olmalıdır. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
                 <em>— Loirat C, et al. Pediatric Nephrology. 2016</em>
             </div>
 
@@ -308,7 +308,7 @@
 
             <div class="ref-citation">
                 <strong>📚 Kritik Uyarı:</strong>
-                Özellikle pediyatrik hastalarda STEC dışlandığı ve ADAMTS13 normal olduğu anda zaman kaybetmeden anti-kompleman tedavisine başlanması böbrek kurtarımı (renal recovery) için kritiktir.
+                Özellikle pediyatrik hastalarda STEC dışlandığı ve ADAMTS13 normal saptandığı anda zaman kaybetmeden anti-kompleman tedavisine başlanması böbrek fonksiyon kazanımı için kritiktir.
                 <em>— KDIGO 2017 Clinical Practice Guideline Update (TMA focus)</em>
             </div>
 
@@ -319,13 +319,13 @@
             <span class="outcome-icon outcome-good">✅</span>
             <h2 class="outcome-title outcome-good">Başarılı Pediatrik Nakil</h2>
             <p class="outcome-desc">
-                Profilaktik Eculizumab kullanımı sayesinde greftte tromboz gelişmedi.<br>
-                Çocuk diyalizden kurtuldu ve büyüme eğrisi normale döndü.
+                Profilaktik Eculizumab kullanımı sayesinde greftte fonksiyonları korundu.<br>
+                Hasta diyaliz bağımsız takip ediliyor ve büyüme eğrisi normal izleniyor
             </p>
 
             <div class="ref-citation">
                 <strong>📚 Transplantasyon Verisi:</strong>
-                Böbrek nakli öncesi genetik riski yüksek hastalarda profilaktik Eculizumab kullanımı greft kaybını dramatik şekilde düşürürken (%10), kullanılmazsa nüks oranı %80'e varabilmektedir.
+                Böbrek nakli öncesi genetik riski yüksek hastalarda profilaktik Eculizumab kullanımı greft kaybını dramatik şekilde düşürürken (%10), profilaksi uygulanmaması ile nüks oranı %80'e varabilmektedir.
                 <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
             </div>
 
@@ -337,7 +337,7 @@
             <h2 class="outcome-title outcome-bad">Greft Kaybı ve Nüks</h2>
             <p class="outcome-desc">
                 Nakil sırasında profilaksi yapılmadığı için cerrahi stres kompleman sistemini aktive etti.<br>
-                Nakilden günler sonra aHÜS nüksü ile greft tromboze oldu ve kaybedildi.
+                Nakilden sonrası aHÜS nüksü ile greft fonksiyonu kaybedildi.
             </p>
 
             <div class="ref-citation">
@@ -570,3 +570,4 @@
     </script>
 </body>
 </html>
+
