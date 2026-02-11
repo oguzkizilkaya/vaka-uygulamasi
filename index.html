@@ -27,9 +27,12 @@
             padding: 40px;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 600px; /* Footer'ın aşağıda durması için min yükseklik */
         }
 
-        .screen { display: none; opacity: 0; transition: opacity 0.5s ease; }
+        .screen { display: none; opacity: 0; transition: opacity 0.5s ease; flex-grow: 1; }
         .screen.active { display: block; opacity: 1; animation: slideUp 0.6s ease-out; }
 
         @keyframes slideUp {
@@ -146,7 +149,6 @@
         }
         .restart-btn:hover { background: #2c3e50; }
 
-        /* Admin Button - Updated */
         .admin-btn {
             position: fixed; bottom: 20px; right: 20px;
             background: #343a40; color: white; border: none;
@@ -154,16 +156,60 @@
             cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             z-index: 100;
             transition: transform 0.2s;
-            text-decoration: none; /* Link için */
+            text-decoration: none;
             font-size: 14px;
         }
         .admin-btn:hover { transform: scale(1.05); background: #23272b; }
 
+        /* --- YENİ EKLENEN FOOTER STİLLERİ --- */
+        .footer-row {
+            margin-top: auto; /* İçeriğin en altına iter */
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .footer-links {
+            font-size: 11px;
+            color: #666;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .footer-links a {
+            color: #1a2a6c;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-logo img {
+            height: 40px; /* Logonun yüksekliği, duruma göre 30px-50px arası ayarlanabilir */
+            width: auto;
+            display: block;
+        }
+        
+        @media (max-width: 600px) {
+            .footer-row {
+                flex-direction: column-reverse;
+                gap: 15px;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+        
         <div class="screen active" id="scene1">
             <h1>Vaka Sunumu</h1>
             <span class="status-badge status-stable">Pediatrik Acil Başvurusu</span>
@@ -323,13 +369,21 @@
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
-    </div>
+        <div class="footer-row">
+            <div class="footer-links">
+                <a href="https://az.box.com/shared/static/knwd88xwnh6vay5ozkj4xo035tpd75od.pdf" target="_blank">▼Soliris KÜB özeti için tıklayınız</a>
+                <span>M/TR/UNB-a/0174</span>
+            </div>
+            <div class="footer-logo">
+                <img src="https://az.box.com/shared/static/qzc32ve2j3vdjf1aa7qfvoffsovdxc3k" alt="Logo">
+            </div>
+        </div>
+        </div>
 
     <button class="admin-btn" onclick="window.location.href='admin.html'">📊 Vaka Analizi (Admin)</button>
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        // DİKKAT: Burada getDocs, query gibi okuma fonksiyonlarını kaldırdık. Sadece yazma var.
         import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
