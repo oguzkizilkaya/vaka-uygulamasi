@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İnteraktif Vaka: aHÜS Yönetimi</title>
+    <title>Pediatrik Vaka: aHÜS Yönetimi</title>
     <style>
-        /* Tasarım kodların aynen korunmuştur */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -110,6 +109,35 @@
         .outcome-moderate { color: #fd7e14; }
         .outcome-bad { color: #dc3545; }
 
+        /* YENİ: Referans Kutusu Stili */
+        .ref-citation {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1a2a6c;
+            padding: 12px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+            font-size: 13px;
+            color: #555;
+            border-radius: 0 5px 5px 0;
+            line-height: 1.4;
+        }
+
+        .ref-citation strong {
+            color: #b21f1f;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .ref-citation em {
+            display: block;
+            margin-top: 6px;
+            font-size: 11px;
+            color: #888;
+            text-align: right;
+        }
+
         /* Admin & Controls */
         .admin-btn {
             position: fixed; bottom: 20px; right: 20px;
@@ -147,7 +175,6 @@
         
         .path-visual { font-family: monospace; font-size: 12px; color: #666; }
         
-        /* Yükleniyor animasyonu için */
         .loading-text { text-align: center; padding: 20px; color: #666; font-style: italic; }
 
     </style>
@@ -157,54 +184,55 @@
     <div class="container">
         <div class="screen active" id="scene1">
             <h1>Vaka Başlangıcı</h1>
-            <span class="status-badge status-stable">Klinik Durum: Stabil Başlangıç</span>
+            <span class="status-badge status-stable">Pediatrik Acil Başvurusu</span>
             
             <div class="case-header">
-                <h3>32 Yaşında Kadın Hasta</h3>
-                <p>Acil servise 5 gündür devam eden halsizlik, bulantı ve idrar miktarında azalma şikayeti ile başvurdu. Öyküsünde bilinen bir hastalık yok. 1 hafta önce hafif bir ÜYE benzeri tablo geçirmiş.</p>
+                <h3>4 Yaşında Erkek Hasta</h3>
+                <p>Annesi tarafından "çocuğun renginin solması, huzursuzluk ve son 24 saattir idrar yapmama" şikayetiyle getirildi. Öyküde 1 hafta önce ateşli üst solunum yolu enfeksiyonu var. <strong>Kanlı ishal öyküsü yok.</strong></p>
             </div>
 
             <div class="lab-grid">
-                <div class="lab-item">Hb: <span class="lab-val">8.1 g/dL</span></div>
-                <div class="lab-item">Plt: <span class="lab-val">32.000/mm³</span></div>
-                <div class="lab-item">Kreatinin: <span class="lab-val">2.4 mg/dL</span></div>
-                <div class="lab-item">LDH: <span class="lab-val">1250 U/L</span></div>
+                <div class="lab-item">Hb: <span class="lab-val">7.2 g/dL</span> (Düşük)</div>
+                <div class="lab-item">Plt: <span class="lab-val">45.000/mm³</span> (Trombositopeni)</div>
+                <div class="lab-item">Kreatinin: <span class="lab-val">1.9 mg/dL</span> (Yaşına göre ABY)</div>
+                <div class="lab-item">LDH: <span class="lab-val">1800 U/L</span> (Hemoliz)</div>
                 <div class="lab-item">Periferik Yayma: <span class="lab-val">Şistositler (+)</span></div>
             </div>
 
-            <p class="question">TMA (Trombotik Mikroanjiyopati) tablosu mevcut. İlk yaklaşımınız ve tetkik isteğiniz ne olur?</p>
+            <p class="question">TMA (Trombotik Mikroanjiyopati) tablosu mevcut. 4 yaşındaki hastada ilk yaklaşımınız ne olur?</p>
 
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(1, 'A')">
-                    <strong>A)</strong> Plazmaferez hazırlığı yaparım, ADAMTS13 ve Kompleman paneli gönderirim.
+                    <strong>A)</strong> STEC-HÜS ve aHÜS ayrımı için tetkik (Gaita PCR, ADAMTS13) isterim, hidrasyona başlarım.
                 </button>
                 <button class="option-btn" onclick="makeDecision(1, 'B')">
-                    <strong>B)</strong> Enfeksiyon kaynaklı olabilir, geniş spektrumlu antibiyotik ve hidrasyon ile 24 saat izlerim.
+                    <strong>B)</strong> Viral enfeksiyon sonrası geçici bir tablodur, destek tedavisi ve antibiyotik ile izlerim.
                 </button>
             </div>
         </div>
 
         <div class="screen" id="scene2a">
             <h1>Tanısal Değerlendirme</h1>
-            <span class="status-badge status-stable">Durum: Kontrol Altında</span>
+            <span class="status-badge status-stable">Sonuçlar Çıktı</span>
             
             <div class="case-header">
-                <h3>Sonuçlar Geldi</h3>
-                <p>ADAMTS13 aktivitesi: <strong>%65 (Normal)</strong> (TTP Ekarte).<br>
-                STEC (Shiga Toksin): <strong>Negatif</strong>.<br>
-                Hasta anürik hale gelmeye başladı. Kreatinin: 3.1 mg/dL'ye yükseldi.</p>
+                <h3>Kritik Ayrım</h3>
+                <p>Gaita STEC PCR: <strong>Negatif</strong> (Tipik HÜS değil).<br>
+                ADAMTS13 aktivitesi: <strong>%70 (Normal)</strong> (TTP değil).<br>
+                Hasta halen anürik. Kreatinin 2.4 mg/dL'ye yükseldi ve hipertansif (130/90 mmHg).</p>
             </div>
 
-            <p class="question">ADAMTS13 normal, STEC negatif. TTP ve Tipik HÜS ekarte edildi. Tanınız aHÜS. Tedavi planınız?</p>
+            <p class="question">Tanınız aHÜS (Atipik HÜS). Pediatrik hasta için en uygun tedavi planı nedir?</p>
 
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(2, 'A')">
-                    <strong>A)</strong> Hemen Eculizumab (C5 İnhibitörü) tedavisi başla + Menenjit aşısı yap.
+                    <strong>A)</strong> Santral kateter takarak Plazma Değişimi (TPE) yapalım, yanıt alamazsak ilaç düşünelim.
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'B')">
-                    <strong>B)</strong> Plazma değişimine (TPE) devam et, Eculizumab pahalı olduğu için sona sakla.
+                    <strong>B)</strong> Hemen Eculizumab (Anti-C5) başla + Meningokok aşısı ve profilaksisi yap.
                 </button>
             </div>
+            <div style="font-size:12px; color:#666; margin-top:10px;">*Not: TPE çocuklarda teknik zorluklar içerir ve aHÜS'te etkinliği sınırlıdır.</div>
         </div>
 
         <div class="screen" id="scene2b">
@@ -212,82 +240,95 @@
             <span class="status-badge status-critical">Durum: Kritik</span>
             
             <div class="case-header">
-                <h3>24 Saat Sonra</h3>
-                <p>Hastanın idrar çıkışı tamamen durdu (Anüri). Bilinci bulanıklaşmaya başladı.<br>
-                <strong>Yeni Lab:</strong> Hb: 6.5 g/dL, Plt: 18.000, <strong>Kreatinin: 5.8 mg/dL</strong>.<br>
-                Destek tedavisi yanıt vermedi.</p>
+                <h3>12 Saat Sonra</h3>
+                <p>Hasta nöbet geçirdi (aHÜS santral tutulumu).<br>
+                <strong>Yeni Lab:</strong> Hb: 6.0 g/dL, Plt: 20.000, <strong>Kreatinin: 3.5 mg/dL</strong>.<br>
+                Destek tedavisi yetersiz kaldı. Çoklu organ yetmezliği riski var.</p>
             </div>
 
-            <p class="question">Zaman kaybettiniz. Böbrek hasarı ilerledi. Şimdi ne yapacaksınız?</p>
+            <p class="question">Zaman kaybettiniz. Şimdi agresif müdahale gerekiyor. Seçiminiz?</p>
 
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(2, 'C')">
-                    <strong>A)</strong> Acil Hemodiyaliz + Eculizumab tedavisi başla.
+                    <strong>A)</strong> Acil Pediatrik Diyaliz + Eculizumab tedavisi (Kurtarma).
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'D')">
-                    <strong>B)</strong> Sadece Diyaliz ve Plazmaferez ile devam et.
+                    <strong>B)</strong> Sadece Diyaliz ve Taze Donmuş Plazma (TDP) infüzyonu.
                 </button>
             </div>
         </div>
 
         <div class="screen" id="scene3_dialysis">
-            <h1>6 Ay Sonra...</h1>
-            <span class="status-badge status-chronic">Durum: Kronik Böbrek Yetmezliği (SDBY)</span>
+            <h1>1 Yıl Sonra...</h1>
+            <span class="status-badge status-chronic">Durum: Son Dönem Böbrek Yetmezliği (SDBY)</span>
             
             <div class="case-header">
                 <h3>Poliklinik Kontrolü</h3>
-                <p>Hasta haftada 3 gün hemodiyalize giriyor. Hematolojik tablosu düzeldi ancak böbrekler geri dönmedi (ESRD).<br>
-                Canlı vericiden (annesinden) böbrek nakli planlanıyor.</p>
+                <p>Çocuk periton diyalizi ile takip ediliyor. Büyüme-gelişme geriliği başladı.<br>
+                Annesinden canlı böbrek nakli planlanıyor.</p>
             </div>
 
-            <p class="question">aHÜS tanılı hastada böbrek nakli öncesi stratejiniz ne olmalı?</p>
+            <p class="question">aHÜS tanılı çocuk hastada nakil (transplantasyon) stratejiniz ne olmalı?</p>
 
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(3, 'A')">
-                    <strong>A)</strong> Profilaktik Eculizumab başla, sonra nakil yap.
+                    <strong>A)</strong> Nakil öncesi profilaktik Eculizumab başla, sonra nakil yap.
                 </button>
                 <button class="option-btn" onclick="makeDecision(3, 'B')">
-                    <strong>B)</strong> Sadece nakil yap, nüks ederse ilaç başlarız.
+                    <strong>B)</strong> İlaç çok maliyetli, sadece nakil yapıp nüks ederse tedavi veririz.
                 </button>
             </div>
         </div>
 
         <div class="screen outcome-screen" id="outcome_perfect">
             <span class="outcome-icon outcome-good">🌟</span>
-            <h2 class="outcome-title outcome-good">Mükemmel Klinik Yanıt</h2>
+            <h2 class="outcome-title outcome-good">Tam İyileşme (Renal Recovery)</h2>
             <p class="outcome-desc">
-                Erken tanı ve doğru tedavi (Eculizumab) sayesinde hematolojik değerler 1 haftada düzeldi.<br>
-                Böbrek fonksiyonları tamamen normale döndü (Kreatinin: 0.8 mg/dL).<br>
-                Hasta diyalize girmeden taburcu edildi.
+                Hızlı Eculizumab tedavisi (ilk 24-48 saat) sayesinde böbrek fonksiyonları tamamen döndü.<br>
+                Diyaliz ihtiyacı kalmadı. Çocuk normal gelişimine devam ediyor.<br>
+                Genetik panelde <em>CFH</em> mutasyonu saptandı.
             </p>
-            <div style="background:#eee; padding:10px; border-radius:5px; margin-bottom:20px;">
-                <strong>Öğrenim Hedefi:</strong> TMA'da erken ADAMTS13 ayrımı ve hızlı aHÜS tedavisi organ kurtarıcıdır.
+            
+            <div class="ref-citation">
+                <strong>📚 Kanıt Temelli Yaklaşım:</strong>
+                Çocuklarda STEC-Negatif HÜS tanısı konulur konulmaz Eculizumab birinci basamak (first-line) tedavi olmalıdır. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
+                <em>— Loirat C, et al. Pediatric Nephrology. 2016</em>
             </div>
+
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
         <div class="screen outcome-screen" id="outcome_ckd">
             <span class="outcome-icon outcome-moderate">⚠️</span>
-            <h2 class="outcome-title outcome-moderate">Kısmi Düzelme (KBY)</h2>
+            <h2 class="outcome-title outcome-moderate">Kalıcı Böbrek Hasarı</h2>
             <p class="outcome-desc">
-                İlk baştaki gecikme veya plazmaferez ısrarı nedeniyle böbreklerde kalıcı hasar oluştu.<br>
-                Hematolojik remisyon sağlandı ancak hasta Evre 3-4 KBY ile takip ediliyor (Kreatinin: 2.1 mg/dL).<br>
-                Diyalizden kurtuldu ama ömür boyu yakın nefroloji takibi gerekecek.
+                Tanıdaki gecikme ve yetersiz tedavi (sadece plazma) nedeniyle kortikal nekroz gelişti.<br>
+                Hematolojik değerler düzeldi ancak GFR 40 ml/dk civarında kaldı. İleride nakil adayı.
             </p>
+
+            <div class="ref-citation">
+                <strong>📚 Kritik Uyarı:</strong>
+                Özellikle pediyatrik hastalarda STEC dışlandığı ve ADAMTS13 normal olduğu anda zaman kaybetmeden anti-kompleman tedavisine başlanması böbrek kurtarımı (renal recovery) için kritiktir.
+                <em>— KDIGO 2017 Clinical Practice Guideline Update (TMA focus)</em>
+            </div>
+
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
         <div class="screen outcome-screen" id="outcome_transplant_success">
             <span class="outcome-icon outcome-good">✅</span>
-            <h2 class="outcome-title outcome-good">Başarılı Nakil</h2>
+            <h2 class="outcome-title outcome-good">Başarılı Pediatrik Nakil</h2>
             <p class="outcome-desc">
-                Hasta diyaliz sürecinden sonra nakile hazırlandı.<br>
-                <strong>Profilaktik Eculizumab</strong> kullanımı sayesinde greftte hastalık nüksü önlendi.<br>
-                Böbrek fonksiyonları şu an mükemmel çalışıyor.
+                Profilaktik Eculizumab kullanımı sayesinde greftte tromboz gelişmedi.<br>
+                Çocuk diyalizden kurtuldu ve büyüme eğrisi normale döndü.
             </p>
-            <div style="background:#eee; padding:10px; border-radius:5px; margin-bottom:20px;">
-                <strong>Bilgi:</strong> aHÜS'te profilaksi yapılmadan yapılan nakillerde nüks riski %50-80'dir.
+
+            <div class="ref-citation">
+                <strong>📚 Transplantasyon Verisi:</strong>
+                Böbrek nakli öncesi genetik riski yüksek hastalarda profilaktik Eculizumab kullanımı greft kaybını dramatik şekilde düşürürken (%10), kullanılmazsa nüks oranı %80'e varabilmektedir.
+                <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
             </div>
+
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
@@ -295,10 +336,16 @@
             <span class="outcome-icon outcome-bad">❌</span>
             <h2 class="outcome-title outcome-bad">Greft Kaybı ve Nüks</h2>
             <p class="outcome-desc">
-                Nakil öncesi profilaksi yapılmadığı için cerrahi stres ve iskemi, kompleman sistemini tetikledi.<br>
-                Nakilden 1 hafta sonra aHÜS nüks etti ve takılan böbrekte trombotik mikroanjiyopati gelişti.<br>
-                Greft kaybedildi, hasta tekrar diyalize döndü.
+                Nakil sırasında profilaksi yapılmadığı için cerrahi stres kompleman sistemini aktive etti.<br>
+                Nakilden günler sonra aHÜS nüksü ile greft tromboze oldu ve kaybedildi.
             </p>
+
+            <div class="ref-citation">
+                <strong>📚 Neden Başarısız Oldu?</strong>
+                Literatür, profilaktik Eculizumab kullanılmayan yüksek riskli hastalarda nüks ve greft kaybı riskinin %80 civarında olduğunu göstermektedir.
+                <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
+            </div>
+
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
@@ -367,7 +414,10 @@
             // Log choice
             currentSession.path.push(`Step${step}:${choice}`);
 
-            // Hide all screens first
+            // Hide all screens first (DİKKAT: active class'ını kaldırmadan önce kontrolü aşağıda yapacağız)
+            // Bu yüzden önce class listesini okuyup, sonra gizleyeceğiz.
+            const isScene2aActive = document.getElementById('scene2a').classList.contains('active');
+
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
 
             // Branching Logic
@@ -382,10 +432,14 @@
             }
             else if (step === 2) {
                 // Sahne 2A (Erken) Kararları
-                if (document.getElementById('scene2a').style.display !== 'none' || currentSession.path.includes('Step1:A')) {
-                    if (choice === 'A') {
-                        finishCase('Mükemmel İyileşme', 'outcome_perfect');
+                // Mantık Düzeltmesi: Eğer bir önceki ekran Scene2a ise veya Step1'de A seçildiyse:
+                if (isScene2aActive || currentSession.path.includes('Step1:A')) {
+                    // A: TPE (Yanlış/Eksik), B: Eculizumab (Doğru)
+                    
+                    if (choice === 'B') { 
+                        finishCase('Mükemmel İyileşme (Tam Renal Recovery)', 'outcome_perfect');
                     } else {
+                        // TPE seçildi -> Yetersiz tedavi -> Diyaliz
                         document.getElementById('scene3_dialysis').classList.add('active');
                     }
                 } 
@@ -393,7 +447,7 @@
                 else {
                     if (choice === 'C') { // Eculizumab (Geç de olsa)
                         finishCase('Kalıcı Hasarlı İyileşme (KBY)', 'outcome_ckd');
-                    } else { // Sadece Diyaliz/Plazma
+                    } else { // Sadece Diyaliz/Plazma (D)
                         document.getElementById('scene3_dialysis').classList.add('active');
                     }
                 }
@@ -409,23 +463,19 @@
 
         async function finishCase(outcomeName, screenId) {
             currentSession.outcome = outcomeName;
-            currentSession.endTime = new Date().toISOString(); // String olarak tarih
+            currentSession.endTime = new Date().toISOString(); 
             
-            // Show outcome screen
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
 
-            // --- FIREBASE'E KAYIT ---
             try {
-                // "vaka_kayitlari" koleksiyonuna yazıyoruz
                 await addDoc(collection(db, "vaka_kayitlari"), {
                     ...currentSession,
-                    createdAt: Timestamp.now() // Sıralama yapmak için Firestore zaman damgası
+                    createdAt: Timestamp.now()
                 });
                 console.log("Kayıt Firebase'e gönderildi.");
             } catch (error) {
                 console.error("Firebase Hatası:", error);
-                alert("Veri kaydedilemedi. İnternet bağlantınızı kontrol edin.");
             }
         }
 
@@ -456,7 +506,6 @@
             loadingMsg.style.display = 'block';
 
             try {
-                // Firebase'den verileri çek (Tarihe göre tersten sırala)
                 const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
 
@@ -466,7 +515,6 @@
                     const session = doc.data();
                     const row = document.createElement('tr');
                     
-                    // Tarihi formatla
                     let dateStr = "Belirsiz";
                     if(session.createdAt && session.createdAt.toDate) {
                         dateStr = session.createdAt.toDate().toLocaleString('tr-TR');
@@ -474,10 +522,9 @@
                         dateStr = new Date(session.startTime).toLocaleString('tr-TR');
                     }
                     
-                    // Renkli outcome
                     let color = 'black';
                     if(session.outcome.includes('Mükemmel') || session.outcome.includes('Başarılı')) color = 'green';
-                    else if(session.outcome.includes('KBY')) color = 'orange';
+                    else if(session.outcome.includes('KBY') || session.outcome.includes('Hasarlı')) color = 'orange';
                     else color = 'red';
 
                     row.innerHTML = `
@@ -495,7 +542,6 @@
         }
 
         window.exportCSV = async function() {
-            // Firebase'den güncel veriyi çekip CSV yapalım
             try {
                 const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
@@ -506,7 +552,6 @@
                 querySnapshot.forEach((doc) => {
                     const h = doc.data();
                     const dateStr = h.startTime || "N/A";
-                    // CSV formatını bozmamak için tırnak içine al
                     const pathStr = `"${h.path.join('->')}"`;
                     csv += `${h.id},${dateStr},${pathStr},"${h.outcome}"\n`;
                 });
@@ -515,7 +560,7 @@
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'ahus_vaka_verileri_firebase.csv';
+                a.download = 'ahus_pediatrik_vaka_verileri.csv';
                 a.click();
             } catch (e) {
                 console.error(e);
