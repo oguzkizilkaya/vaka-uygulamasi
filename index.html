@@ -110,7 +110,7 @@
         .outcome-moderate { color: #fd7e14; }
         .outcome-bad { color: #dc3545; }
 
-        /* YENİ: Referans Kutusu Stili */
+        /* Referans Kutusu Stili */
         .ref-citation {
             background-color: #f8f9fa;
             border-left: 4px solid #1a2a6c;
@@ -139,15 +139,6 @@
             text-align: right;
         }
 
-        /* Admin & Controls */
-        .admin-btn {
-            position: fixed; bottom: 20px; right: 20px;
-            background: #343a40; color: white; border: none;
-            padding: 12px 25px; border-radius: 50px;
-            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 100;
-        }
-
         .restart-btn {
             background: #1a2a6c; color: white; border: none;
             padding: 15px 40px; border-radius: 8px; font-size: 16px;
@@ -155,28 +146,18 @@
         }
         .restart-btn:hover { background: #2c3e50; }
 
-        /* Admin Panel Overlay */
-        .admin-panel {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-            z-index: 1000; overflow-y: auto; padding: 40px;
+        /* Admin Button - Updated */
+        .admin-btn {
+            position: fixed; bottom: 20px; right: 20px;
+            background: #343a40; color: white; border: none;
+            padding: 12px 25px; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 100;
+            transition: transform 0.2s;
+            text-decoration: none; /* Link için */
+            font-size: 14px;
         }
-        .admin-panel.active { display: block; }
-        .admin-content {
-            background: white; max-width: 1000px; margin: 0 auto;
-            padding: 30px; border-radius: 10px;
-        }
-        .data-table {
-            width: 100%; border-collapse: collapse; margin-top: 20px;
-        }
-        .data-table th, .data-table td {
-            border: 1px solid #ddd; padding: 12px; text-align: left;
-        }
-        .data-table th { background: #f8f9fa; }
-        
-        .path-visual { font-family: monospace; font-size: 12px; color: #666; }
-        
-        .loading-text { text-align: center; padding: 20px; color: #666; font-style: italic; }
+        .admin-btn:hover { transform: scale(1.05); background: #23272b; }
 
     </style>
 </head>
@@ -289,13 +270,11 @@
                 Diyaliz ihtiyacı kalmadı. Çocuk normal gelişimine devam ediyor.<br>
                 Genetik panelde <em>CFH</em> mutasyonu saptandı.
             </p>
-            
             <div class="ref-citation">
                 <strong>📚 Kanıt Temelli Yaklaşım:</strong>
                 Çocuklarda aHÜS tanısı konulur konulmaz Eculizumab birinci basamak (first-line) tedavi olmalıdır. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
                 <em>— Loirat C, et al. Pediatric Nephrology. 2016</em>
             </div>
-
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
@@ -306,13 +285,11 @@
                 Tanıdaki gecikme ve yetersiz tedavi (sadece plazma) nedeniyle kortikal nekroz gelişti.<br>
                 Hematolojik değerler düzeldi ancak GFR 40 ml/dk civarında kaldı. İleride nakil adayı.
             </p>
-
             <div class="ref-citation">
                 <strong>📚 Kritik Uyarı:</strong>
                 Özellikle pediyatrik hastalarda STEC dışlandığı ve ADAMTS13 normal saptandığı anda zaman kaybetmeden anti-kompleman tedavisine başlanması böbrek fonksiyon kazanımı için kritiktir.
                 <em>— KDIGO 2017 Clinical Practice Guideline Update (TMA focus)</em>
             </div>
-
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
@@ -323,13 +300,11 @@
                 Profilaktik Eculizumab kullanımı sayesinde greftte fonksiyonları korundu.<br>
                 Hasta diyaliz bağımsız takip ediliyor ve büyüme eğrisi normal izleniyor
             </p>
-
             <div class="ref-citation">
                 <strong>📚 Transplantasyon Verisi:</strong>
                 Böbrek nakli öncesi genetik riski yüksek hastalarda profilaktik Eculizumab kullanımı greft kaybını dramatik şekilde düşürürken (%10), profilaksi uygulanmaması ile nüks oranı %80'e varabilmektedir.
                 <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
             </div>
-
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
@@ -340,54 +315,23 @@
                 Nakil sırasında profilaksi yapılmadığı için cerrahi stres kompleman sistemini aktive etti.<br>
                 Nakilden sonrası aHÜS nüksü ile greft fonksiyonu kaybedildi.
             </p>
-
             <div class="ref-citation">
                 <strong>📚 Neden Başarısız Oldu?</strong>
                 Literatür, profilaktik Eculizumab kullanılmayan yüksek riskli hastalarda nüks ve greft kaybı riskinin %80 civarında olduğunu göstermektedir.
                 <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
             </div>
-
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
     </div>
 
-    <button class="admin-btn" onclick="toggleAdmin()">📊 Vaka Analizi</button>
+    <button class="admin-btn" onclick="window.location.href='admin.html'">📊 Vaka Analizi (Admin)</button>
     
-    <div class="admin-panel" id="adminPanel">
-        <div class="admin-content">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2>Kullanıcı Karar Analizi</h2>
-                <button onclick="toggleAdmin()" style="background:red; color:white; border:none; padding:5px 15px; cursor:pointer;">X</button>
-            </div>
-            <p><strong>Veriler Firebase Veritabanında (Firestore) Tutulmaktadır.</strong></p>
-            
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Tarih</th>
-                        <th>Kullanıcı ID</th>
-                        <th>İzlenen Yol</th>
-                        <th>Sonuç (Outcome)</th>
-                    </tr>
-                </thead>
-                <tbody id="dataTableBody">
-                    </tbody>
-            </table>
-            <div id="loadingMsg" class="loading-text" style="display:none;">Veriler Firebase'den yükleniyor...</div>
-            
-            <div style="margin-top:20px;">
-                <button onclick="exportCSV()" style="background:#28a745; color:white; border:none; padding:10px; cursor:pointer;">CSV İndir</button>
-            </div>
-        </div>
-    </div>
-
     <script type="module">
-        // 1. Firebase Kütüphanelerini Import Et
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, orderBy, query, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // DİKKAT: Burada getDocs, query gibi okuma fonksiyonlarını kaldırdık. Sadece yazma var.
+        import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 2. Senin Verdiğin Firebase Config Bilgileri
         const firebaseConfig = {
             apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
             authDomain: "medicom-ai.firebaseapp.com",
@@ -397,11 +341,9 @@
             appId: "1:330987426994:web:587bc3e397ec376e5565ab"
         };
 
-        // 3. Firebase'i Başlat
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- State Management ---
         let currentSession = {
             id: 'user_' + Math.random().toString(36).substr(2, 9),
             startTime: new Date().toISOString(),
@@ -409,56 +351,27 @@
             outcome: ''
         };
 
-        // --- Navigation Logic (Decision Tree) ---
-        // Global scope'a fonksiyonları tanımlıyoruz ki HTML onclick görebilsin
         window.makeDecision = function(step, choice) {
-            // Log choice
             currentSession.path.push(`Step${step}:${choice}`);
-
-            // Hide all screens first (DİKKAT: active class'ını kaldırmadan önce kontrolü aşağıda yapacağız)
-            // Bu yüzden önce class listesini okuyup, sonra gizleyeceğiz.
             const isScene2aActive = document.getElementById('scene2a').classList.contains('active');
-
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
 
-            // Branching Logic
             if (step === 1) {
-                if (choice === 'A') {
-                    // Doğru başlangıç -> Erken Tanı Yolu
-                    document.getElementById('scene2a').classList.add('active');
-                } else {
-                    // Yanlış başlangıç -> Kötüleşme Yolu
-                    document.getElementById('scene2b').classList.add('active');
-                }
+                if (choice === 'A') document.getElementById('scene2a').classList.add('active');
+                else document.getElementById('scene2b').classList.add('active');
             }
             else if (step === 2) {
-                // Sahne 2A (Erken) Kararları
-                // Mantık Düzeltmesi: Eğer bir önceki ekran Scene2a ise veya Step1'de A seçildiyse:
                 if (isScene2aActive || currentSession.path.includes('Step1:A')) {
-                    // A: TPE (Yanlış/Eksik), B: Eculizumab (Doğru)
-                    
-                    if (choice === 'B') { 
-                        finishCase('Mükemmel İyileşme (Tam Renal Recovery)', 'outcome_perfect');
-                    } else {
-                        // TPE seçildi -> Yetersiz tedavi -> Diyaliz
-                        document.getElementById('scene3_dialysis').classList.add('active');
-                    }
-                } 
-                // Sahne 2B (Geç) Kararları
-                else {
-                    if (choice === 'C') { // Eculizumab (Geç de olsa)
-                        finishCase('Kalıcı Hasarlı İyileşme (KBY)', 'outcome_ckd');
-                    } else { // Sadece Diyaliz/Plazma (D)
-                        document.getElementById('scene3_dialysis').classList.add('active');
-                    }
+                    if (choice === 'B') finishCase('Mükemmel İyileşme (Tam Renal Recovery)', 'outcome_perfect');
+                    else document.getElementById('scene3_dialysis').classList.add('active');
+                } else {
+                    if (choice === 'C') finishCase('Kalıcı Hasarlı İyileşme (KBY)', 'outcome_ckd');
+                    else document.getElementById('scene3_dialysis').classList.add('active');
                 }
             }
             else if (step === 3) {
-                if (choice === 'A') {
-                    finishCase('Başarılı Nakil', 'outcome_transplant_success');
-                } else {
-                    finishCase('Greft Rejeksiyonu', 'outcome_transplant_fail');
-                }
+                if (choice === 'A') finishCase('Başarılı Nakil', 'outcome_transplant_success');
+                else finishCase('Greft Rejeksiyonu', 'outcome_transplant_fail');
             }
         };
 
@@ -490,86 +403,6 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('scene1').classList.add('active');
         };
-
-        // --- Data & Admin Functions ---
-
-        window.toggleAdmin = function() {
-            const panel = document.getElementById('adminPanel');
-            panel.classList.toggle('active');
-            if (panel.classList.contains('active')) loadAdminData();
-        };
-
-        async function loadAdminData() {
-            const tbody = document.getElementById('dataTableBody');
-            const loadingMsg = document.getElementById('loadingMsg');
-            
-            tbody.innerHTML = '';
-            loadingMsg.style.display = 'block';
-
-            try {
-                const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-
-                loadingMsg.style.display = 'none';
-
-                querySnapshot.forEach((doc) => {
-                    const session = doc.data();
-                    const row = document.createElement('tr');
-                    
-                    let dateStr = "Belirsiz";
-                    if(session.createdAt && session.createdAt.toDate) {
-                        dateStr = session.createdAt.toDate().toLocaleString('tr-TR');
-                    } else if (session.startTime) {
-                        dateStr = new Date(session.startTime).toLocaleString('tr-TR');
-                    }
-                    
-                    let color = 'black';
-                    if(session.outcome.includes('Mükemmel') || session.outcome.includes('Başarılı')) color = 'green';
-                    else if(session.outcome.includes('KBY') || session.outcome.includes('Hasarlı')) color = 'orange';
-                    else color = 'red';
-
-                    row.innerHTML = `
-                        <td>${dateStr}</td>
-                        <td>${session.id}</td>
-                        <td class="path-visual">${session.path.join(' ➝ ')}</td>
-                        <td style="color:${color}; font-weight:bold;">${session.outcome}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            } catch (error) {
-                loadingMsg.innerText = "Veri çekilemedi: " + error.message;
-                console.error(error);
-            }
-        }
-
-        window.exportCSV = async function() {
-            try {
-                const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                
-                if (querySnapshot.empty) return alert('Veri yok');
-
-                let csv = "ID,Tarih,Yol,Sonuc\n";
-                querySnapshot.forEach((doc) => {
-                    const h = doc.data();
-                    const dateStr = h.startTime || "N/A";
-                    const pathStr = `"${h.path.join('->')}"`;
-                    csv += `${h.id},${dateStr},${pathStr},"${h.outcome}"\n`;
-                });
-
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'ahus_pediatrik_vaka_verileri.csv';
-                a.click();
-            } catch (e) {
-                console.error(e);
-                alert("CSV oluşturulurken hata oluştu.");
-            }
-        }
     </script>
 </body>
 </html>
-
-
