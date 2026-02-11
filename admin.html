@@ -2,42 +2,101 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yönetici Paneli - Medicom AI</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-        .login-box { max-width: 300px; margin: 50px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;}
-        button { width: 100%; padding: 10px; background: #1a2a6c; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px; 
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        h2, h3 { color: #1a2a6c; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+
+        .login-box { 
+            max-width: 400px; 
+            margin: 100px auto; 
+            background: white; 
+            padding: 40px; 
+            border-radius: 10px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+        }
+
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px;}
+        
+        button { 
+            padding: 12px 20px; 
+            background: #1a2a6c; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            transition: background 0.3s;
+            width: 100%;
+        }
         button:hover { background: #2c3e50; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; display: none; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+
+        /* Veri Tablosu Stilleri */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+            background: white; 
+            /* display: none; KALDIRILDI - Artık varsayılan olarak tablo yapısında */
+        }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px; }
         th { background-color: #1a2a6c; color: white; }
-        .error { color: red; font-size: 12px; text-align: center; display: block; margin-top: 10px; }
+        tr:nth-child(even) { background-color: #f8f9fa; }
+        tr:hover { background-color: #e9ecef; }
+
+        .error { color: #dc3545; font-size: 14px; text-align: center; display: block; margin-top: 10px; }
+        
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        .btn-logout { background: #dc3545; width: auto; }
+        .btn-logout:hover { background: #c82333; }
+        
+        .btn-csv { background: #28a745; width: auto; display: inline-block; }
+        .btn-csv:hover { background: #218838; }
+
     </style>
 </head>
 <body>
 
     <div class="login-box" id="loginScreen">
         <h3 style="text-align:center;">Admin Girişi</h3>
-        <input type="email" id="email" placeholder="E-posta">
+        <input type="email" id="email" placeholder="E-posta Adresi">
         <input type="password" id="password" placeholder="Şifre">
         <button onclick="adminLogin()">Giriş Yap</button>
         <span class="error" id="errorMsg"></span>
     </div>
 
-    <div id="dataScreen" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>Vaka Kayıtları</h2>
-            <button onclick="logout()" style="width:auto; background:#dc3545;">Çıkış Yap</button>
+    <div class="container" id="dataScreen" style="display:none;">
+        <div class="header-actions">
+            <h2>📊 Vaka Kayıtları</h2>
+            <button class="btn-logout" onclick="logout()">Çıkış Yap</button>
         </div>
-        <button onclick="downloadCSV()" style="margin-bottom:10px; background:#28a745; width:auto;">📥 Excel (CSV) İndir</button>
+        
+        <button class="btn-csv" onclick="downloadCSV()">📥 CSV (Excel) İndir</button>
         
         <table id="dataTable">
             <thead>
                 <tr>
                     <th>Tarih</th>
-                    <th>ID</th>
-                    <th>Yol (Kararlar)</th>
+                    <th>Kullanıcı ID</th>
+                    <th>İzlenen Yol</th>
                     <th>Sonuç</th>
                 </tr>
             </thead>
@@ -66,10 +125,13 @@
         // Oturum durumunu dinle
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                // Giriş yapılmışsa Login ekranını gizle, Data ekranını aç
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dataScreen').style.display = 'block';
+                // Verileri hemen çek
                 loadData();
             } else {
+                // Çıkış yapılmışsa tam tersi
                 document.getElementById('loginScreen').style.display = 'block';
                 document.getElementById('dataScreen').style.display = 'none';
             }
@@ -89,27 +151,43 @@
 
         async function loadData() {
             const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '<tr><td colspan="4">Yükleniyor...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Veriler Yükleniyor...</td></tr>';
             
             try {
                 const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
                 tbody.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Henüz veri yok.</td></tr>';
+                    return;
+                }
+
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString('tr-TR') : 'Belirsiz';
                     
+                    // Renklendirme
+                    let color = 'black';
+                    if(data.outcome && (data.outcome.includes('Mükemmel') || data.outcome.includes('Başarılı'))) color = '#28a745';
+                    else if(data.outcome && (data.outcome.includes('KBY') || data.outcome.includes('Hasarlı'))) color = '#fd7e14';
+                    else color = '#dc3545';
+
                     const row = `<tr>
                         <td>${date}</td>
                         <td>${data.id}</td>
-                        <td style="font-size:12px;">${data.path.join(' ➝ ')}</td>
-                        <td style="font-weight:bold;">${data.outcome}</td>
+                        <td style="font-size:13px; color:#555;">${data.path.join(' ➝ ')}</td>
+                        <td style="font-weight:bold; color:${color};">${data.outcome}</td>
                     </tr>`;
                     tbody.innerHTML += row;
                 });
             } catch (error) {
-                tbody.innerHTML = `<tr><td colspan="4" style="color:red">Yetki Hatası: Verileri görmeye izniniz yok.</td></tr>`;
+                console.error(error);
+                tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">
+                    Yetki Hatası veya Bağlantı Sorunu.<br>
+                    (Lütfen bu kullanıcı ile giriş yaptığınızdan emin olun)
+                </td></tr>`;
             }
         }
 
@@ -118,7 +196,8 @@
             const rows = document.querySelectorAll("#dataTable tbody tr");
             rows.forEach(row => {
                 const cols = row.querySelectorAll("td");
-                if(cols.length > 1) { // Loading satırını atla
+                // "Veri yok" veya "Yükleniyor" satırlarını atlamak için kontrol
+                if(cols.length > 1) { 
                     csv += `${cols[0].innerText},${cols[1].innerText},"${cols[2].innerText}","${cols[3].innerText}"\n`;
                 }
             });
