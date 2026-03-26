@@ -12,7 +12,6 @@
             min-height: 100vh;
             color: #333;
         }
-        
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -21,9 +20,7 @@
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
-
         h2, h3 { color: #1a2a6c; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
-
         .login-box { 
             max-width: 400px; 
             margin: 100px auto; 
@@ -32,9 +29,7 @@
             border-radius: 10px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
         }
-
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px;}
-        
         button { 
             padding: 12px 20px; 
             background: #1a2a6c; 
@@ -47,34 +42,28 @@
             width: 100%;
         }
         button:hover { background: #2c3e50; }
-
-        /* Veri Tablosu Stilleri */
         table { 
             width: 100%; 
             border-collapse: collapse; 
             margin-top: 20px; 
-            background: white; 
-            /* display: none; KALDIRILDI - Artık varsayılan olarak tablo yapısında */
+            background: white;
         }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px; }
         th { background-color: #1a2a6c; color: white; }
         tr:nth-child(even) { background-color: #f8f9fa; }
         tr:hover { background-color: #e9ecef; }
-
         .error { color: #dc3545; font-size: 14px; text-align: center; display: block; margin-top: 10px; }
-        
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn-logout { background: #dc3545; width: auto; }
         .btn-logout:hover { background: #c82333; }
-        
-        .btn-csv { background: #28a745; width: auto; display: inline-block; }
+        .btn-csv { background: #28a745; width: auto; }
         .btn-csv:hover { background: #218838; }
-
+        .btn-back { background: #6c757d; width: auto; text-decoration: none; display: inline-block; padding: 12px 20px; color: white; border-radius: 6px; font-size: 16px; }
+        .btn-back:hover { background: #545b62; }
     </style>
 </head>
 <body>
-
     <div class="login-box" id="loginScreen">
         <h3 style="text-align:center;">Admin Girişi</h3>
         <input type="email" id="email" placeholder="E-posta Adresi">
@@ -86,10 +75,12 @@
     <div class="container" id="dataScreen" style="display:none;">
         <div class="header-actions">
             <h2>📊 Vaka Kayıtları</h2>
-            <button class="btn-logout" onclick="logout()">Çıkış Yap</button>
+            <div class="btn-group">
+                <a href="index.html" class="btn-back">← Vakaya Dön</a>
+                <button class="btn-csv" style="width:auto;" onclick="downloadCSV()">📥 CSV İndir</button>
+                <button class="btn-logout" style="width:auto;" onclick="logout()">Çıkış Yap</button>
+            </div>
         </div>
-        
-        <button class="btn-csv" onclick="downloadCSV()">📥 CSV (Excel) İndir</button>
         
         <table id="dataTable">
             <thead>
@@ -122,16 +113,12 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Oturum durumunu dinle
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Giriş yapılmışsa Login ekranını gizle, Data ekranını aç
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dataScreen').style.display = 'block';
-                // Verileri hemen çek
                 loadData();
             } else {
-                // Çıkış yapılmışsa tam tersi
                 document.getElementById('loginScreen').style.display = 'block';
                 document.getElementById('dataScreen').style.display = 'none';
             }
@@ -145,59 +132,47 @@
             } catch (error) {
                 document.getElementById('errorMsg').innerText = "Hata: " + error.message;
             }
-        }
+        };
 
         window.logout = () => signOut(auth);
 
         async function loadData() {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Veriler Yükleniyor...</td></tr>';
-            
             try {
                 const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
-                
                 tbody.innerHTML = '';
-                
                 if (querySnapshot.empty) {
                     tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Henüz veri yok.</td></tr>';
                     return;
                 }
-
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     const date = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString('tr-TR') : 'Belirsiz';
-                    
-                    // Renklendirme
-                    let color = 'black';
-                    if(data.outcome && (data.outcome.includes('Mükemmel') || data.outcome.includes('Başarılı'))) color = '#28a745';
-                    else if(data.outcome && (data.outcome.includes('KBY') || data.outcome.includes('Hasarlı'))) color = '#fd7e14';
-                    else color = '#dc3545';
-
-                    const row = `<tr>
+                    let color = '#dc3545';
+                    if (data.outcome && (data.outcome.includes('Mükemmel') || data.outcome.includes('Başarılı'))) color = '#28a745';
+                    else if (data.outcome && (data.outcome.includes('KBY') || data.outcome.includes('Hasarlı'))) color = '#fd7e14';
+                    tbody.innerHTML += `<tr>
                         <td>${date}</td>
                         <td>${data.id}</td>
                         <td style="font-size:13px; color:#555;">${data.path.join(' ➝ ')}</td>
                         <td style="font-weight:bold; color:${color};">${data.outcome}</td>
                     </tr>`;
-                    tbody.innerHTML += row;
                 });
             } catch (error) {
                 console.error(error);
-                tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">
-                    Yetki Hatası veya Bağlantı Sorunu.<br>
-                    (Lütfen bu kullanıcı ile giriş yaptığınızdan emin olun)
-                </td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">Yetki Hatası veya Bağlantı Sorunu.</td></tr>`;
             }
         }
 
         window.downloadCSV = () => {
-            let csv = "Tarih,ID,Yol,Sonuc\n";
+            // [FIX] BOM eklendi — Türkçe karakterler Excel'de doğru açılır
+            let csv = '\uFEFF' + "Tarih,ID,Yol,Sonuc\n";
             const rows = document.querySelectorAll("#dataTable tbody tr");
             rows.forEach(row => {
                 const cols = row.querySelectorAll("td");
-                // "Veri yok" veya "Yükleniyor" satırlarını atlamak için kontrol
-                if(cols.length > 1) { 
+                if (cols.length > 1) {
                     csv += `${cols[0].innerText},${cols[1].innerText},"${cols[2].innerText}","${cols[3].innerText}"\n`;
                 }
             });
@@ -206,7 +181,7 @@
             link.href = URL.createObjectURL(blob);
             link.download = "vaka_analizi.csv";
             link.click();
-        }
+        };
     </script>
 </body>
 </html>
