@@ -434,39 +434,38 @@
         };
     </script>
 
-    <!-- SCRIPT 2: Firebase logging — key GitHub Secret'tan inject edilir, kaynak kodda bulunmaz -->
-    <script type="module">
+   <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase ayarlarınızı buraya açıkça (hardcoded) yazıyoruz. 
+        // Güvenlik kısıtlamalarını Google Cloud'dan yaptığımız için bu tamamen güvenlidir.
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
+            authDomain: "medicom-ai.firebaseapp.com",
+            projectId: "medicom-ai",
+            storageBucket: "medicom-ai.firebasestorage.app",
+            messagingSenderId: "330987426994",
+            appId: "1:330987426994:web:587bc3e397ec376e5565ab"
+        };
+
         try {
-            const firebaseConfig = {
-                apiKey: "%%FIREBASE_API_KEY%%",
-                authDomain: "%%FIREBASE_AUTH_DOMAIN%%",
-                projectId: "%%FIREBASE_PROJECT_ID%%",
-                storageBucket: "%%FIREBASE_STORAGE_BUCKET%%",
-                messagingSenderId: "%%FIREBASE_MESSAGING_SENDER_ID%%",
-                appId: "%%FIREBASE_APP_ID%%"
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+
+            window.logToFirebase = async function(session) {
+                try {
+                    await addDoc(collection(db, "vaka_kayitlari"), {
+                        ...session,
+                        createdAt: Timestamp.now()
+                    });
+                    console.log("Kayıt Firebase'e başarıyla gönderildi. ✅");
+                } catch (err) {
+                    console.error("Firebase yazma hatası:", err);
+                }
             };
-            // Placeholder kontrol — inject edilmemişse çalışma
-            if (firebaseConfig.apiKey.startsWith('%%')) {
-                console.warn('Firebase config inject edilmedi, loglama devre dışı.');
-            } else {
-                const app = initializeApp(firebaseConfig);
-                const db = getFirestore(app);
-                window.logToFirebase = async function(session) {
-                    try {
-                        await addDoc(collection(db, "vaka_kayitlari"), {
-                            ...session,
-                            createdAt: Timestamp.now()
-                        });
-                        console.log("Kayıt Firebase'e gönderildi.");
-                    } catch (err) {
-                        console.error("Firebase yazma hatası:", err);
-                    }
-                };
-            }
         } catch (err) {
-            console.warn("Firebase başlatılamadı, loglama devre dışı:", err);
+            console.error("Firebase başlatılamadı:", err);
         }
     </script>
 </body>
