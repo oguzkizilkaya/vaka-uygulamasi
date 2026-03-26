@@ -217,7 +217,7 @@
             <div class="options">
                 <!-- [DEĞİŞİKLİK 1] ADAMTS13'ün günler aldığını vurgulayan seçenek -->
                 <button class="option-btn" onclick="makeDecision(1, 'A')">
-                    <strong>A)</strong> Gaita kültürü ve kompleman panel (C3, anti-FH antikoru) isterim; ADAMTS13 sonucu 3-5 gün aldığından klinik karar için bekleyemeyiz. Hidrasyona başlarım.
+                    <strong>A)</strong> Gaita kültürü ve kompleman panel (C3, anti-FH antikoru) isterim; ADAMTS13 testi ister, hidrasyona başlarım.
                 </button>
                 <button class="option-btn" onclick="makeDecision(1, 'B')">
                     <strong>B)</strong> Viral enfeksiyon sonrası geçici bir tablodur, destek tedavisi ve antibiyotik ile izlerim.
@@ -235,22 +235,22 @@
                 <!-- [DEĞİŞİKLİK 1+2] ADAMTS13 "bekleniyor" + C3 düşük + anti-FH eklendi -->
                 <p>
                     Gaita kültürü: <strong>Negatif</strong><br>
-                    ADAMTS13 aktivitesi: <strong>Henüz bekleniyor</strong> (sonuç 3–5 gün alır)<br>
-                    C3: <strong class="lab-val-low">62 mg/dL (↓)</strong> — Kompleman aktivasyonu ile uyumlu<br>
+                    ADAMTS13 aktivitesi: <strong>Henüz bekleniyor</strong> <br>
+                    C3: <strong class="lab-val-low">62 mg/dL (↓)</strong> <br>
                     Anti-FH antikoru: <strong>Çalışılıyor</strong><br>
                     Hasta halen anürik. Kreatinin 2.4 mg/dL'ye yükseldi ve yaşa göre hipertansif (130/90 mmHg).
                 </p>
             </div>
-            <p class="question">ADAMTS13 beklenmeksizin klinik tablo aHÜS ile uyumlu görünüyor. Tedavi planınız nasıl olur?</p>
+            <p class="question">Klinik tablo aHÜS ile uyumlu görünüyor. Tedavi planınız nasıl olur?</p>
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(2, 'A')">
-                    <strong>A)</strong> Santral kateterizasyon ile plazma değişimi başlayalım, yanıt alamazsak ilaç düşünelim.
+                    <strong>A)</strong> Santral kateterizasyon ile plazma değişimi, yanıt alınmazsa ilaç tedavisi.
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'B')">
-                    <strong>B)</strong> Eculizumab (Soliris) başla + Meningokok aşısı ve profilaksisi yap.
+                    <strong>B)</strong> Eculizumab + Meningokok aşı ve profilaksisi.
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'C')">
-                    <strong>C)</strong> Ravulizumab (Ultomiris) başla + Meningokok aşısı ve profilaksisi yap.
+                    <strong>C)</strong> Ravulizumab + Meningokok aşı ve profilaksisi.
                 </button>
             </div>
         </div>
@@ -269,10 +269,10 @@
             <p class="question">Hastanın kliniği kötüleşiyor, kararınız ne yönde olur?</p>
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(2, 'E')">
-                    <strong>A)</strong> Acil Diyaliz + Eculizumab (Soliris) tedavisi
+                    <strong>A)</strong> Acil Diyaliz + Eculizumab tedavisi
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'G')">
-                    <strong>B)</strong> Acil Diyaliz + Ravulizumab (Ultomiris) tedavisi
+                    <strong>B)</strong> Acil Diyaliz + Ravulizumab tedavisi
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'F')">
                     <strong>C)</strong> Sadece Diyaliz ve Taze Donmuş Plazma infüzyonu.
@@ -298,10 +298,10 @@
             <p class="question">CFH mutasyonu pozitif bu hastada nakil (transplantasyon) stratejiniz ne olmalı?</p>
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(3, 'A')">
-                    <strong>A)</strong> Nakil öncesi profilaktik Eculizumab (Soliris) başla, sonra nakil yap.
+                    <strong>A)</strong> Nakil öncesi profilaktik Eculizumab sonrası nakil.
                 </button>
                 <button class="option-btn" onclick="makeDecision(3, 'C')">
-                    <strong>B)</strong> Nakil öncesi profilaktik Ravulizumab (Ultomiris) başla, sonra nakil yap.
+                    <strong>B)</strong> Nakil öncesi profilaktik Ravulizumab sonrası nakil.
                 </button>
                 <button class="option-btn" onclick="makeDecision(3, 'B')">
                     <strong>C)</strong> Sadece nakil yapıp nüks gözlenirse tedavi başlayalım.
@@ -320,13 +320,13 @@
             </p>
             <div class="ref-citation">
                 <strong>📚 Kanıt Temelli Yaklaşım:</strong>
-                Çocuklarda aHÜS tanısı konulur konulmaz anti-kompleman tedavi (Eculizumab veya Ravulizumab) birinci basamak (first-line) tedavi olmalıdır. ADAMTS13 sonucu beklenmeksizin, STEC dışlandığında klinik karar verilmelidir. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
+                Çocuklarda aHÜS tanısı konulur konulmaz anti-kompleman tedavi (Eculizumab veya Ravulizumab) birinci basamak (first-line) tedavi olmalıdır. ADAMTS13 sonucu ve STEC dışlandığında klinik karar verilmelidir. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
                 <em>— Loirat C, et al. Pediatric Nephrology. 2016</em>
             </div>
             <!-- [DEĞİŞİKLİK 4] Meningokok profilaksisi için ayrı kutu -->
             <div class="ref-citation warning">
                 <strong>⚠️ Güvenlik: Meningokok Profilaksisi Zorunludur</strong>
-                Eculizumab terminal kompleman inhibisyonu yaptığından <em>Neisseria meningitidis</em> enfeksiyonu riskini artırır. Tedavi başlanmadan en az 2 hafta önce meningokok aşısı (ACWY + B) yapılmalı; acil başlanması gerekirse profilaktik antibiyotik (penisilin V veya siprofloksasin) eş zamanlı uygulanmalıdır.
+                Eculizumab terminal kompleman inhibisyonu gerçekleştirdiği için <em>Neisseria meningitidis</em> enfeksiyonu riskini artırır. Tedavi başlanmadan en az 2 hafta önce meningokok aşısı (ACWY + B) yapılmalı; acil başlanması gerekirse profilaktik antibiyotik eş zamanlı uygulanmalıdır.
                 <em>— Soliris KÜB; ECDC Meningococcal Disease Guidelines</em>
             </div>
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
@@ -342,7 +342,7 @@
             </p>
             <div class="ref-citation">
                 <strong>📚 Kritik Uyarı:</strong>
-                Özellikle pediyatrik hastalarda STEC dışlandığı ve kompleman aktivasyonu (C3↓) saptandığı anda ADAMTS13 beklenmeksizin anti-kompleman tedavisine başlanması böbrek fonksiyon kazanımı için kritiktir.
+                Özellikle pediyatrik hastalarda aHÜS tanısında erken anti-kompleman tedavisine başlanması böbrek fonksiyon kazanımı için kritiktir.
                 <em>— KDIGO 2017 Clinical Practice Guideline Update (TMA focus)</em>
             </div>
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
