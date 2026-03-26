@@ -17,7 +17,6 @@
             padding: 20px;
             color: #333;
         }
-
         .container {
             background: rgba(255, 255, 255, 0.98);
             border-radius: 15px;
@@ -31,15 +30,12 @@
             flex-direction: column;
             min-height: 650px;
         }
-
         .screen { display: none; opacity: 0; transition: opacity 0.5s ease; flex-grow: 1; }
         .screen.active { display: block; opacity: 1; animation: slideUp 0.6s ease-out; }
-
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         h1 { color: #b21f1f; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
         
         .case-header {
@@ -49,7 +45,6 @@
             margin-bottom: 20px;
             border-left: 5px solid #1a2a6c;
         }
-
         .status-badge {
             display: inline-block;
             padding: 5px 10px;
@@ -62,7 +57,6 @@
         .status-stable { background: #28a745; }
         .status-critical { background: #dc3545; }
         .status-chronic { background: #ffc107; color: #333; }
-
         .lab-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -75,9 +69,8 @@
         }
         .lab-item { font-size: 14px; }
         .lab-val { font-weight: bold; color: #b21f1f; }
-
+        .lab-val-low { font-weight: bold; color: #fd7e14; }
         .question { font-size: 19px; font-weight: 600; margin-bottom: 25px; color: #2c3e50; }
-
         .options { display: flex; flex-direction: column; gap: 15px; }
         
         .option-btn {
@@ -103,7 +96,6 @@
             transition: opacity 0.3s;
         }
         .option-btn:hover::before { opacity: 1; }
-
         .outcome-screen { text-align: center; padding: 20px; }
         .outcome-icon { font-size: 60px; margin-bottom: 20px; display: block; }
         .outcome-title { font-size: 24px; font-weight: bold; margin-bottom: 15px; }
@@ -112,7 +104,6 @@
         .outcome-good { color: #28a745; }
         .outcome-moderate { color: #fd7e14; }
         .outcome-bad { color: #dc3545; }
-
         .ref-citation {
             background-color: #f8f9fa;
             border-left: 4px solid #1a2a6c;
@@ -125,14 +116,12 @@
             border-radius: 0 5px 5px 0;
             line-height: 1.4;
         }
-
         .ref-citation strong {
             color: #b21f1f;
             display: block;
             margin-bottom: 4px;
             font-size: 14px;
         }
-
         .ref-citation em {
             display: block;
             margin-top: 6px;
@@ -140,14 +129,19 @@
             color: #888;
             text-align: right;
         }
-
+        /* [DEĞİŞİKLİK 4] Meningokok uyarı kutusu için ayrı renk */
+        .ref-citation.warning {
+            border-left-color: #dc3545;
+        }
+        .ref-citation.warning strong {
+            color: #dc3545;
+        }
         .restart-btn {
             background: #1a2a6c; color: white; border: none;
             padding: 15px 40px; border-radius: 8px; font-size: 16px;
             cursor: pointer; transition: background 0.3s;
         }
         .restart-btn:hover { background: #2c3e50; }
-
         .admin-btn {
             position: fixed; bottom: 20px; right: 20px;
             background: #343a40; color: white; border: none;
@@ -159,8 +153,6 @@
             font-size: 14px;
         }
         .admin-btn:hover { transform: scale(1.05); background: #23272b; }
-
-        /* FOOTER STİLLERİ */
         .footer-row {
             margin-top: auto;
             padding-top: 25px;
@@ -170,7 +162,6 @@
             align-items: center;
             width: 100%;
         }
-
         .footer-links {
             font-size: 11px;
             color: #666;
@@ -179,7 +170,6 @@
             flex-direction: column;
             gap: 5px;
         }
-
         .footer-links a {
             color: #1a2a6c;
             text-decoration: none;
@@ -187,37 +177,27 @@
             display: flex;
             align-items: center;
         }
-        
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-
-        .footer-logo {
-            text-align: right;
-        }
-
+        .footer-links a:hover { text-decoration: underline; }
+        .footer-logo { text-align: right; }
         .footer-logo img {
-            max-height: 50px; /* Logo boyutunu buradan ayarlayabilirsiniz */
+            max-height: 50px;
             width: auto;
             object-fit: contain;
         }
-        
         @media (max-width: 600px) {
             .footer-row {
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: flex-end;
             }
-            .footer-logo img {
-                max-height: 35px;
-            }
+            .footer-logo img { max-height: 35px; }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         
+        <!-- SAHNE 1 -->
         <div class="screen active" id="scene1">
             <h1>Vaka Sunumu</h1>
             <span class="status-badge status-stable">Pediatrik Acil Başvurusu</span>
@@ -226,20 +206,18 @@
                 <h3>4 Yaşında Erkek Hasta</h3>
                 <p>Annesi tarafından "solukluk, huzursuzluk ve son 24 saattir idrar çıkışı olmaması" şikayetiyle getirildi. Öyküde 1 hafta önce ateşli üst solunum yolu enfeksiyonu var. <strong>Kanlı ishal öyküsü yok.</strong></p>
             </div>
-
             <div class="lab-grid">
-                <div class="lab-item">Hb: <span class="lab-val">7.2 g/dL</span> </div>
-                <div class="lab-item">Plt: <span class="lab-val">45.000/mm³</span> </div>
+                <div class="lab-item">Hb: <span class="lab-val">7.2 g/dL</span></div>
+                <div class="lab-item">Plt: <span class="lab-val">45.000/mm³</span></div>
                 <div class="lab-item">Kreatinin: <span class="lab-val">1.9 mg/dL</span> (Yaşa göre ABY)</div>
-                <div class="lab-item">LDH: <span class="lab-val">1800 U/L</span> </div>
+                <div class="lab-item">LDH: <span class="lab-val">1800 U/L</span></div>
                 <div class="lab-item">Periferik Yayma: <span class="lab-val">Şistosit (+)</span></div>
             </div>
-
-            <p class="question"> Mevcut bulgular ile hastaya ilk yaklaşımınız nasıl olur?</p>
-
+            <p class="question">Mevcut bulgular ile hastaya ilk yaklaşımınız nasıl olur?</p>
             <div class="options">
+                <!-- [DEĞİŞİKLİK 1] ADAMTS13'ün günler aldığını vurgulayan seçenek -->
                 <button class="option-btn" onclick="makeDecision(1, 'A')">
-                    <strong>A)</strong> STEC-HÜS ve aHÜS ayrımı için tetkik (Gaita kültürü, ADAMTS13) isterim, hidrasyona başlarım.
+                    <strong>A)</strong> Gaita kültürü ve kompleman panel (C3, anti-FH antikoru) isterim; ADAMTS13 sonucu 3-5 gün aldığından klinik karar için bekleyemeyiz. Hidrasyona başlarım.
                 </button>
                 <button class="option-btn" onclick="makeDecision(1, 'B')">
                     <strong>B)</strong> Viral enfeksiyon sonrası geçici bir tablodur, destek tedavisi ve antibiyotik ile izlerim.
@@ -247,30 +225,37 @@
             </div>
         </div>
 
+        <!-- SAHNE 2A — DOĞRU YOL -->
         <div class="screen" id="scene2a">
             <h1>Tanısal Değerlendirme</h1>
-            <span class="status-badge status-stable">Sonuçlar Çıktı</span>
+            <span class="status-badge status-stable">İlk Sonuçlar Çıktı</span>
             
             <div class="case-header">
                 <h3>Kritik Ayrım</h3>
-                <p>Gaita kültürü: <strong>Negatif</strong> <br>
-                ADAMTS13 aktivitesi: <strong>%70 (Normal)</strong> <br>
-                Hasta halen anürik. Kreatinin 2.4 mg/dL'ye yükseldi ve yaşa göre hipertansif (130/90 mmHg).</p>
+                <!-- [DEĞİŞİKLİK 1+2] ADAMTS13 "bekleniyor" + C3 düşük + anti-FH eklendi -->
+                <p>
+                    Gaita kültürü: <strong>Negatif</strong><br>
+                    ADAMTS13 aktivitesi: <strong>Henüz bekleniyor</strong> (sonuç 3–5 gün alır)<br>
+                    C3: <strong class="lab-val-low">62 mg/dL (↓)</strong> — Kompleman aktivasyonu ile uyumlu<br>
+                    Anti-FH antikoru: <strong>Çalışılıyor</strong><br>
+                    Hasta halen anürik. Kreatinin 2.4 mg/dL'ye yükseldi ve yaşa göre hipertansif (130/90 mmHg).
+                </p>
             </div>
-
-            <p class="question"> Bu hasta için tedavi planınız nasıl olur?</p>
-
+            <p class="question">ADAMTS13 beklenmeksizin klinik tablo aHÜS ile uyumlu görünüyor. Tedavi planınız nasıl olur?</p>
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(2, 'A')">
                     <strong>A)</strong> Santral kateterizasyon ile plazma değişimi başlayalım, yanıt alamazsak ilaç düşünelim.
                 </button>
                 <button class="option-btn" onclick="makeDecision(2, 'B')">
-                    <strong>B)</strong> Eculizumab başla + Meningokok aşısı ve profilaksisi yap.
+                    <strong>B)</strong> Eculizumab (Soliris) başla + Meningokok aşısı ve profilaksisi yap.
+                </button>
+                <button class="option-btn" onclick="makeDecision(2, 'C')">
+                    <strong>C)</strong> Ravulizumab (Ultomiris) başla + Meningokok aşısı ve profilaksisi yap.
                 </button>
             </div>
-            <div style="font-size:12px; color:#666; margin-top:10px;">*Not: TPE çocuklarda teknik zorluklar içerir ve aHÜS'te etkinliği sınırlıdır.</div>
         </div>
 
+        <!-- SAHNE 2B — YANLIŞ YOL -->
         <div class="screen" id="scene2b">
             <h1>Klinik Kötüleşme</h1>
             <span class="status-badge status-critical">Durum: Kritik</span>
@@ -281,57 +266,73 @@
                 <strong>Yeni Lab:</strong> Hb: 6.0 g/dL, Plt: 20.000, <strong>Kreatinin: 3.5 mg/dL</strong>.<br>
                 Destek tedavisi yetersiz kaldı. Çoklu organ yetmezliği riski var.</p>
             </div>
-
-            <p class="question"> Hastanın kliniği kötüleşiyor, kararınız ne yönde olur? </p>
-
+            <p class="question">Hastanın kliniği kötüleşiyor, kararınız ne yönde olur?</p>
             <div class="options">
-                <button class="option-btn" onclick="makeDecision(2, 'C')">
-                    <strong>A)</strong> Acil Diyaliz + Eculizumab tedavisi
+                <button class="option-btn" onclick="makeDecision(2, 'E')">
+                    <strong>A)</strong> Acil Diyaliz + Eculizumab (Soliris) tedavisi
                 </button>
-                <button class="option-btn" onclick="makeDecision(2, 'D')">
-                    <strong>B)</strong> Sadece Diyaliz ve Taze Donmuş Plazma infüzyonu.
+                <button class="option-btn" onclick="makeDecision(2, 'G')">
+                    <strong>B)</strong> Acil Diyaliz + Ravulizumab (Ultomiris) tedavisi
+                </button>
+                <button class="option-btn" onclick="makeDecision(2, 'F')">
+                    <strong>C)</strong> Sadece Diyaliz ve Taze Donmuş Plazma infüzyonu.
                 </button>
             </div>
         </div>
 
+        <!-- SAHNE 3 — DİYALİZ YOLU -->
         <div class="screen" id="scene3_dialysis">
             <h1>1 Yıl Sonra...</h1>
             <span class="status-badge status-chronic">Durum: Son Dönem Böbrek Yetmezliği (SDBY)</span>
             
             <div class="case-header">
                 <h3>Poliklinik Kontrolü</h3>
-                <p>Hasta periton diyalizi ile takip ediliyor. Büyüme-gelişme geriliği başladı.<br>
-                Annesinden canlı böbrek nakli planlanıyor.</p>
+                <!-- [DEĞİŞİKLİK 5] CFH mutasyonu + yüksek nüks riski bilgisi eklendi -->
+                <p>
+                    Hasta periton diyalizi ile takip ediliyor. Büyüme-gelişme geriliği başladı.<br>
+                    Annesinden canlı böbrek nakli planlanıyor.<br><br>
+                    <strong>Genetik Panel Sonucu:</strong> <span class="lab-val">CFH mutasyonu (+)</span> — Yüksek nüks riski grubu<br>
+                    <small style="color:#666;">CFH/C3/CFB mutasyonları nakil sonrası nüks riskini dramatik şekilde artırır. MCP/CD46 mutasyonlarından farklı olarak greft koruyucu yaklaşım zorunludur.</small>
+                </p>
             </div>
-
-            <p class="question">aHÜS tanılı çocuk hastada nakil (transplantasyon) stratejiniz ne olmalı?</p>
-
+            <p class="question">CFH mutasyonu pozitif bu hastada nakil (transplantasyon) stratejiniz ne olmalı?</p>
             <div class="options">
                 <button class="option-btn" onclick="makeDecision(3, 'A')">
-                    <strong>A)</strong> Nakil öncesi profilaktik Eculizumab başla, sonra nakil yap.
+                    <strong>A)</strong> Nakil öncesi profilaktik Eculizumab (Soliris) başla, sonra nakil yap.
+                </button>
+                <button class="option-btn" onclick="makeDecision(3, 'C')">
+                    <strong>B)</strong> Nakil öncesi profilaktik Ravulizumab (Ultomiris) başla, sonra nakil yap.
                 </button>
                 <button class="option-btn" onclick="makeDecision(3, 'B')">
-                    <strong>B)</strong> Sadece nakil yapıp nüks gözlenirse Eculizumab tedavisi başlayalım.
+                    <strong>C)</strong> Sadece nakil yapıp nüks gözlenirse tedavi başlayalım.
                 </button>
             </div>
         </div>
 
+        <!-- OUTCOME: MÜKEMMEL -->
         <div class="screen outcome-screen" id="outcome_perfect">
             <span class="outcome-icon outcome-good">🌟</span>
             <h2 class="outcome-title outcome-good">Tam İyileşme (Renal Recovery)</h2>
             <p class="outcome-desc">
-                Hızlı Eculizumab tedavisi (ilk 24-48 saat) sayesinde böbrek fonksiyonları tamamen normale döndü<br>
+                Hızlı anti-kompleman tedavisi (ilk 24–48 saat) sayesinde böbrek fonksiyonları tamamen normale döndü.<br>
                 Diyaliz ihtiyacı kalmadı. Çocuk normal gelişimine devam ediyor.<br>
                 Genetik panelde <em>CFH</em> mutasyonu saptandı.
             </p>
             <div class="ref-citation">
                 <strong>📚 Kanıt Temelli Yaklaşım:</strong>
-                Çocuklarda aHÜS tanısı konulur konulmaz Eculizumab birinci basamak (first-line) tedavi olmalıdır. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
+                Çocuklarda aHÜS tanısı konulur konulmaz anti-kompleman tedavi (Eculizumab veya Ravulizumab) birinci basamak (first-line) tedavi olmalıdır. ADAMTS13 sonucu beklenmeksizin, STEC dışlandığında klinik karar verilmelidir. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
                 <em>— Loirat C, et al. Pediatric Nephrology. 2016</em>
+            </div>
+            <!-- [DEĞİŞİKLİK 4] Meningokok profilaksisi için ayrı kutu -->
+            <div class="ref-citation warning">
+                <strong>⚠️ Güvenlik: Meningokok Profilaksisi Zorunludur</strong>
+                Eculizumab terminal kompleman inhibisyonu yaptığından <em>Neisseria meningitidis</em> enfeksiyonu riskini artırır. Tedavi başlanmadan en az 2 hafta önce meningokok aşısı (ACWY + B) yapılmalı; acil başlanması gerekirse profilaktik antibiyotik (penisilin V veya siprofloksasin) eş zamanlı uygulanmalıdır.
+                <em>— Soliris KÜB; ECDC Meningococcal Disease Guidelines</em>
             </div>
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
+        <!-- OUTCOME: KBY -->
         <div class="screen outcome-screen" id="outcome_ckd">
             <span class="outcome-icon outcome-moderate">⚠️</span>
             <h2 class="outcome-title outcome-moderate">Kalıcı Böbrek Hasarı</h2>
@@ -341,37 +342,39 @@
             </p>
             <div class="ref-citation">
                 <strong>📚 Kritik Uyarı:</strong>
-                Özellikle pediyatrik hastalarda STEC dışlandığı ve ADAMTS13 normal saptandığı anda zaman kaybetmeden anti-kompleman tedavisine başlanması böbrek fonksiyon kazanımı için kritiktir.
+                Özellikle pediyatrik hastalarda STEC dışlandığı ve kompleman aktivasyonu (C3↓) saptandığı anda ADAMTS13 beklenmeksizin anti-kompleman tedavisine başlanması böbrek fonksiyon kazanımı için kritiktir.
                 <em>— KDIGO 2017 Clinical Practice Guideline Update (TMA focus)</em>
             </div>
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
+        <!-- OUTCOME: NAKİL BAŞARILI -->
         <div class="screen outcome-screen" id="outcome_transplant_success">
             <span class="outcome-icon outcome-good">✅</span>
             <h2 class="outcome-title outcome-good">Başarılı Pediatrik Nakil</h2>
             <p class="outcome-desc">
-                Profilaktik Eculizumab kullanımı sayesinde greftte fonksiyonları korundu.<br>
-                Hasta diyaliz bağımsız takip ediliyor ve büyüme eğrisi normal izleniyor
+                Profilaktik Eculizumab kullanımı sayesinde greft fonksiyonları korundu.<br>
+                Hasta diyaliz bağımsız takip ediliyor ve büyüme eğrisi normal izleniyor.
             </p>
             <div class="ref-citation">
                 <strong>📚 Transplantasyon Verisi:</strong>
-                Böbrek nakli öncesi genetik riski yüksek hastalarda profilaktik Eculizumab kullanımı greft kaybını dramatik şekilde düşürürken (%10), profilaksi uygulanmaması ile nüks oranı %80'e varabilmektedir.
+                CFH mutasyonu gibi yüksek riskli genotiplerde profilaktik Eculizumab greft kaybını dramatik şekilde azaltır (%10'un altına). Profilaksi uygulanmaması halinde nüks oranı %80'e ulaşabilmektedir. MCP/CD46 mutasyonlu hastalarda risk profili farklıdır; genetik sonuç stratejiyi belirler.
                 <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
             </div>
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
         </div>
 
+        <!-- OUTCOME: NAKİL BAŞARISIZ -->
         <div class="screen outcome-screen" id="outcome_transplant_fail">
             <span class="outcome-icon outcome-bad">❌</span>
             <h2 class="outcome-title outcome-bad">Greft Kaybı ve Nüks</h2>
             <p class="outcome-desc">
                 Nakil sırasında profilaksi yapılmadığı için cerrahi stres kompleman sistemini aktive etti.<br>
-                Nakilden sonrası aHÜS nüksü ile greft fonksiyonu kaybedildi.
+                Nakilden sonra aHÜS nüksü ile greft fonksiyonu kaybedildi.
             </p>
             <div class="ref-citation">
                 <strong>📚 Neden Başarısız Oldu?</strong>
-                Literatür, profilaktik Eculizumab kullanılmayan yüksek riskli hastalarda nüks ve greft kaybı riskinin %80 civarında olduğunu göstermektedir.
+                CFH mutasyonu pozitif hastalarda kompleman disregülasyonu sistemik olarak devam eder; nakil tek başına hastalığı tedavi etmez. Profilaktik Eculizumab kullanılmayan yüksek riskli hastalarda nüks ve greft kaybı riski %80 civarındadır.
                 <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
             </div>
             <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
@@ -379,92 +382,111 @@
 
         <div class="footer-row">
             <div class="footer-links">
-                <a href="https://az.box.com/shared/static/knwd88xwnh6vay5ozkj4xo035tpd75od.pdf" target="_blank">▼Soliris KÜB özeti için tıklayınız</a>
+                <a href="https://az.box.com/shared/static/knwd88xwnh6vay5ozkj4xo035tpd75od.pdf" target="_blank">▼ Soliris KÜB özeti için tıklayınız</a>
+                <a href="https://az.box.com/s/d643itwunmtvm091rfx5r6ssba2w7c53" target="_blank">▼ Ultomiris KÜB özeti için tıklayınız</a>
                 <span>M/TR/UNB-a/0174</span>
             </div>
             <div class="footer-logo">
-                <img src="https://raw.githubusercontent.com/oguzkizilkaya/vaka-uygulamasi/975869699dcc9ab42518c7e13c0720dd082a5689/Alexion%20Logo.png" alt="Alexion Logo">
+                <img src="https://raw.githubusercontent.com/oguzkizilkaya/vaka-uygulamasi/975869699dcc9ab42518c7e13c0720dd082a5689/Alexion%20Logo.png" alt="Alexion Logo" onerror="this.style.display='none'">
             </div>
         </div>
-        </div>
+    </div>
 
     <button class="admin-btn" onclick="window.location.href='admin.html'">📊 Vaka Analizi (Admin)</button>
     
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
-            authDomain: "medicom-ai.firebaseapp.com",
-            projectId: "medicom-ai",
-            storageBucket: "medicom-ai.firebasestorage.app",
-            messagingSenderId: "330987426994",
-            appId: "1:330987426994:web:587bc3e397ec376e5565ab"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        let currentSession = {
-            id: 'user_' + Math.random().toString(36).substr(2, 9),
+    <!-- SCRIPT 1: Navigasyon — Firebase'den bağımsız, her zaman çalışır -->
+    <script>
+        window.currentSession = {
+            id: 'user_' + Math.random().toString(36).slice(2, 11),
             startTime: new Date().toISOString(),
             path: [],
             outcome: ''
         };
 
-        window.makeDecision = function(step, choice) {
-            currentSession.path.push(`Step${step}:${choice}`);
-            const isScene2aActive = document.getElementById('scene2a').classList.contains('active');
+        function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        window.makeDecision = function(step, choice) {
+            window.currentSession.path.push('Step' + step + ':' + choice);
 
             if (step === 1) {
-                if (choice === 'A') document.getElementById('scene2a').classList.add('active');
-                else document.getElementById('scene2b').classList.add('active');
+                showScreen(choice === 'A' ? 'scene2a' : 'scene2b');
             }
             else if (step === 2) {
-                if (isScene2aActive || currentSession.path.includes('Step1:A')) {
-                    if (choice === 'B') finishCase('Mükemmel İyileşme (Tam Renal Recovery)', 'outcome_perfect');
-                    else document.getElementById('scene3_dialysis').classList.add('active');
+                if (window.currentSession.path.includes('Step1:A')) {
+                    // scene2a yolu
+                    if (choice === 'B') finishCase('Mükemmel İyileşme (Tam Renal Recovery) — Eculizumab', 'outcome_perfect');
+                    else if (choice === 'C') finishCase('Mükemmel İyileşme (Tam Renal Recovery) — Ravulizumab', 'outcome_perfect');
+                    else showScreen('scene3_dialysis'); // choice A: plazma
                 } else {
-                    if (choice === 'C') finishCase('Kalıcı Hasarlı İyileşme (KBY)', 'outcome_ckd');
-                    else document.getElementById('scene3_dialysis').classList.add('active');
+                    // scene2b yolu
+                    if (choice === 'E') finishCase('Kalıcı Hasarlı İyileşme (KBY) — Eculizumab', 'outcome_ckd');
+                    else if (choice === 'G') finishCase('Kalıcı Hasarlı İyileşme (KBY) — Ravulizumab', 'outcome_ckd');
+                    else showScreen('scene3_dialysis'); // choice F: sadece diyaliz
                 }
             }
             else if (step === 3) {
-                if (choice === 'A') finishCase('Başarılı Nakil', 'outcome_transplant_success');
+                if (choice === 'A') finishCase('Başarılı Nakil — Eculizumab Profilaksisi', 'outcome_transplant_success');
+                else if (choice === 'C') finishCase('Başarılı Nakil — Ravulizumab Profilaksisi', 'outcome_transplant_success');
                 else finishCase('Greft Rejeksiyonu', 'outcome_transplant_fail');
             }
         };
 
-        async function finishCase(outcomeName, screenId) {
-            currentSession.outcome = outcomeName;
-            currentSession.endTime = new Date().toISOString(); 
-            
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-
-            try {
-                await addDoc(collection(db, "vaka_kayitlari"), {
-                    ...currentSession,
-                    createdAt: Timestamp.now()
-                });
-                console.log("Kayıt Firebase'e gönderildi.");
-            } catch (error) {
-                console.error("Firebase Hatası:", error);
+        function finishCase(outcomeName, screenId) {
+            window.currentSession.outcome = outcomeName;
+            window.currentSession.endTime = new Date().toISOString();
+            showScreen(screenId);
+            // Firebase hazırsa logla, değilse sessizce geç
+            if (typeof window.logToFirebase === 'function') {
+                window.logToFirebase(window.currentSession);
             }
         }
 
         window.resetCase = function() {
-            currentSession = {
-                id: 'user_' + Math.random().toString(36).substr(2, 9),
+            window.currentSession = {
+                id: 'user_' + Math.random().toString(36).slice(2, 11),
                 startTime: new Date().toISOString(),
                 path: [],
                 outcome: ''
             };
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('scene1').classList.add('active');
+            showScreen('scene1');
         };
+    </script>
+
+    <!-- SCRIPT 2: Firebase logging — başarısız olsa da navigasyon etkilenmez -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        try {
+            const firebaseConfig = {
+                apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
+                authDomain: "medicom-ai.firebaseapp.com",
+                projectId: "medicom-ai",
+                storageBucket: "medicom-ai.firebasestorage.app",
+                messagingSenderId: "330987426994",
+                appId: "1:330987426994:web:587bc3e397ec376e5565ab"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+
+            window.logToFirebase = async function(session) {
+                try {
+                    await addDoc(collection(db, "vaka_kayitlari"), {
+                        ...session,
+                        createdAt: Timestamp.now()
+                    });
+                    console.log("Kayıt Firebase'e gönderildi.");
+                } catch (err) {
+                    console.error("Firebase yazma hatası:", err);
+                }
+            };
+        } catch (err) {
+            console.warn("Firebase başlatılamadı, loglama devre dışı:", err);
+        }
     </script>
 </body>
 </html>
