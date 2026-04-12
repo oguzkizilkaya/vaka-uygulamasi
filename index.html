@@ -1,198 +1,1044 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com https://firebaseinstallations.googleapis.com; img-src 'self' https://raw.githubusercontent.com data:;">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yönetici Paneli - Medicom AI</title>
+    <title>MEDICOM+ | Case Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px; 
-            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'DM Sans', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f1d4a 0%, #8a1515 100%);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 20px;
             color: #333;
         }
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.98);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        /* ========== LANDING ========== */
+        #landing {
+            background: rgba(255,255,255,0.97);
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            max-width: 1000px;
+            width: 100%;
+            padding: 50px 40px 40px;
         }
-        h2, h3 { color: #1a2a6c; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
-        .login-box { max-width: 400px; margin: 100px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { padding: 12px 20px; background: #1a2a6c; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; transition: background 0.3s; width: 100%; }
-        button:hover { background: #2c3e50; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; font-size: 13px; }
-        th { background-color: #1a2a6c; color: white; font-size: 13px; }
-        tr:nth-child(even) { background-color: #f8f9fa; }
-        tr:hover { background-color: #e9ecef; }
-        .error { color: #dc3545; font-size: 14px; text-align: center; display: block; margin-top: 10px; }
-        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-logout { background: #dc3545; width: auto; }
-        .btn-logout:hover { background: #c82333; }
-        .btn-csv { background: #28a745; width: auto; }
-        .btn-csv:hover { background: #218838; }
-        .btn-back { background: #6c757d; width: auto; text-decoration: none; display: inline-block; padding: 12px 20px; color: white; border-radius: 6px; font-size: 16px; }
-        .btn-back:hover { background: #545b62; }
-        .case-badge { display: inline-block; padding: 3px 9px; border-radius: 4px; font-size: 11px; font-weight: 700; white-space: nowrap; }
-        .badge-ahus-ped   { background: #e8f0fe; color: #1a2a6c; }
-        .badge-ahus-adult { background: #ede8fe; color: #4a1a6c; }
-        .badge-pnh-adult  { background: #fde8e8; color: #8a1515; }
-        .badge-unknown    { background: #f0f0f0; color: #666; }
+        .landing-header { text-align: center; margin-bottom: 45px; }
+        .landing-logo { display: flex; justify-content: center; margin-bottom: 20px; }
+        .landing-logo img { max-height: 38px; object-fit: contain; }
+        .landing-header h1 { color: #0f1d4a; font-size: 30px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 10px; }
+        .landing-header p { color: #666; font-size: 15px; max-width: 520px; margin: 0 auto; line-height: 1.6; }
+        .case-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+        @media (max-width: 720px) { .case-grid { grid-template-columns: 1fr; } }
+        .case-card { border-radius: 14px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.10); transition: transform 0.25s, box-shadow 0.25s; cursor: pointer; border: 2px solid transparent; }
+        .case-card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(0,0,0,0.18); }
+        .card-header { padding: 32px 22px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; position: relative; overflow: hidden; }
+        .card-header::after { content: ''; position: absolute; bottom: -30px; right: -30px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+        .card-icon { font-size: 44px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2)); }
+        .card-title { font-size: 17px; font-weight: 700; color: white; text-align: center; }
+        .card-subtitle { font-size: 12px; color: rgba(255,255,255,0.80); font-weight: 500; }
+        .card-body { padding: 20px; background: white; }
+        .card-desc { font-size: 13px; color: #555; line-height: 1.55; margin-bottom: 14px; }
+        .start-btn { width: 100%; padding: 11px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; color: white; cursor: pointer; transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.2px; }
+        .start-btn:hover { opacity: 0.88; }
+        .start-btn:active { transform: scale(0.98); }
+        /* ========== CASE CONTAINER ========== */
+        #case-container {
+            background: rgba(255,255,255,0.97);
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            max-width: 900px;
+            width: 100%;
+            padding: 35px 40px 30px;
+            display: none;
+            flex-direction: column;
+            min-height: 650px;
+        }
+        #case-container.active { display: flex; }
+        .back-btn { display: inline-flex; align-items: center; gap: 5px; background: none; border: none; color: #888; font-size: 13px; cursor: pointer; margin-bottom: 18px; padding: 0; font-family: inherit; transition: color 0.2s; }
+        .back-btn:hover { color: #0f1d4a; }
+        /* ========== SCREENS ========== */
+        .screen { display: none; opacity: 0; flex-grow: 1; }
+        .screen.active { display: block; opacity: 1; animation: slideUp 0.5s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        h1 { color: #8a1515; margin-bottom: 18px; font-size: 24px; font-weight: 700; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; }
+        .case-header { background: #f5f7fa; padding: 16px; border-radius: 10px; margin-bottom: 18px; border-left: 5px solid #0f1d4a; }
+        .case-header h3 { margin-bottom: 6px; font-size: 15px; color: #0f1d4a; }
+        .case-header p { font-size: 14px; line-height: 1.7; color: #444; }
+        .status-badge { display: inline-block; padding: 4px 11px; border-radius: 5px; font-size: 11px; font-weight: 700; color: white; margin-bottom: 12px; letter-spacing: 0.3px; }
+        .status-stable  { background: #28a745; }
+        .status-critical { background: #dc3545; }
+        .status-chronic { background: #e6a817; }
+        .status-fatal   { background: #1a1a1a; }
+        .lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 10px; margin-bottom: 18px; background: #fff; padding: 12px; border: 1px solid #eef0f3; border-radius: 8px; }
+        .lab-item { font-size: 13px; color: #444; }
+        .lab-val     { font-weight: 700; color: #8a1515; }
+        .lab-val-low { font-weight: 700; color: #e07800; }
+        .question { font-size: 18px; font-weight: 600; margin-bottom: 22px; color: #1a1a2e; line-height: 1.4; }
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .option-btn { background: white; border: 2px solid #e8eaed; padding: 18px 20px; border-radius: 10px; font-size: 15px; cursor: pointer; transition: all 0.25s; text-align: left; position: relative; overflow: hidden; font-family: inherit; color: #333; line-height: 1.5; }
+        .option-btn:hover { border-color: #0f1d4a; background: #f8f9ff; transform: translateX(4px); }
+        .option-btn::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: #0f1d4a; opacity: 0; transition: opacity 0.25s; }
+        .option-btn:hover::before { opacity: 1; }
+        /* ========== CHECKBOX PANEL ========== */
+        .test-panel {
+            background: #f8f9fc;
+            border: 1px solid #e0e4ef;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 22px;
+        }
+        .test-panel-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #0f1d4a;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .test-panel-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #d0d5e8;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 8px;
+        }
+        .test-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: white;
+            border: 1.5px solid #e8eaed;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .test-item:hover { border-color: #0f1d4a; background: #f0f3ff; }
+        .test-item.selected { border-color: #0f1d4a; background: #eef1ff; }
+        .test-item.key-test { border-color: #c8a800; }
+        .test-item.key-test:hover { border-color: #8a6500; background: #fffbea; }
+        .test-item.key-test.selected { border-color: #8a6500; background: #fff8d6; }
+        .test-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-top: 1px;
+            flex-shrink: 0;
+            accent-color: #0f1d4a;
+            cursor: pointer;
+        }
+        .test-label { font-size: 13.5px; color: #333; line-height: 1.4; cursor: pointer; }
+        .test-label .test-name { font-weight: 600; display: block; }
+        .test-label .test-note { font-size: 11.5px; color: #888; margin-top: 1px; }
+        .key-badge { display: inline-block; font-size: 10px; font-weight: 700; color: #7a5500; background: #fff3c0; padding: 1px 7px; border-radius: 10px; margin-left: 6px; vertical-align: middle; letter-spacing: 0.3px; }
+        .submit-tests-btn {
+            width: 100%;
+            padding: 14px;
+            background: #0f1d4a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+        }
+        .submit-tests-btn:hover { background: #1a2d6e; }
+        .submit-tests-btn:active { transform: scale(0.99); }
+        /* Result display */
+        .result-panel {
+            background: #f8f9fc;
+            border: 1px solid #e0e4ef;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 18px;
+        }
+        .result-panel-title { font-size: 12px; font-weight: 700; color: #0f1d4a; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 12px; }
+        .result-row { display: flex; justify-content: space-between; align-items: baseline; padding: 6px 0; border-bottom: 1px solid #edf0f5; font-size: 13.5px; }
+        .result-row:last-child { border-bottom: none; }
+        .result-test { color: #555; }
+        .result-val { font-weight: 700; }
+        .result-val.normal { color: #1a7a3a; }
+        .result-val.abnormal { color: #8a1515; }
+        .result-val.key { color: #7a5500; background: #fff3c0; padding: 2px 8px; border-radius: 5px; }
+        /* Diagnosis options */
+        .dx-options { display: flex; flex-direction: column; gap: 10px; }
+        .dx-btn {
+            background: white;
+            border: 2px solid #e8eaed;
+            padding: 16px 20px;
+            border-radius: 10px;
+            font-size: 14.5px;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: left;
+            font-family: inherit;
+            color: #333;
+            line-height: 1.4;
+        }
+        .dx-btn:hover { border-color: #8a1515; background: #fff5f5; transform: translateX(4px); }
+        .dx-btn .dx-name { font-weight: 700; color: #1a1a2e; display: block; margin-bottom: 3px; }
+        .dx-btn .dx-reasoning { font-size: 12.5px; color: #888; }
+        /* ========== OUTCOMES ========== */
+        .outcome-screen { text-align: center; padding: 20px 10px; }
+        .outcome-icon  { font-size: 58px; margin-bottom: 16px; display: block; }
+        .outcome-title { font-size: 22px; font-weight: 700; margin-bottom: 14px; }
+        .outcome-desc  { font-size: 15px; line-height: 1.7; color: #555; margin-bottom: 24px; }
+        .outcome-good     { color: #1a7a3a; }
+        .outcome-moderate { color: #c47a00; }
+        .outcome-bad      { color: #c0392b; }
+        .outcome-fatal    { color: #1a1a1a; }
+        .ref-citation { background: #f7f9fc; border-left: 4px solid #0f1d4a; padding: 14px; margin-top: 16px; margin-bottom: 16px; text-align: left; font-size: 13px; color: #555; border-radius: 0 8px 8px 0; line-height: 1.5; }
+        .ref-citation strong { color: #8a1515; display: block; margin-bottom: 5px; font-size: 13px; }
+        .ref-citation em { display: block; margin-top: 8px; font-size: 11px; color: #999; text-align: right; }
+        .ref-citation.warning { border-left-color: #c0392b; }
+        .ref-citation.warning strong { color: #c0392b; }
+        .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+        .restart-btn { background: #0f1d4a; color: white; border: none; padding: 13px 28px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+        .restart-btn:hover { background: #1a2d6e; }
+        .home-btn { background: #f0f0f0; color: #444; border: none; padding: 13px 28px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+        .home-btn:hover { background: #e0e0e0; }
+        /* Fatal outcome styling */
+        .fatal-screen { background: #0f0f0f; border-radius: 16px; padding: 40px 30px; text-align: center; }
+        .fatal-screen .outcome-title { color: #e0e0e0; }
+        .fatal-screen .outcome-desc { color: #999; }
+        .fatal-screen .ref-citation { background: #1a1a1a; border-left-color: #555; color: #aaa; }
+        .fatal-screen .ref-citation strong { color: #cc8888; }
+        .fatal-screen .ref-citation em { color: #666; }
+        .fatal-screen .restart-btn { background: #3a3a3a; }
+        .fatal-screen .restart-btn:hover { background: #555; }
+        .fatal-screen .home-btn { background: #222; color: #aaa; }
+        .fatal-screen .home-btn:hover { background: #333; }
+        /* ========== FOOTER ========== */
+        .footer-row { margin-top: auto; padding-top: 24px; border-top: 1px solid #eef0f3; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .footer-links { font-size: 11px; color: #888; display: flex; flex-direction: column; gap: 5px; }
+        .footer-links a { color: #0f1d4a; text-decoration: none; font-weight: 600; }
+        .footer-links a:hover { text-decoration: underline; }
+        .footer-logo img { max-height: 42px; object-fit: contain; }
+        .admin-btn { position: fixed; bottom: 20px; right: 20px; background: #2c2c2c; color: white; border: none; padding: 11px 22px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.3); z-index: 100; transition: transform 0.2s; font-size: 13px; font-family: inherit; }
+        .admin-btn:hover { transform: scale(1.05); background: #111; }
+        @media (max-width: 600px) {
+            #landing, #case-container { padding: 28px 20px 24px; }
+            .footer-row { flex-direction: row; justify-content: space-between; align-items: flex-end; }
+            .test-grid { grid-template-columns: 1fr; }
+        }
+        /* Validation hint */
+        .validation-hint { font-size: 12px; color: #c0392b; margin-top: 10px; display: none; }
+        .validation-hint.visible { display: block; }
+        /* Alert box */
+        .alert-box { border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; font-size: 14px; line-height: 1.6; }
+        .alert-box.info  { background: #e8f0fe; border-left: 4px solid #0f1d4a; color: #0f1d4a; }
+        .alert-box.warn  { background: #fff3cd; border-left: 4px solid #e6a817; color: #7a5800; }
+        .alert-box.danger { background: #fde8e8; border-left: 4px solid #dc3545; color: #7a1515; }
     </style>
 </head>
 <body>
-    <div class="login-box" id="loginScreen">
-        <h3 style="text-align:center;">Admin Girişi</h3>
-        <input type="email" id="email" placeholder="E-posta Adresi">
-        <input type="password" id="password" placeholder="Şifre">
-        <button onclick="adminLogin()">Giriş Yap</button>
-        <span class="error" id="errorMsg"></span>
+<div id="landing">
+    <div class="landing-header">
+        <div class="landing-logo">
+            <img src="https://raw.githubusercontent.com/oguzkizilkaya/vaka-uygulamasi/975869699dcc9ab42518c7e13c0720dd082a5689/Alexion%20Logo.png" alt="Alexion" onerror="this.style.display='none'">
+        </div>
+        <h1>MEDICOM+ Case Simulator</h1>
+        <p>Build expertise in diagnosing and treating complement-mediated diseases through interactive clinical decision simulations.</p>
     </div>
-    <div class="container" id="dataScreen" style="display:none;">
-        <div class="header-actions">
-            <h2>📊 Vaka Kayıtları</h2>
-            <div class="btn-group">
-                <a href="index.html" class="btn-back">← Vakaya Dön</a>
-                <button class="btn-csv" style="width:auto;" onclick="downloadCSV()">📥 CSV İndir</button>
-                <button class="btn-logout" style="width:auto;" onclick="logout()">Çıkış Yap</button>
+    <div class="case-grid">
+        <div class="case-card" onclick="loadCase('ahus-ped')">
+            <div class="card-header" style="background: linear-gradient(135deg, #0f1d4a 0%, #1e3a8a 100%);">
+                <span class="card-icon">🧒</span>
+                <div class="card-title">Pediatric uncertainity</div>
+                <div class="card-subtitle">4-Year-Old Male</div>
+            </div>
+            <div class="card-body">
+                <p class="card-desc">A pediatric patient presenting with anuria.</p>
+                <button class="start-btn" style="background:#0f1d4a;">Start Case →</button>
             </div>
         </div>
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th>Tarih</th>
-                    <th>Vaka</th>
-                    <th>Kullanıcı ID</th>
-                    <th>İzlenen Yol</th>
-                    <th>Sonuç</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+        <div class="case-card" onclick="loadCase('ahus-adult')">
+            <div class="card-header" style="background: linear-gradient(135deg, #3b1060 0%, #6d28d9 100%);">
+                <span class="card-icon">👩</span>
+                <div class="card-title">Puzzling adult</div>
+                <div class="card-subtitle">38-Year-Old Female</div>
+            </div>
+            <div class="card-body">
+                <p class="card-desc">An adult patient presenting with confusion and oliguria.</p>
+                <button class="start-btn" style="background:#3b1060;">Start Case →</button>
+            </div>
+        </div>
+        <div class="case-card" onclick="loadCase('pnh-adult')">
+            <div class="card-header" style="background: linear-gradient(135deg, #8a1515 0%, #c0392b 100%);">
+                <span class="card-icon">🩸</span>
+                <div class="card-title">Patient in the gray</div>
+                <div class="card-subtitle">58-Year-Old Male</div>
+            </div>
+            <div class="card-body">
+                <p class="card-desc">Symptoms as clear as mud.</p>
+                <button class="start-btn" style="background:#8a1515;">Start Case →</button>
+            </div>
+        </div>
     </div>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        const firebaseConfig = {
-            apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
-            authDomain: "medicom-ai.firebaseapp.com",
-            projectId: "medicom-ai",
-            storageBucket: "medicom-ai.firebasestorage.app",
-            messagingSenderId: "330987426994",
-            appId: "1:330987426994:web:587bc3e397ec376e5565ab"
+</div>
+<div id="case-container">
+    <button class="back-btn" onclick="backToLanding()">← Back to Case List</button>
+    <!-- CASE 1: PEDIATRIC -->
+    <div class="screen" id="ahus-ped-scene1">
+        <h1>Case Presentation</h1>
+        <span class="status-badge status-stable">Pediatric Emergency Admission</span>
+        <div class="case-header">
+            <h3>4-Year-Old Male Patient</h3>
+            <p>Brought in by his mother with complaints of fatigue and no urine output for the past 24 hours. History includes a febrile upper respiratory tract infection one week ago. <strong>No history of bloody diarrhea.</strong></p>
+        </div>
+        <div class="lab-grid">
+            <div class="lab-item">Hb: <span class="lab-val">7.2 g/dL</span></div>
+            <div class="lab-item">Plt: <span class="lab-val">45,000/mm³</span></div>
+            <div class="lab-item">Creatinine: <span class="lab-val">1.9 mg/dL</span> (AKI)</div>
+            <div class="lab-item">LDH: <span class="lab-val">1,800 U/L</span></div>
+            <div class="lab-item">Peripheral Smear: <span class="lab-val">Schistocytes (+)</span></div>
+        </div>
+        <p class="question">Given these findings, what is your initial approach to this patient?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-ped',1,'A')"><strong>A)</strong> Order stool culture; request ADAMTS13 test and initiate hydration.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-ped',1,'B')"><strong>B)</strong> Consider as a transient post-viral presentation; monitor with supportive care and antibiotics.</button>
+        </div>
+    </div>
+    <div class="screen" id="ahus-ped-scene2a">
+        <h1>Diagnostic Workup</h1>
+        <span class="status-badge status-stable">Initial Results Available</span>
+        <div class="case-header">
+            <h3>Critical Distinction</h3>
+            <p>Stool culture: <strong>Negative</strong><br>
+            ADAMTS13 activity: <strong>65%</strong><br>
+            Patient remains anuric. Creatinine has risen to 2.4 mg/dL; hypertensive for age (130/90 mmHg).</p>
+        </div>
+        <p class="question">What is your treatment plan at this point?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-ped',2,'A')"><strong>A)</strong> Central catheterization for plasma exchange; escalate to pharmacotherapy if no response.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-ped',2,'B')"><strong>B)</strong> Eculizumab + meningococcal vaccination and prophylaxis.</button>
+        </div>
+    </div>
+    <div class="screen" id="ahus-ped-scene2b">
+        <h1>Clinical Deterioration</h1>
+        <span class="status-badge status-critical">Status: Critical</span>
+        <div class="case-header">
+            <h3>15 Days Later</h3>
+            <p>Patient developed seizures (aHUS CNS involvement?).<br>
+            <strong>New Labs:</strong> Hb: 6.0 g/dL, Plt: 20,000, <strong>Creatinine: 3.5 mg/dL</strong>.</p>
+        </div>
+        <p class="question">What is your decision given the current clinical status?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-ped',2,'C')"><strong>A)</strong> Emergency dialysis + Eculizumab therapy</button>
+            <button class="option-btn" onclick="makeDecision('ahus-ped',2,'D')"><strong>B)</strong> Dialysis only with plasmapheresis.</button>
+        </div>
+    </div>
+    <div class="screen" id="ahus-ped-scene3">
+        <h1>3 months later...</h1>
+        <span class="status-badge status-chronic">End-Stage Renal Disease</span>
+        <div class="case-header">
+            <h3>Outpatient Clinic Follow-up</h3>
+            <p>Patient is being followed on peritoneal dialysis. Growth and developmental delay has started. Living kidney transplant from mother is being planned.<br><br>
+            <strong>Genetic Panel:</strong> <span class="lab-val">CFH mutation (+)</span> — High recurrence risk group<br>
+            <small style="color:#888;">CFH/C3/CFB mutation positivity has been reported to increase post-transplant recurrence risk.</small></p>
+        </div>
+        <p class="question">What is your transplant strategy for this patient with a positive CFH mutation?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-ped',3,'A')"><strong>A)</strong> Prophylactic Eculizumab prior to transplant, then proceed with transplantation.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-ped',3,'B')"><strong>B)</strong> Proceed with transplant alone and initiate treatment only if recurrence is observed.</button>
+        </div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-ped-out-perfect">
+        <span class="outcome-icon">🌟</span>
+        <h2 class="outcome-title outcome-good">Full Renal Recovery</h2>
+        <p class="outcome-desc">Prompt Eculizumab treatment led to complete normalization of renal function.<br>Patient becomes dialysis-independent. Normal growth and development.<br>Subsequent genetic panel identified a <em>CFH</em> mutation — underlining the importance of genotyping all aHUS patients for long-term risk stratification.</p>
+        <div class="ref-citation"><strong>📚 Evidence-Based Approach</strong>In children, once aHUS is diagnosed, Eculizumab should be initiated as first-line therapy. Plasma therapy is not recommended due to technical challenges and low efficacy.<em>— Loirat C, et al. Pediatric Nephrology. 2016</em></div>
+        <div class="ref-citation warning"><strong>⚠️ Safety: Meningococcal Prophylaxis Is Mandatory</strong>Terminal complement inhibition increases the risk of <em>Neisseria meningitidis</em> infection. Vaccination (ACWY + B) must be administered at least 2 weeks before treatment; prophylactic antibiotics should be given at treatment initiation in urgent cases.<em>— Soliris SmPC; ECDC Meningococcal Disease Guidelines</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-ped')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-ped-out-ckd">
+        <span class="outcome-icon">⚠️</span>
+        <h2 class="outcome-title outcome-moderate">Permanent Renal Damage</h2>
+        <p class="outcome-desc">Despite treatment, cortical necrosis is observed.<br>Hematological values are trending toward improvement, but GFR is stable around 40 mL/min.</p>
+        <div class="ref-citation"><strong>📚 Critical Warning</strong>In patients with aHUS, early initiation of Eculizumab is critical for renal function recovery.<em>— KDIGO 2017 Clinical Practice Guideline Update (TMA focus)</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-ped')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-ped-out-tx-success">
+        <span class="outcome-icon">✅</span>
+        <h2 class="outcome-title outcome-good">Successful Pediatric Transplant</h2>
+        <p class="outcome-desc">Prophylactic Eculizumab preserved graft function.<br>Patient is being followed dialysis-independent with a normal growth trajectory.</p>
+        <div class="ref-citation"><strong>📚 Transplant Data</strong>In high-risk genotypes such as CFH mutation, prophylactic Eculizumab dramatically reduces graft loss. Without prophylaxis, recurrence rates can reach 80%.<em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-ped')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-ped-out-tx-fail">
+        <span class="outcome-icon">❌</span>
+        <h2 class="outcome-title outcome-bad">Graft Loss and Recurrence</h2>
+        <p class="outcome-desc">Surgical stress activated the complement system.<br>aHUS recurred post-transplant and graft function was lost.</p>
+        <div class="ref-citation"><strong>📚 Why Did It Fail?</strong>In patients with CFH mutation, complement dysregulation persists systemically; transplantation alone does not cure the disease. In high-risk patients without prophylaxis, recurrence risk is approximately 80%.<em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-ped')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-ped-out-no-ecu">
+        <span class="outcome-icon">❌</span>
+        <h2 class="outcome-title outcome-bad">End-Stage Renal Disease — No Complement Inhibition</h2>
+        <p class="outcome-desc">Symptomatic support was provided with dialysis and FFP; however, complement activation could not be stopped.<br>TMA progressed and dialysis dependence became permanent.</p>
+        <div class="ref-citation warning"><strong>⚠️ Why Did It Fail?</strong>Plasma infusion cannot adequately suppress complement dysregulation in aHUS. Stopping the TMA process without Eculizumab is not possible.<em>— Loirat C, et al. Pediatric Nephrology. 2016; Soliris SmPC</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-ped')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <!-- CASE 2: ADULT -->
+    <div class="screen" id="ahus-adult-scene1">
+        <h1>Case Presentation</h1>
+        <span class="status-badge status-stable">Adult Emergency Admission</span>
+        <div class="case-header">
+            <h3>38-Year-Old Female Patient</h3>
+            <p>Presented with 3 days of progressive fatigue, confusion, and oliguria. <strong>No history of diarrhea.</strong> Currently on oral contraceptives. Had a viral upper respiratory tract infection 4 weeks ago.</p>
+        </div>
+        <div class="lab-grid">
+            <div class="lab-item">Hb: <span class="lab-val">8.1 g/dL</span></div>
+            <div class="lab-item">Plt: <span class="lab-val">138,000/mm³</span></div>
+            <div class="lab-item">Creatinine: <span class="lab-val">3.2 mg/dL</span> (AKI)</div>
+            <div class="lab-item">LDH: <span class="lab-val">720 U/L</span></div>
+            <div class="lab-item">Peripheral Smear: <span class="lab-val">Schistocytes (+)</span></div>
+        </div>
+        <p class="question">What is your initial approach?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-adult',1,'A')"><strong>A)</strong> Order stool culture, initiate hydration.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-adult',1,'B')"><strong>B)</strong> Suspect an autoimmune process; order ANA, ANCA, and start corticosteroids.</button>
+        </div>
+    </div>
+    <div class="screen" id="ahus-adult-scene2a">
+        <h1>Diagnostic Workup</h1>
+        <span class="status-badge status-stable">Initial Results Available</span>
+        <div class="case-header">
+            <h3>Critical Distinction</h3>
+            <p>Stool culture: <strong>Negative</strong><br>ADAMTS13 activity: <strong>72%</strong> — TTP excluded<br>Patient remains oliguric. Creatinine 4.1 mg/dL, BP: 165/100 mmHg.</p>
+        </div>
+        <p class="question">What is your treatment plan?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-adult',2,'A')"><strong>A)</strong> Initiate plasma exchange; escalate to pharmacotherapy if no response.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-adult',2,'B')"><strong>B)</strong> Eculizumab + meningococcal vaccination and prophylaxis.</button>
+        </div>
+    </div>
+    <div class="screen" id="ahus-adult-scene2b">
+        <h1>Clinical Deterioration</h1>
+        <span class="status-badge status-critical">Status: Critical</span>
+        <div class="case-header">
+            <h3>10 Days Later</h3>
+            <p>No response to corticosteroid therapy. Pulmonary edema has developed.<br>
+            <strong>New Labs:</strong> Hb: 6.0 g/dL, Plt: 75,000, <strong>Creatinine: 5.9 mg/dL</strong>. Emergency dialysis is required.</p>
+        </div>
+        <p class="question">Dialysis is now needed. What is your decision on adjunct therapy?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-adult',2,'C')"><strong>A)</strong> Start dialysis + Eculizumab.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-adult',2,'D')"><strong>B)</strong> Dialysis only with plasmapheresis.</button>
+        </div>
+    </div>
+    <div class="screen" id="ahus-adult-scene3">
+        <h1>One Year Later...</h1>
+        <span class="status-badge status-chronic">Hemodialysis-Dependent</span>
+        <div class="case-header">
+            <h3>Nephrology Outpatient Clinic</h3>
+            <p>Patient is maintained on hemodialysis three times per week. Listed for deceased-donor kidney transplant.<br><br>
+            <strong>Genetic Panel:</strong> <span class="lab-val">CFI mutation (+)</span> — High recurrence risk</p>
+        </div>
+        <p class="question">What is your transplant strategy for this patient with a positive CFI mutation?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-adult',3,'A')"><strong>A)</strong> Start prophylactic Eculizumab before transplant, then proceed.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-adult',3,'B')"><strong>B)</strong> Proceed with transplant; start Eculizumab only if recurrence is observed.</button>
+        </div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-adult-out-perfect">
+        <span class="outcome-icon">🌟</span>
+        <h2 class="outcome-title outcome-good">Full Recovery (Renal Recovery)</h2>
+        <p class="outcome-desc">Early Eculizumab therapy led to complete normalization of renal function.<br>Dialysis-independent. Oral contraceptives discontinued.<br>Subsequent genetic panel identified a <em>CFI</em> mutation — underlining the importance of genotyping all aHUS patients for long-term risk stratification.</p>
+        <div class="ref-citation"><strong>📚 Evidence-Based Approach</strong>In adult aHUS, when ADAMTS13 is normal and autoimmune causes are excluded, Eculizumab should be the first-line treatment.<em>— Fakhouri F, et al. Lancet. 2017</em></div>
+        <div class="ref-citation warning"><strong>⚠️ Safety: Meningococcal Prophylaxis Is Mandatory</strong>Terminal complement inhibition increases the risk of <em>Neisseria meningitidis</em> infection.<em>— Soliris SmPC; ECDC Meningococcal Disease Guidelines</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-adult-out-ckd">
+        <span class="outcome-icon">⚠️</span>
+        <h2 class="outcome-title outcome-moderate">Chronic Kidney Disease</h2>
+        <p class="outcome-desc">Despite treatment, cortical necrosis progressed.<br>GFR permanently stabilized at 35 mL/min.</p>
+        <div class="ref-citation"><strong>📚 Critical Warning</strong>In adult aHUS, misidentification as an autoimmune process causes delays in diagnosis. ADAMTS13 panel should be obtained before any hematological intervention.<em>— Fakhouri F, et al. Lancet. 2017</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-adult-out-tx-success">
+        <span class="outcome-icon">✅</span>
+        <h2 class="outcome-title outcome-good">Successful Kidney Transplant</h2>
+        <p class="outcome-desc">Prophylactic Eculizumab preserved graft function. Patient is dialysis-independent.</p>
+        <div class="ref-citation"><strong>📚 Transplant Data</strong>In high-risk genotypes such as CFI mutation, prophylactic Eculizumab dramatically reduces graft loss.<em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-adult-out-tx-fail">
+        <span class="outcome-icon">❌</span>
+        <h2 class="outcome-title outcome-bad">Graft Loss</h2>
+        <p class="outcome-desc">Surgical stress activated the complement system. aHUS recurred and graft function was lost.</p>
+        <div class="ref-citation"><strong>📚 Why Did It Fail?</strong>Recurrence risk in high-risk patients without prophylaxis is approximately 80%.<em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="ahus-adult-out-no-ecu">
+        <span class="outcome-icon">❌</span>
+        <h2 class="outcome-title outcome-bad">Dialysis Dependence — No Complement Inhibition</h2>
+        <p class="outcome-desc">Complement activation could not be controlled. TMA progressed and renal function could not be rescued.</p>
+        <div class="ref-citation warning"><strong>⚠️ Why Did It Fail?</strong>Stopping the TMA process in aHUS without a complement inhibitor is not possible.<em>— Fakhouri F, et al. Lancet. 2017; Soliris SmPC</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('ahus-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <!-- CASE 3: PNH -->
+    <div class="screen" id="pnh-adult-scene1">
+        <h1>Case Presentation</h1>
+        <span class="status-badge status-stable">Hematology Outpatient Clinic</span>
+        <div class="case-header">
+            <h3>58-Year-Old Male Patient</h3>
+            <p>Presented with fatigue and intermittent abdominal pain. No fever, no current weight loss. Symptoms initially attributed to stress.</p>
+        </div>
+        <div class="lab-grid">
+            <div class="lab-item">Hb: <span class="lab-val">7.8 g/dL</span></div>
+            <div class="lab-item">Reticulocytes: <span class="lab-val">8% (↑)</span></div>
+            <div class="lab-item">LDH: <span class="lab-val">760 U/L</span> <span style="font-size:11px;color:#888;">(ULN: 246 U/L)</span></div>
+            <div class="lab-item">Total Bilirubin: <span class="lab-val">1.7 mg/dL (↑)</span></div>
+            <div class="lab-item">Peripheral Smear: <span class="lab-val">Normochromic, no schistocytes</span></div>
+        </div>
+        <p class="question">Select the tests you want to order for further workup:</p>
+        <div class="test-panel">
+            <div class="test-panel-title">Available Diagnostic Tests</div>
+            <div class="test-grid" id="pnh-s1-tests">
+                <label class="test-item" onclick="toggleTest(this)">
+                    <input type="checkbox" id="pnh-s1-coombs">
+                    <span class="test-label"><span class="test-name">Direct Coombs Test</span></span>
+                </label>
+                <label class="test-item" onclick="toggleTest(this)">
+                    <input type="checkbox" id="pnh-s1-osmotic">
+                    <span class="test-label"><span class="test-name">Osmotic Fragility Test</span></span>
+                </label>
+                <label class="test-item" onclick="toggleTest(this)">
+                    <input type="checkbox" id="pnh-s1-b12folate">
+                    <span class="test-label"><span class="test-name">Serum B12 &amp; Folate</span></span>
+                </label>
+                <label class="test-item" onclick="toggleTest(this)">
+                    <input type="checkbox" id="pnh-s1-coag">
+                    <span class="test-label"><span class="test-name">Coagulation Panel (PT, aPTT)</span></span>
+                </label>
+                <label class="test-item" onclick="toggleTest(this)">
+                    <input type="checkbox" id="pnh-s1-flaer">
+                    <span class="test-label"><span class="test-name">FLAER</span></span>
+                </label>
+                <label class="test-item" onclick="toggleTest(this)">
+                    <input type="checkbox" id="pnh-s1-bm">
+                    <span class="test-label"><span class="test-name">Bone Marrow Biopsy</span></span>
+                </label>
+                <label class="test-item" onclick="toggleTest(this)">
+                    <input type="checkbox" id="pnh-s1-doppler">
+                    <span class="test-label"><span class="test-name">Abdominal Doppler Ultrasound</span></span>
+                </label>
+                <label class="test-item" onclick="toggleTest(this)">
+                    <input type="checkbox" id="pnh-s1-renal">
+                    <span class="test-label"><span class="test-name">Renal Function (BUN, Creatinine, UA)</span></span>
+                </label>
+            </div>
+        </div>
+        <p id="pnh-s1-hint" class="validation-hint">Please select at least one test before submitting.</p>
+        <button class="submit-tests-btn" onclick="submitPNHScene1()">Submit Orders →</button>
+    </div>
+    <div class="screen" id="pnh-adult-scene2a">
+        <h1>Diagnostic Results</h1>
+        <span class="status-badge status-stable">Workup Complete</span>
+        <div class="result-panel">
+            <div class="result-panel-title">Your ordered test results</div>
+            <div id="pnh-s2a-results"></div>
+            <div class="result-row">
+                <span class="result-test">FLAER</span>
+                <span class="result-val abnormal">GPI-deficient RBC clone: 62% &nbsp;|&nbsp; GPI-deficient PMN clone: 3%</span>
+            </div>
+        </div>
+        <p class="question">Based on all findings, what is your diagnosis?</p>
+        <div class="dx-options">
+            <button class="dx-btn" onclick="selectPNHDiagnosis('pnh')">
+                <span class="dx-name">Paroxysmal Nocturnal Hemoglobinuria (PNH)</span>
+                <span class="dx-reasoning">GPI-deficient clone >%1 + intravascular hemolysis pattern + abdominal pain consistent with smooth muscle dystonia</span>
+            </button>
+            <button class="dx-btn" onclick="selectPNHDiagnosis('aiha')">
+                <span class="dx-name">Autoimmune Hemolytic Anemia (AIHA)</span>
+                <span class="dx-reasoning">Hemolysis is present, but Coombs-negative pattern and flow cytometry findings argue against this</span>
+            </button>
+            <button class="dx-btn" onclick="selectPNHDiagnosis('mds')">
+                <span class="dx-name">Myelodysplastic Syndrome (MDS)</span>
+                <span class="dx-reasoning">Clonal hematopoietic disorder, but does not explain the hemolysis pattern or clone findings</span>
+            </button>
+            <button class="dx-btn" onclick="selectPNHDiagnosis('hereditary')">
+                <span class="dx-name">Hereditary Spherocytosis</span>
+                <span class="dx-reasoning">Congenital hemolysis; osmotic fragility is the diagnostic test — not consistent with flow cytometry findings</span>
+            </button>
+        </div>
+    </div>
+    <div class="screen" id="pnh-adult-scene-tx-2">
+        <h1>Diagnostic Results</h1>
+        <span class="status-badge status-stable">Workup Complete</span>
+        <div class="result-panel">
+            <div class="result-panel-title">Your ordered test results</div>
+            <div id="pnh-s2a-noflaer-results"></div>
+        </div>
+        <p class="question">Based on all findings, what is your diagnosis?</p>
+        <div class="dx-options">
+            <button class="dx-btn" onclick="selectWrongDiagnosis('aiha')">
+                <span class="dx-name">Autoimmune Hemolytic Anemia (AIHA)</span>
+                <span class="dx-reasoning">Hemolysis is present, but Coombs-negative pattern argues against this</span>
+            </button>
+            <button class="dx-btn" onclick="selectWrongDiagnosis('mds')">
+                <span class="dx-name">Myelodysplastic Syndrome (MDS)</span>
+                <span class="dx-reasoning">Clonal hematopoietic disorder, but does not fully explain the hemolysis pattern</span>
+            </button>
+            <button class="dx-btn" onclick="selectWrongDiagnosis('hereditary')">
+                <span class="dx-name">Hereditary Spherocytosis</span>
+                <span class="dx-reasoning">Congenital hemolysis; requires specific tests like osmotic fragility</span>
+            </button>
+        </div>
+    </div>
+    <div class="screen" id="pnh-adult-scene-tx">
+        <h1>Diagnosis Confirmed: PNH</h1>
+        <span class="status-badge status-stable">Treatment Decision Required</span>
+        <div class="case-header">
+            <h3>Symptomatic PNH</h3>
+            <p>GPI-deficient clone: <strong>62% (RBC) / 3% (PMN)</strong><br>
+            LDH: <strong>760 U/L</strong> (≥3× ULN)<br>
+            3 units of packed RBC transfusion in the past 3 months.<br>
+            Abdominal Doppler: <strong>No thrombosis detected</strong></p>
+        </div>
+        <p class="question">The diagnosis is confirmed. What is your treatment decision?</p>
+        <div class="options">
+            <button class="option-btn" onclick="selectPNHTreatment('watchful')"><strong>A)</strong> Folic acid + iron supplementation with watchful waiting; decide based on clone size over time.</button>
+            <button class="option-btn" onclick="selectPNHTreatment('ravulizumab')"><strong>B)</strong> Ravulizumab + meningococcal vaccination and prophylaxis.</button>
+        </div>
+    </div>
+    <div class="screen" id="pnh-adult-scene2b">
+        <h1>3 Months Later — Emergency Admission</h1>
+        <span class="status-badge status-critical">Status: Critical</span>
+        <div class="case-header">
+            <h3>Neurology Emergency</h3>
+            <p id="scene2b-desc-unknown">The patient, whose hemolysis workup had been inconclusive, is now brought in by ambulance with sudden onset of left hemiparesis and dysarthria. Brain CT shows <strong>right MCA territory ischemic stroke</strong> with cortical venous involvement.<br><br>
+            <strong>Acute Labs:</strong> Hb: 6.2 g/dL &nbsp;|&nbsp; LDH: <span class="lab-val">3,600 U/L</span> &nbsp;|&nbsp; D-dimer: 4,800 ng/mL</p>
+            <p id="scene2b-desc-known" style="display:none;">The patient, who has been followed with watchful waiting for PNH, is now brought in by ambulance with sudden onset of left hemiparesis and dysarthria. Brain CT shows <strong>right MCA territory ischemic stroke</strong> with cortical venous involvement.<br><br>
+            <strong>Acute Labs:</strong> Hb: 6.2 g/dL &nbsp;|&nbsp; LDH: <span class="lab-val">3,600 U/L</span> &nbsp;|&nbsp; D-dimer: 4,800 ng/mL</p>
+        </div>
+        <div id="scene2b-diagnostic-path">
+            <div class="alert-box danger">Thrombosis has occurred. The underlying cause must now be identified urgently to prevent further events and guide anticoagulation decisions.</div>
+            <p class="question">Select the diagnostic tests you want to order in this emergency workup:</p>
+            <div class="test-panel">
+                <div class="test-panel-title">Emergency Diagnostic Panel</div>
+                <div class="test-grid" id="pnh-s2b-tests">
+                    <label class="test-item" onclick="toggleTest(this)">
+                        <input type="checkbox" id="pnh-s2b-aps">
+                        <span class="test-label"><span class="test-name">Antiphospholipid Antibodies (aCL, anti-β2GP1, LA)</span></span>
+                    </label>
+                    <label class="test-item" onclick="toggleTest(this)">
+                        <input type="checkbox" id="pnh-s2b-protcs">
+                        <span class="test-label"><span class="test-name">Protein C / Protein S / AT-III</span></span>
+                    </label>
+                    <label class="test-item" onclick="toggleTest(this)">
+                        <input type="checkbox" id="pnh-s2b-echo">
+                        <span class="test-label"><span class="test-name">Transthoracic Echocardiography</span></span>
+                    </label>
+                    <label class="test-item" onclick="toggleTest(this)">
+                        <input type="checkbox" id="pnh-s2b-flaer">
+                        <span class="test-label"><span class="test-name">FLAER</span></span>
+                    </label>
+                    <label class="test-item" onclick="toggleTest(this)">
+                        <input type="checkbox" id="pnh-s2b-factor5">
+                        <span class="test-label"><span class="test-name">Factor V Leiden / Prothrombin Mutation</span></span>
+                    </label>
+                    <label class="test-item" onclick="toggleTest(this)">
+                        <input type="checkbox" id="pnh-s2b-mri">
+                        <span class="test-label"><span class="test-name">Brain MRI</span></span>
+                    </label>
+                    <label class="test-item" onclick="toggleTest(this)">
+                        <input type="checkbox" id="pnh-s2b-vasculitis">
+                        <span class="test-label"><span class="test-name">Vasculitis Panel (ANA, ANCA, anti-dsDNA)</span></span>
+                    </label>
+                </div>
+            </div>
+            <p id="pnh-s2b-hint" class="validation-hint">Please select at least one test before submitting.</p>
+            <button class="submit-tests-btn" onclick="submitPNHEmergency()">Submit Emergency Orders →</button>
+        </div>
+        <div id="scene2b-known-path" style="display:none;">
+            <div class="alert-box danger">Thrombosis has occurred. The underlying complement-driven disease process has progressed to a Major Vascular Event despite watchful waiting.</div>
+            <p class="question">What is your immediate treatment decision for this acute PNH complication?</p>
+            <div class="options">
+                <button class="option-btn" onclick="selectKnownPNHStrokeTx('ravulizumab')"><strong>A)</strong> Start anticoagulation + Ravulizumab (complement inhibition + thrombosis prevention).</button>
+                <button class="option-btn" onclick="selectKnownPNHStrokeTx('anticoag')"><strong>B)</strong> Anticoagulation alone is sufficient to manage the thrombotic risk.</button>
+            </div>
+        </div>
+    </div>
+    <div class="screen" id="pnh-adult-scene2b-dx">
+        <h1>Emergency Workup Results</h1>
+        <span class="status-badge status-critical">Results Available</span>
+        <div class="result-panel">
+            <div class="result-panel-title">Emergency test results</div>
+            <div id="pnh-s2b-results"></div>
+            <div class="result-row">
+                <span class="result-test">FLAER</span>
+                <span class="result-val abnormal">GPI-deficient RBC clone: 68% &nbsp;|&nbsp; GPI-deficient PMN clone: 7%</span>
+            </div>
+        </div>
+        <div class="alert-box warn">The flow cytometry reveals a PNH clone >%1. This finding, combined with the thrombotic event and ongoing intravascular hemolysis (LDH 3,600 U/L), must be integrated into the clinical diagnosis.</div>
+        <p class="question">Based on all emergency findings, what is the thrombosis etiology?</p>
+        <div class="dx-options">
+            <button class="dx-btn" onclick="selectPNHEmergencyDiagnosis('pnh')">
+                <span class="dx-name">Paroxysmal Nocturnal Hemoglobinuria (PNH) — Complement-mediated thrombosis</span>
+                <span class="dx-reasoning">PNH clone >%1 + hemolysis + thrombosis pattern consistent with PNH related Major Vascular Event</span>
+            </button>
+            <button class="dx-btn" onclick="selectPNHEmergencyDiagnosis('aps')">
+                <span class="dx-name">Antiphospholipid Syndrome (APS)</span>
+                <span class="dx-reasoning">APS can cause arterial and venous thrombosis, but would not explain the PNH clone or hemolysis findings</span>
+            </button>
+            <button class="dx-btn" onclick="selectPNHEmergencyDiagnosis('crypto')">
+                <span class="dx-name">Cryptogenic Stroke</span>
+                <span class="dx-reasoning">Diagnosis of exclusion; the PNH clone provides a specific mechanistic explanation</span>
+            </button>
+            <button class="dx-btn" onclick="selectPNHEmergencyDiagnosis('athero')">
+                <span class="dx-name">Atherosclerotic Cerebrovascular Disease</span>
+                <span class="dx-reasoning">Cannot explain the hematological findings; PNH clone is a specific, actionable finding that must not be dismissed</span>
+            </button>
+        </div>
+    </div>
+    <div class="screen" id="pnh-adult-scene-late-tx">
+        <h1>Late Diagnosis — Treatment Decision</h1>
+        <span class="status-badge status-critical">PNH + Thrombosis</span>
+        <div class="case-header">
+            <h3>Established PNH with Thrombotic Complication</h3>
+            <p>Right MCA ischemic stroke with cortical venous involvement.<br>PNH clone: 68% (RBC) / 7% (PMN) &nbsp;|&nbsp; LDH: 3,600 U/L<br>Patient is neurologically stabilized with partial left hemiparesis remaining.</p>
+        </div>
+        <p class="question">PNH is now confirmed in the setting of an acute thrombotic event. What is your treatment decision?</p>
+        <div class="options">
+            <button class="option-btn" onclick="selectPNHLateTreatment('ravulizumab')"><strong>A)</strong> Start anticoagulation + Ravulizumab (complement inhibition + thrombosis prevention).</button>
+            <button class="option-btn" onclick="selectPNHLateTreatment('anticoag')"><strong>B)</strong> Anticoagulation alone is sufficient to manage the thrombotic risk.</button>
+        </div>
+    </div>
+    <div class="screen" id="pnh-adult-scene2b-day2">
+        <h1>The Following Day</h1>
+        <span class="status-badge status-fatal">Status: Catastrophic</span>
+        <div class="case-header">
+            <h3>24 Hours After Admission</h3>
+            <p>Despite anticoagulation, the patient deteriorated overnight. A repeat CT scan reveals <strong>massive cerebral venous sinus thrombosis</strong> with hemorrhagic transformation involving the superior sagittal sinus and bilateral transverse sinuses.<br><br>
+            The patient is transferred to the ICU in a comatose state (GCS 5).</p>
+        </div>
+        <div class="alert-box danger"><strong>The underlying complement-driven thrombotic process continued unchecked.</strong> Because complement inhibition was not provided, the root cause of the thrombosis continued to progress.</div>
+        <p class="question">The patient is now in the ICU, unresponsive. Despite maximal supportive care, over the next 72 hours herniation occurs.</p>
+        <div class="options">
+            <button class="option-btn" style="cursor:default; opacity:0.6; pointer-events:none;">No further decisions can be made.</button>
+        </div>
+        <div style="margin-top:22px; text-align:center;">
+            <button class="restart-btn" onclick="finish('Fatal — PNH Missed Twice', 'pnh-adult-out-death')">Continue to outcome →</button>
+        </div>
+    </div>
+    <!-- PNH OUTCOMES -->
+    <div class="screen outcome-screen" id="pnh-adult-out-perfect">
+        <span class="outcome-icon">🌟</span>
+        <h2 class="outcome-title outcome-good">Hemolysis Under Control</h2>
+        <p class="outcome-desc">Ravulizumab achieved LDH normalization and transfusion independence.<br>Every-8-week dosing provides excellent treatment adherence. No thrombotic complications developed.</p>
+        <div class="ref-citation"><strong>📚 Evidence-Based Approach</strong>In symptomatic PNH (high LDH, transfusion dependence, PNH clone >%1), a C5 inhibitor is indicated. Ravulizumab's long-term C5 inhibition provides more stable disease control and less breakthrough hemolysis.<em>— Kulasekararaj AG, et al. Blood. 2019 (ALXN1210-PNH-301)</em></div>
+        <div class="ref-citation warning"><strong>⚠️ Safety: Meningococcal Prophylaxis Is Mandatory</strong>Terminal complement inhibition increases the risk of <em>Neisseria meningitidis</em> infection. Vaccination (ACWY + B) must be administered at least 2 weeks before treatment; prophylactic antibiotics should be given at treatment initiation in urgent cases.<em>— Ultomiris SmPC; ECDC Meningococcal Disease Guidelines</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('pnh-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="pnh-adult-out-late">
+        <span class="outcome-icon">⚠️</span>
+        <h2 class="outcome-title outcome-moderate">Late Treatment — Partial Recovery</h2>
+        <p class="outcome-desc">Anticoagulation + Ravulizumab brought hemolysis under control.<br>Further thrombotic events were prevented, but the neurological deficits from the initial stroke remained. Patient requires long-term rehabilitation under hematology and neurology co-management.</p>
+        <div class="ref-citation"><strong>📚 PNH and Thrombosis</strong>Thrombosis is the leading cause of mortality in PNH. C5 inhibition dramatically reduces thrombosis risk (from ~15% to &lt;1% annually). Treatment initiated after thrombosis controls ongoing complement activation but cannot reverse existing damage.<em>— Hillmen P, et al. NEJM. 2004; Brodsky RA. NEJM. 2014</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('pnh-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="pnh-adult-out-noc5">
+        <span class="outcome-icon">❌</span>
+        <h2 class="outcome-title outcome-bad">Chronic Organ Damage</h2>
+        <p class="outcome-desc">Despite anticoagulation, complement activation continued unchecked.<br>Hemolysis progressed, triggering renal involvement and recurrent thrombotic events. The patient developed chronic organ failure requiring multi-specialty management.</p>
+        <div class="ref-citation"><strong>📚 Why Did It Fail?</strong>Thrombosis and organ damage in PNH are complement-mediated. Anticoagulation alone cannot stop this process — hemolysis and thrombosis risk persist without complement inhibition.<em>— Hillmen P, et al. NEJM. 2004</em></div>
+        <div class="btn-group"><button class="restart-btn" onclick="restartCase('pnh-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
+    </div>
+    <div class="screen outcome-screen" id="pnh-adult-out-death">
+        <div class="fatal-screen">
+            <span class="outcome-icon">🕯️</span>
+            <h2 class="outcome-title outcome-fatal">Patient Deceased</h2>
+            <p class="outcome-desc">The patient died from massive cerebral venous sinus thrombosis with bilateral hemorrhagic transformation.<br><br>
+            PNH was identified on post-mortem flow cytometry of stored samples. The GPI-deficient clone had been present — and growing — since his first presentation months earlier.</p>
+            <div class="ref-citation"><strong>📚 The Cost of a Missed Diagnosis</strong>PNH is a rare but life-threatening disease. Thrombosis — often in unusual sites — is the leading cause of death. Flow cytometry with FLAER is the only test capable of reliably detecting GPI-deficient clones. In any unexplained intravascular hemolysis, PNH must be actively excluded.<em>— Parker C, et al. (IPIG). Blood. 2005; Brodsky RA. NEJM. 2014</em></div>
+            <div class="ref-citation" style="border-left-color:#8a1515; background:#1a1a1a;"><strong style="color:#cc8888;">📖 Learning Point</strong>FLAER (Fluorescein-Labeled Proaerolysin) binds directly to GPI anchors and has near-100% sensitivity for PNH clone detection — even small clones. Direct Coombs and osmotic fragility tests will be <em>negative</em> in PNH. Ordering these instead of FLAER delays diagnosis and costs lives.<em style="color:#555;">— International PNH Interest Group Consensus Diagnostic Criteria</em></div>
+            <div class="btn-group" style="margin-top:24px;">
+                <button class="restart-btn" onclick="restartCase('pnh-adult')">Try Again</button>
+                <button class="home-btn" onclick="backToLanding()">← Case List</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer-row">
+        <div class="footer-links">
+            <a id="footer-soliris"   href="https://az.box.com/shared/static/knwd88xwnh6vay5ozkj4xo035tpd75od.pdf" target="_blank">▼ Click here for Soliris SmPC summary</a>
+            <a id="footer-ultomiris" href="https://az.box.com/s/d643itwunmtvm091rfx5r6ssba2w7c53"                        target="_blank">▼ Click here for Ultomiris SmPC summary</a>
+            <span id="footer-code">M/TR/UNB-a/0174</span>
+        </div>
+        <div class="footer-logo">
+            <img src="https://raw.githubusercontent.com/oguzkizilkaya/vaka-uygulamasi/975869699dcc9ab42518c7e13c0720dd082a5689/Alexion%20Logo.png" alt="Alexion Logo" onerror="this.style.display='none'">
+        </div>
+    </div>
+</div>
+<button class="admin-btn" onclick="window.location.href='admin.html'">📊 Case Analytics (Admin)</button>
+<script>
+    let activeCase = null;
+    window.currentSession = { id:'', caseId:'', startTime:'', path:[], outcome:'' };
+    function newSession(caseId) {
+        window.currentSession = {
+            id: 'user_' + Math.random().toString(36).slice(2,11),
+            caseId: caseId,
+            startTime: new Date().toISOString(),
+            path: [], outcome: ''
         };
-        const app  = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db   = getFirestore(app);
-
-        const CASE_LABELS = {
-            'ahus-ped':   'Pediatrik aHÜS',
-            'ahus-adult': 'Erişkin aHÜS',
-            'pnh-adult':  'Erişkin PNH'
-        };
-
-        function outcomeColor(outcome) {
-            if (!outcome) return '#dc3545';
-            const o = outcome.toLowerCase();
-            if (
-                o.includes('full recovery') ||
-                o.includes('successful') ||
-                o.includes('hemolysis controlled') ||
-                o.includes('hemolysis under control')
-            ) return '#28a745';
-            if (
-                o.includes('ckd') ||
-                o.includes('chronic') ||
-                o.includes('partial recovery') ||
-                o.includes('permanent') ||
-                o.includes('disease progression') ||
-                o.includes('late treatment') ||
-                o.includes('watch and wait')
-            ) return '#fd7e14';
-            return '#dc3545';
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dataScreen').style.display = 'block';
-                loadData();
-            } else {
-                document.getElementById('loginScreen').style.display = 'block';
-                document.getElementById('dataScreen').style.display = 'none';
-            }
+    }
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const el = document.getElementById(id);
+        if (el) el.classList.add('active');
+        const c = document.getElementById('case-container');
+        if (c) c.scrollTop = 0;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    window.toggleTest = function(labelEl) {
+        const cb = labelEl.querySelector('input[type="checkbox"]');
+        setTimeout(() => {
+            if (cb.checked) labelEl.classList.add('selected');
+            else labelEl.classList.remove('selected');
+        }, 0);
+    };
+    function resetCheckboxes() {
+        document.querySelectorAll('.test-item input[type="checkbox"]').forEach(cb => {
+            cb.checked = false;
+            cb.closest('.test-item').classList.remove('selected');
         });
-
-        window.adminLogin = async () => {
-            const email = document.getElementById('email').value;
-            const pass  = document.getElementById('password').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (error) {
-                document.getElementById('errorMsg').innerText = "Hata: " + error.message;
-            }
-        };
-
-        window.logout = () => signOut(auth);
-
-        async function loadData() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Veriler Yükleniyor...</td></tr>';
-            try {
-                const q = query(collection(db, "vaka_kayitlari"), orderBy("createdAt", "desc"));
-                const snap = await getDocs(q);
-                tbody.innerHTML = '';
-                if (snap.empty) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Henüz veri yok.</td></tr>';
-                    return;
+        document.querySelectorAll('.validation-hint').forEach(hint => hint.classList.remove('visible'));
+    }
+    function setupScene2bDiagnostic() {
+        document.getElementById('scene2b-desc-unknown').style.display = 'block';
+        document.getElementById('scene2b-desc-known').style.display = 'none';
+        document.getElementById('scene2b-diagnostic-path').style.display = 'block';
+        document.getElementById('scene2b-known-path').style.display = 'none';
+    }
+    function setupScene2bTreatment() {
+        document.getElementById('scene2b-desc-unknown').style.display = 'none';
+        document.getElementById('scene2b-desc-known').style.display = 'block';
+        document.getElementById('scene2b-diagnostic-path').style.display = 'none';
+        document.getElementById('scene2b-known-path').style.display = 'block';
+    }
+    const FOOTER_CFG = {
+        'ahus-ped':   { soliris: true,  ultomiris: false },
+        'ahus-adult': { soliris: true,  ultomiris: false },
+        'pnh-adult':  { soliris: false, ultomiris: true  }
+    };
+    window.loadCase = function(caseId) {
+        activeCase = caseId;
+        newSession(caseId);
+        resetCheckboxes();
+        setupScene2bDiagnostic();
+        document.getElementById('landing').style.display = 'none';
+        const c = document.getElementById('case-container');
+        c.style.display = 'flex';
+        const ft = FOOTER_CFG[caseId];
+        document.getElementById('footer-soliris').style.display   = ft.soliris   ? 'block' : 'none';
+        document.getElementById('footer-ultomiris').style.display = ft.ultomiris ? 'block' : 'none';
+        showScreen(caseId + '-scene1');
+    };
+    window.backToLanding = function() {
+        document.getElementById('case-container').style.display = 'none';
+        document.getElementById('landing').style.display = 'block';
+        activeCase = null;
+    };
+    window.restartCase = function(caseId) {
+        newSession(caseId);
+        resetCheckboxes();
+        setupScene2bDiagnostic();
+        showScreen(caseId + '-scene1');
+    };
+    window.makeDecision = function(caseId, step, choice) {
+        window.currentSession.path.push('Step' + step + ':' + choice);
+        const p = window.currentSession.path;
+        if (caseId === 'ahus-ped') {
+            if (step === 1) {
+                showScreen(choice === 'A' ? 'ahus-ped-scene2a' : 'ahus-ped-scene2b');
+            } else if (step === 2) {
+                if (p.includes('Step1:A')) {
+                    choice === 'B'
+                        ? finish('Full Recovery — Eculizumab', 'ahus-ped-out-perfect')
+                        : showScreen('ahus-ped-scene3');
+                } else {
+                    choice === 'C'
+                        ? finish('CKD — Late Eculizumab', 'ahus-ped-out-ckd')
+                        : finish('ESRD — No Complement Inhibition', 'ahus-ped-out-no-ecu');
                 }
-                snap.forEach((doc) => {
-                    const data  = doc.data();
-                    const date  = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString('tr-TR') : 'Belirsiz';
-                    const caseId     = data.caseId || '';
-                    const caseLabel  = CASE_LABELS[caseId] || (caseId || 'Bilinmiyor');
-                    const badgeClass = caseId ? 'badge-' + caseId : 'badge-unknown';
-                    const color  = outcomeColor(data.outcome);
-                    const path   = Array.isArray(data.path) ? data.path.join(' ➝ ') : (data.path || '');
-                    tbody.innerHTML += `<tr>
-                        <td>${date}</td>
-                        <td><span class="case-badge ${badgeClass}">${caseLabel}</span></td>
-                        <td style="font-size:12px; color:#777;">${data.id || ''}</td>
-                        <td style="font-size:12px; color:#555;">${path}</td>
-                        <td style="font-weight:600; color:${color};">${data.outcome || ''}</td>
-                    </tr>`;
-                });
-            } catch (error) {
-                console.error(error);
-                tbody.innerHTML = '<tr><td colspan="5" style="color:red; text-align:center;">Yetki Hatası veya Bağlantı Sorunu.</td></tr>';
+            } else if (step === 3) {
+                choice === 'A'
+                    ? finish('Successful Transplant — Eculizumab Prophylaxis', 'ahus-ped-out-tx-success')
+                    : finish('Graft Rejection', 'ahus-ped-out-tx-fail');
             }
         }
-
-        window.downloadCSV = () => {
-            let csv = '\uFEFF' + "Tarih,Vaka,ID,Yol,Sonuc\n";
-            const rows = document.querySelectorAll("#dataTable tbody tr");
-            rows.forEach(row => {
-                const cols = row.querySelectorAll("td");
-                if (cols.length > 1) {
-                    const vakaTxt = cols[1].querySelector('.case-badge')
-                        ? cols[1].querySelector('.case-badge').innerText
-                        : cols[1].innerText;
-                    csv += `${cols[0].innerText},"${vakaTxt}",${cols[2].innerText},"${cols[3].innerText}","${cols[4].innerText}"\n`;
+        else if (caseId === 'ahus-adult') {
+            if (step === 1) {
+                showScreen(choice === 'A' ? 'ahus-adult-scene2a' : 'ahus-adult-scene2b');
+            } else if (step === 2) {
+                if (p.includes('Step1:A')) {
+                    choice === 'B'
+                        ? finish('Full Recovery — Eculizumab', 'ahus-adult-out-perfect')
+                        : showScreen('ahus-adult-scene3');
+                } else {
+                    choice === 'C'
+                        ? finish('CKD — Late Eculizumab', 'ahus-adult-out-ckd')
+                        : finish('Dialysis Dependence — No Complement Inhibition', 'ahus-adult-out-no-ecu');
                 }
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "vaka_analizi.csv";
-            link.click();
+            } else if (step === 3) {
+                choice === 'A'
+                    ? finish('Successful Transplant — Eculizumab Prophylaxis', 'ahus-adult-out-tx-success')
+                    : finish('Graft Rejection', 'ahus-adult-out-tx-fail');
+            }
+        }
+    };
+    function buildResultRows(checkedMap) {
+        const resultDefs = {
+            'pnh-s1-coombs':    { label: 'Direct Coombs Test',         val: 'Negative',                                              cls: 'normal'   },
+            'pnh-s1-osmotic':   { label: 'Osmotic Fragility Test',      val: 'Normal',                                                cls: 'normal'   },
+            'pnh-s1-b12folate': { label: 'Serum B12 / Folate',          val: 'B12 320 pg/mL (normal), Folate 9 ng/mL (normal)',       cls: 'normal'   },
+            'pnh-s1-coag':      { label: 'Coagulation (PT/aPTT)',       val: 'Normal',                                                cls: 'normal'   },
+            'pnh-s1-bm':        { label: 'Bone Marrow Biopsy',          val: 'Normocellular; no dysplasia; no aplasia',               cls: 'normal'   },
+            'pnh-s1-doppler':   { label: 'Abdominal Doppler',           val: 'No thrombosis detected',                                cls: 'normal'   },
+            'pnh-s1-renal':     { label: 'Renal Function',              val: 'Creatinine 1.1 mg/dL, UA: hemosiderinuria (+)',         cls: 'abnormal' },
+            'pnh-s2b-aps':      { label: 'Antiphospholipid Antibodies', val: 'Negative',                                              cls: 'normal'   },
+            'pnh-s2b-protcs':   { label: 'Protein C / S / AT-III',     val: 'Within normal limits',                                  cls: 'normal'   },
+            'pnh-s2b-echo':     { label: 'Transthoracic Echo',          val: 'No cardioembolic source; no PFO',                       cls: 'normal'   },
+            'pnh-s2b-factor5':  { label: 'Factor V Leiden / Prothrombin', val: 'Both negative',                                      cls: 'normal'   },
+            'pnh-s2b-mri':      { label: 'Brain MRI / MR Venography',  val: 'Cortical venous thrombosis confirmed; no sinus occlusion', cls: 'abnormal' },
+            'pnh-s2b-vasculitis':{ label: 'Vasculitis Panel',           val: 'ANA weakly positive (1:40); ANCA negative; anti-dsDNA negative', cls: 'normal' },
         };
-    </script>
+        let html = '';
+        for (const [id, ordered] of Object.entries(checkedMap)) {
+            if (ordered && resultDefs[id]) {
+                const r = resultDefs[id];
+                html += `<div class="result-row"><span class="result-test">${r.label}</span><span class="result-val ${r.cls}">${r.val}</span></div>`;
+            }
+        }
+        return html || '<div class="result-row"><span class="result-test" style="color:#aaa;">No additional tests ordered.</span><span></span></div>';
+    }
+    window.submitPNHScene1 = function() {
+        const anyChecked = Array.from(document.querySelectorAll('#pnh-s1-tests input[type="checkbox"]')).some(cb => cb.checked);
+        if (!anyChecked) { document.getElementById('pnh-s1-hint').classList.add('visible'); return; }
+        document.getElementById('pnh-s1-hint').classList.remove('visible');
+        const flaer = document.getElementById('pnh-s1-flaer').checked;
+        const checkedMap = {};
+        document.querySelectorAll('#pnh-s1-tests input[type="checkbox"]').forEach(cb => { checkedMap[cb.id] = cb.checked; });
+        window.currentSession.path.push('Scene1:FLAER=' + flaer);
+        if (flaer) {
+            document.getElementById('pnh-s2a-results').innerHTML = buildResultRows(checkedMap);
+            showScreen('pnh-adult-scene2a');
+        } else {
+            document.getElementById('pnh-s2a-noflaer-results').innerHTML = buildResultRows(checkedMap);
+            showScreen('pnh-adult-scene-tx-2');
+        }
+    };
+    window.selectPNHDiagnosis = function(dx) {
+        window.currentSession.path.push('Dx1:' + dx);
+        if (dx === 'pnh') {
+            showScreen('pnh-adult-scene-tx');
+        } else {
+            setupScene2bDiagnostic();
+            showScreen('pnh-adult-scene2b');
+        }
+    };
+    window.selectWrongDiagnosis = function(dx) {
+        window.currentSession.path.push('Dx1_NoFlaer:' + dx);
+        setupScene2bDiagnostic();
+        showScreen('pnh-adult-scene2b');
+    };
+    window.selectPNHTreatment = function(choice) {
+        window.currentSession.path.push('Tx:' + choice);
+        if (choice === 'ravulizumab') {
+            finish('Hemolysis Controlled — Ravulizumab', 'pnh-adult-out-perfect');
+        } else {
+            setupScene2bTreatment();
+            showScreen('pnh-adult-scene2b');
+        }
+    };
+    window.selectKnownPNHStrokeTx = function(choice) {
+        window.currentSession.path.push('KnownStrokeTx:' + choice);
+        if (choice === 'ravulizumab') {
+            finish('Late Treatment — Partial Recovery', 'pnh-adult-out-late');
+        } else {
+            showScreen('pnh-adult-scene2b-day2');
+        }
+    };
+    window.submitPNHEmergency = function() {
+        const anyChecked = Array.from(document.querySelectorAll('#pnh-s2b-tests input[type="checkbox"]')).some(cb => cb.checked);
+        if (!anyChecked) { document.getElementById('pnh-s2b-hint').classList.add('visible'); return; }
+        document.getElementById('pnh-s2b-hint').classList.remove('visible');
+        const flaer = document.getElementById('pnh-s2b-flaer').checked;
+        const checkedMap = {};
+        document.querySelectorAll('#pnh-s2b-tests input[type="checkbox"]').forEach(cb => { checkedMap[cb.id] = cb.checked; });
+        window.currentSession.path.push('Scene2b:FLAER=' + flaer);
+        if (flaer) {
+            document.getElementById('pnh-s2b-results').innerHTML = buildResultRows(checkedMap);
+            showScreen('pnh-adult-scene2b-dx');
+        } else {
+            showScreen('pnh-adult-scene2b-day2');
+        }
+    };
+    window.selectPNHEmergencyDiagnosis = function(dx) {
+        window.currentSession.path.push('Dx2:' + dx);
+        if (dx === 'pnh') {
+            showScreen('pnh-adult-scene-late-tx');
+        } else {
+            finish('Fatal — PNH Missed in Emergency', 'pnh-adult-out-death');
+        }
+    };
+    window.selectPNHLateTreatment = function(choice) {
+        window.currentSession.path.push('LateTx:' + choice);
+        if (choice === 'ravulizumab') {
+            finish('Late Treatment — Partial Recovery', 'pnh-adult-out-late');
+        } else {
+            finish('Fatal — Anticoagulation Only After Confirmed PNH', 'pnh-adult-out-death');
+        }
+    };
+    function finish(outcomeName, screenId) {
+        window.currentSession.outcome  = outcomeName;
+        window.currentSession.endTime  = new Date().toISOString();
+        showScreen(screenId);
+        if (typeof window.logToFirebase === 'function') window.logToFirebase(window.currentSession);
+    }
+    window.finish = finish;
+</script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    const firebaseConfig = {
+        apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
+        authDomain: "medicom-ai.firebaseapp.com",
+        projectId: "medicom-ai",
+        storageBucket: "medicom-ai.firebasestorage.app",
+        messagingSenderId: "330987426994",
+        appId: "1:330987426994:web:587bc3e397ec376e5565ab"
+    };
+    try {
+        if (firebaseConfig.apiKey.startsWith('%%')) {
+            console.warn('Firebase config not injected, logging disabled.');
+        } else {
+            const app = initializeApp(firebaseConfig);
+            const db  = getFirestore(app);
+            window.logToFirebase = async function(session) {
+                try {
+                    await addDoc(collection(db, "vaka_kayitlari"), { ...session, createdAt: Timestamp.now() });
+                    console.log("Session logged to Firebase.");
+                } catch (err) { console.error("Firebase write error:", err); }
+            };
+        }
+    } catch (err) { console.warn("Firebase initialization failed:", err); }
+</script>
 </body>
 </html>
