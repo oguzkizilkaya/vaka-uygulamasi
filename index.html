@@ -1,472 +1,849 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com; img-src 'self' https://raw.githubusercontent.com data:;">    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.gstatic.com; img-src 'self' https://raw.githubusercontent.com data:;">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pediatrik Vaka: aHÜS Yönetimi</title>
+    <title>Medicom | Vaka Simülatörü</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
+            font-family: 'DM Sans', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f1d4a 0%, #8a1515 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-start;
+            padding: 30px 20px;
             color: #333;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            max-width: 900px;
+
+        /* ========== LANDING ========== */
+        #landing {
+            background: rgba(255,255,255,0.97);
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            max-width: 1000px;
             width: 100%;
-            padding: 40px;
+            padding: 50px 40px 40px;
+        }
+        .landing-header {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+        .landing-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .landing-logo img {
+            max-height: 38px;
+            object-fit: contain;
+        }
+        .landing-header h1 {
+            color: #0f1d4a;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+        .landing-header p {
+            color: #666;
+            font-size: 15px;
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+        @media (max-width: 720px) { .case-grid { grid-template-columns: 1fr; } }
+
+        .case-card {
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            transition: transform 0.25s, box-shadow 0.25s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .case-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.18);
+        }
+        .card-header {
+            padding: 32px 22px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
             position: relative;
             overflow: hidden;
-            display: flex;
+        }
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px; right: -30px;
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+        }
+        .card-icon { font-size: 44px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2)); }
+        .card-title { font-size: 17px; font-weight: 700; color: white; text-align: center; }
+        .card-subtitle { font-size: 12px; color: rgba(255,255,255,0.80); font-weight: 500; }
+        .card-body { padding: 20px; background: white; }
+        .card-desc { font-size: 13px; color: #555; line-height: 1.55; margin-bottom: 14px; }
+        .card-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 16px; }
+        .tag { padding: 3px 11px; border-radius: 20px; font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
+        .tag-eculi  { background: #e8f0fe; color: #1a2a6c; }
+        .tag-ravuli { background: #fde8e8; color: #8a1515; }
+        .tag-med    { background: #fff3cd; color: #7a5800; }
+        .tag-adv    { background: #fde8e8; color: #7a1515; }
+        .start-btn {
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            letter-spacing: 0.2px;
+        }
+        .start-btn:hover { opacity: 0.88; }
+        .start-btn:active { transform: scale(0.98); }
+
+        /* ========== CASE CONTAINER ========== */
+        #case-container {
+            background: rgba(255,255,255,0.97);
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            max-width: 900px;
+            width: 100%;
+            padding: 35px 40px 30px;
+            display: none;
             flex-direction: column;
             min-height: 650px;
         }
-        .screen { display: none; opacity: 0; transition: opacity 0.5s ease; flex-grow: 1; }
-        .screen.active { display: block; opacity: 1; animation: slideUp 0.6s ease-out; }
+        #case-container.active { display: flex; }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: none; border: none; color: #888; font-size: 13px;
+            cursor: pointer; margin-bottom: 18px; padding: 0; font-family: inherit;
+            transition: color 0.2s;
+        }
+        .back-btn:hover { color: #0f1d4a; }
+
+        /* ========== SCREENS ========== */
+        .screen { display: none; opacity: 0; flex-grow: 1; }
+        .screen.active { display: block; opacity: 1; animation: slideUp 0.5s ease-out; }
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        h1 { color: #b21f1f; margin-bottom: 20px; font-size: 26px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
-        .case-header {
-            background: #f1f3f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 5px solid #1a2a6c;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 10px;
-        }
-        .status-stable { background: #28a745; }
+        h1 { color: #8a1515; margin-bottom: 18px; font-size: 24px; font-weight: 700; border-bottom: 2px solid #f0f0f0; padding-bottom: 12px; }
+        .case-header { background: #f5f7fa; padding: 16px; border-radius: 10px; margin-bottom: 18px; border-left: 5px solid #0f1d4a; }
+        .case-header h3 { margin-bottom: 6px; font-size: 15px; color: #0f1d4a; }
+        .case-header p { font-size: 14px; line-height: 1.7; color: #444; }
+        .status-badge { display: inline-block; padding: 4px 11px; border-radius: 5px; font-size: 11px; font-weight: 700; color: white; margin-bottom: 12px; letter-spacing: 0.3px; }
+        .status-stable  { background: #28a745; }
         .status-critical { background: #dc3545; }
-        .status-chronic { background: #ffc107; color: #333; }
-        .lab-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-            background: #fff;
-            padding: 10px;
-            border: 1px solid #eee;
-            border-radius: 5px;
-        }
-        .lab-item { font-size: 14px; }
-        .lab-val { font-weight: bold; color: #b21f1f; }
-        .lab-val-low { font-weight: bold; color: #fd7e14; }
-        .question { font-size: 19px; font-weight: 600; margin-bottom: 25px; color: #2c3e50; }
-        .options { display: flex; flex-direction: column; gap: 15px; }
+        .status-chronic { background: #e6a817; }
+        .lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(155px, 1fr)); gap: 10px; margin-bottom: 18px; background: #fff; padding: 12px; border: 1px solid #eef0f3; border-radius: 8px; }
+        .lab-item { font-size: 13px; color: #444; }
+        .lab-val     { font-weight: 700; color: #8a1515; }
+        .lab-val-low { font-weight: 700; color: #e07800; }
+        .question { font-size: 18px; font-weight: 600; margin-bottom: 22px; color: #1a1a2e; line-height: 1.4; }
+        .options { display: flex; flex-direction: column; gap: 12px; }
         .option-btn {
-            background: white;
-            border: 2px solid #e9ecef;
-            padding: 20px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: left;
-            position: relative;
-            overflow: hidden;
+            background: white; border: 2px solid #e8eaed; padding: 18px 20px;
+            border-radius: 10px; font-size: 15px; cursor: pointer;
+            transition: all 0.25s; text-align: left; position: relative;
+            overflow: hidden; font-family: inherit; color: #333; line-height: 1.5;
         }
-        .option-btn:hover { border-color: #1a2a6c; background: #f8f9fa; transform: translateX(5px); }
-        .option-btn::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 0; height: 100%; width: 5px;
-            background: #1a2a6c;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+        .option-btn:hover { border-color: #0f1d4a; background: #f8f9ff; transform: translateX(4px); }
+        .option-btn::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: #0f1d4a; opacity: 0; transition: opacity 0.25s; }
         .option-btn:hover::before { opacity: 1; }
-        .outcome-screen { text-align: center; padding: 20px; }
-        .outcome-icon { font-size: 60px; margin-bottom: 20px; display: block; }
-        .outcome-title { font-size: 24px; font-weight: bold; margin-bottom: 15px; }
-        .outcome-desc { font-size: 16px; line-height: 1.6; color: #555; margin-bottom: 30px; }
-        .outcome-good { color: #28a745; }
-        .outcome-moderate { color: #fd7e14; }
-        .outcome-bad { color: #dc3545; }
+
+        /* ========== OUTCOMES ========== */
+        .outcome-screen { text-align: center; padding: 20px 10px; }
+        .outcome-icon  { font-size: 58px; margin-bottom: 16px; display: block; }
+        .outcome-title { font-size: 22px; font-weight: 700; margin-bottom: 14px; }
+        .outcome-desc  { font-size: 15px; line-height: 1.7; color: #555; margin-bottom: 24px; }
+        .outcome-good     { color: #1a7a3a; }
+        .outcome-moderate { color: #c47a00; }
+        .outcome-bad      { color: #c0392b; }
+
         .ref-citation {
-            background-color: #f8f9fa;
-            border-left: 4px solid #1a2a6c;
-            padding: 12px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            text-align: left;
-            font-size: 13px;
-            color: #555;
-            border-radius: 0 5px 5px 0;
-            line-height: 1.4;
+            background: #f7f9fc; border-left: 4px solid #0f1d4a;
+            padding: 14px; margin-top: 16px; margin-bottom: 16px;
+            text-align: left; font-size: 13px; color: #555;
+            border-radius: 0 8px 8px 0; line-height: 1.5;
         }
-        .ref-citation strong {
-            color: #b21f1f;
-            display: block;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-        .ref-citation em {
-            display: block;
-            margin-top: 6px;
-            font-size: 11px;
-            color: #888;
-            text-align: right;
-        }
-        .ref-citation.warning { border-left-color: #dc3545; }
-        .ref-citation.warning strong { color: #dc3545; }
-        .restart-btn {
-            background: #1a2a6c; color: white; border: none;
-            padding: 15px 40px; border-radius: 8px; font-size: 16px;
-            cursor: pointer; transition: background 0.3s;
-        }
-        .restart-btn:hover { background: #2c3e50; }
-        .admin-btn {
-            position: fixed; bottom: 20px; right: 20px;
-            background: #343a40; color: white; border: none;
-            padding: 12px 25px; border-radius: 50px;
-            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 100;
-            transition: transform 0.2s;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .admin-btn:hover { transform: scale(1.05); background: #23272b; }
-        .footer-row {
-            margin-top: auto;
-            padding-top: 25px;
-            border-top: 1px solid #e9ecef;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-        .footer-links {
-            font-size: 11px;
-            color: #666;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .footer-links a {
-            color: #1a2a6c;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
+        .ref-citation strong { color: #8a1515; display: block; margin-bottom: 5px; font-size: 13px; }
+        .ref-citation em { display: block; margin-top: 8px; font-size: 11px; color: #999; text-align: right; }
+        .ref-citation.warning { border-left-color: #c0392b; }
+        .ref-citation.warning strong { color: #c0392b; }
+
+        .btn-group { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+        .restart-btn { background: #0f1d4a; color: white; border: none; padding: 13px 28px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+        .restart-btn:hover { background: #1a2d6e; }
+        .home-btn { background: #f0f0f0; color: #444; border: none; padding: 13px 28px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-family: inherit; }
+        .home-btn:hover { background: #e0e0e0; }
+
+        /* ========== FOOTER ========== */
+        .footer-row { margin-top: auto; padding-top: 24px; border-top: 1px solid #eef0f3; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .footer-links { font-size: 11px; color: #888; display: flex; flex-direction: column; gap: 5px; }
+        .footer-links a { color: #0f1d4a; text-decoration: none; font-weight: 600; }
         .footer-links a:hover { text-decoration: underline; }
-        .footer-logo { text-align: right; }
-        .footer-logo img {
-            max-height: 50px;
-            width: auto;
-            object-fit: contain;
-        }
+        .footer-logo img { max-height: 42px; object-fit: contain; }
+
+        .admin-btn { position: fixed; bottom: 20px; right: 20px; background: #2c2c2c; color: white; border: none; padding: 11px 22px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.3); z-index: 100; transition: transform 0.2s; font-size: 13px; font-family: inherit; }
+        .admin-btn:hover { transform: scale(1.05); background: #111; }
+
         @media (max-width: 600px) {
-            .footer-row {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: flex-end;
-            }
-            .footer-logo img { max-height: 35px; }
+            #landing, #case-container { padding: 28px 20px 24px; }
+            .footer-row { flex-direction: row; justify-content: space-between; align-items: flex-end; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
 
-        <!-- SAHNE 1 -->
-        <div class="screen active" id="scene1">
-            <h1>Vaka Sunumu</h1>
-            <span class="status-badge status-stable">Çocuk Acil Başvurusu</span>
-            <div class="case-header">
-                <h3>4 Yaşında Erkek Hasta</h3>
-                <p>Annesi tarafından halsizlik ve son 24 saattir idrar çıkışı olmaması şikayetiyle getirildi. Öyküde 1 hafta önce ateşli üst solunum yolu enfeksiyonu var. <strong>Kanlı ishal öyküsü yok.</strong></p>
+<!-- =================== LANDING =================== -->
+<div id="landing">
+    <div class="landing-header">
+        <div class="landing-logo">
+            <img src="https://raw.githubusercontent.com/oguzkizilkaya/vaka-uygulamasi/975869699dcc9ab42518c7e13c0720dd082a5689/Alexion%20Logo.png" alt="Alexion" onerror="this.style.display='none'">
+        </div>
+        <h1>Medicom Vaka Simülatörü</h1>
+        <p>İnteraktif klinik karar simülasyonlarıyla kompleman aracılı hastalıklarda tanı ve tedavi deneyimi kazanın.</p>
+    </div>
+    <div class="case-grid">
+
+        <div class="case-card" onclick="loadCase('ahus-ped')">
+            <div class="card-header" style="background: linear-gradient(135deg, #0f1d4a 0%, #1e3a8a 100%);">
+                <span class="card-icon">🧒</span>
+                <div class="card-title">Pediatrik aHÜS</div>
+                <div class="card-subtitle">4 Yaşında Erkek</div>
             </div>
-            <div class="lab-grid">
-                <div class="lab-item">Hb: <span class="lab-val">7.2 g/dL</span></div>
-                <div class="lab-item">Plt: <span class="lab-val">45.000/mm³</span></div>
-                <div class="lab-item">Kreatinin: <span class="lab-val">1.9 mg/dL</span> (Yaşa göre ABY)</div>
-                <div class="lab-item">LDH: <span class="lab-val">1800 U/L</span></div>
-                <div class="lab-item">Periferik Yayma: <span class="lab-val">Şistosit (+)</span></div>
-            </div>
-            <p class="question">Mevcut bulgular ile hastaya ilk yaklaşımınız nasıl olur?</p>
-            <div class="options">
-                <button class="option-btn" onclick="makeDecision(1, 'A')">
-                    <strong>A)</strong> Gaita kültürü ve kompleman panel (C3, anti-FH antikoru) isterim; ADAMTS13 testi ister, hidrasyona başlarım.
-                </button>
-                <button class="option-btn" onclick="makeDecision(1, 'B')">
-                    <strong>B)</strong> Viral enfeksiyon sonrası geçici bir tablo olduğunu düşünür, destek tedavisi ve antibiyotik ile izlerim.
-                </button>
+            <div class="card-body">
+                <p class="card-desc">Anüri ve TMA triadı ile başvuran çocuk hasta. STEC-HÜS ve TTP ayırıcı tanısı, kompleman inhibitörü karar anları.</p>
+                <div class="card-tags">
+                    <span class="tag tag-eculi">Eculizumab</span>
+                    <span class="tag tag-med">Orta Düzey</span>
+                </div>
+                <button class="start-btn" style="background:#0f1d4a;">Vakayı Başlat →</button>
             </div>
         </div>
 
-        <!-- SAHNE 2A — DOĞRU YOL -->
-        <div class="screen" id="scene2a">
-            <h1>Tanısal Değerlendirme</h1>
-            <span class="status-badge status-stable">İlk Sonuçlar Çıktı</span>
-            <div class="case-header">
-                <h3>Kritik Ayrım</h3>
-                <p>
-                    Gaita kültürü: <strong>Negatif</strong><br>
-                    ADAMTS13 aktivitesi: <strong> %65 </strong><br>
-                    C3: <strong class="lab-val-low">62 mg/dL (↓)</strong><br>
-                    Anti-FH antikoru: <strong>(-)</strong><br>
-                    Hasta halen anürik. Kreatinin 2.4 mg/dL'ye yükseldi ve yaşa göre hipertansif (130/90 mmHg).
-                </p>
+        <div class="case-card" onclick="loadCase('ahus-adult')">
+            <div class="card-header" style="background: linear-gradient(135deg, #3b1060 0%, #6d28d9 100%);">
+                <span class="card-icon">👩</span>
+                <div class="card-title">Erişkin aHÜS</div>
+                <div class="card-subtitle">38 Yaşında Kadın</div>
             </div>
-            <p class="question">Mevcut durumda tedavi planınız nasıl olur?</p>
-            <div class="options">
-                <button class="option-btn" onclick="makeDecision(2, 'A')">
-                    <strong>A)</strong> Santral kateterizasyon ile plazma değişimi, yanıt alınmazsa ilaç tedavisi.
-                </button>
-                <button class="option-btn" onclick="makeDecision(2, 'B')">
-                    <strong>B)</strong> Eculizumab + Meningokok aşı ve profilaksisi.
-                </button>
-                <button class="option-btn" onclick="makeDecision(2, 'C')">
-                    <strong>C)</strong> Ravulizumab + Meningokok aşı ve profilaksisi.
-                </button>
+            <div class="card-body">
+                <p class="card-desc">Konfüzyon ve oligüri ile gelen erişkin hasta. Oral kontraseptif tetikleyicisi, TTP dışlama ve tedavi zamanlaması.</p>
+                <div class="card-tags">
+                    <span class="tag tag-eculi">Eculizumab</span>
+                    <span class="tag tag-med">Orta Düzey</span>
+                </div>
+                <button class="start-btn" style="background:#3b1060;">Vakayı Başlat →</button>
             </div>
         </div>
 
-        <!-- SAHNE 2B — YANLIŞ YOL -->
-        <div class="screen" id="scene2b">
-            <h1>Klinik Kötüleşme</h1>
-            <span class="status-badge status-critical">Durum: Kritik</span>
-            <div class="case-header">
-                <h3>15 gün sonra</h3>
-                <p>Hasta nöbet geçirdi (aHÜS santral tutulumu ?).<br>
-                <strong>Yeni Lab:</strong> Hb: 6.0 g/dL, Plt: 20.000, <strong>Kreatinin: 3.5 mg/dL</strong>.<br>
-                </p>
+        <div class="case-card" onclick="loadCase('pnh-adult')">
+            <div class="card-header" style="background: linear-gradient(135deg, #8a1515 0%, #c0392b 100%);">
+                <span class="card-icon">🩸</span>
+                <div class="card-title">Erişkin PNH</div>
+                <div class="card-subtitle">28 Yaşında Erkek</div>
             </div>
-            <p class="question">Mevcut klinik durumda kararınız ne yönde olur?</p>
-            <div class="options">
-                <button class="option-btn" onclick="makeDecision(2, 'E')">
-                    <strong>A)</strong> Acil Diyaliz + Eculizumab tedavisi
-                </button>
-                <button class="option-btn" onclick="makeDecision(2, 'G')">
-                    <strong>B)</strong> Acil Diyaliz + Ravulizumab tedavisi
-                </button>
-                <button class="option-btn" onclick="makeDecision(2, 'F')">
-                    <strong>C)</strong> Sadece Diyaliz ve Taze Donmuş Plazma infüzyonu.
-                </button>
+            <div class="card-body">
+                <p class="card-desc">Tekrarlayan hemoglobinüri ve intravaskular hemoliz bulguları. PNH klonu tanımlanması ve komplikasyon önleme.</p>
+                <div class="card-tags">
+                    <span class="tag tag-ravuli">Ravulizumab</span>
+                    <span class="tag tag-adv">İleri Düzey</span>
+                </div>
+                <button class="start-btn" style="background:#8a1515;">Vakayı Başlat →</button>
             </div>
         </div>
 
-        <!-- SAHNE 3 — DİYALİZ YOLU -->
-        <div class="screen" id="scene3_dialysis">
-            <h1>1 Yıl Sonra...</h1>
-            <span class="status-badge status-chronic">Durum: Son Dönem Böbrek Yetmezliği (SDBY)</span>
-            <div class="case-header">
-                <h3>Poliklinik Kontrolü</h3>
-                <p>
-                    Hasta periton diyalizi ile takip ediliyor. Büyüme-gelişme geriliği başladı.<br>
-                    Annesinden canlı böbrek nakli planlanıyor.<br><br>
-                    <strong>Genetik Panel Sonucu:</strong> <span class="lab-val">CFH mutasyonu (+)</span> — Yüksek nüks riski grubu<br>
-                    <small style="color:#666;">CFH/C3/CFB mutasyon pozitifliğinin nakil sonrası nüks riskini artırdığı raporlanmıştır</small>
-                </p>
-            </div>
-            <p class="question">CFH mutasyonu pozitif bu hastada nakil stratejiniz ne yönde olur?</p>
-            <div class="options">
-                <button class="option-btn" onclick="makeDecision(3, 'A')">
-                    <strong>A)</strong> Nakil öncesi profilaktik Eculizumab sonrası nakil.
-                </button>
-                <button class="option-btn" onclick="makeDecision(3, 'C')">
-                    <strong>B)</strong> Nakil öncesi profilaktik Ravulizumab sonrası nakil.
-                </button>
-                <button class="option-btn" onclick="makeDecision(3, 'B')">
-                    <strong>C)</strong> Sadece nakil yapıp nüks gözlenirse tedavi başlayalım.
-                </button>
-            </div>
-        </div>
+    </div>
+</div>
 
-        <!-- OUTCOME: MÜKEMMEL -->
-        <div class="screen outcome-screen" id="outcome_perfect">
-            <span class="outcome-icon outcome-good">🌟</span>
-            <h2 class="outcome-title outcome-good">Tam İyileşme (Renal Recovery)</h2>
-            <p class="outcome-desc">
-                Hızlı anti-kompleman tedavisi sonucunda böbrek fonksiyonları tamamen normale döndü.<br>
-                Diyaliz bağımsız. Normal büyüme gelişme.<br>
-                Genetik panelde <em>CFH</em> mutasyonu saptandı.
-            </p>
-            <div class="ref-citation">
-                <strong>📚 Kanıt Temelli Yaklaşım:</strong>
-                Çocuklarda aHÜS tanısı konulur konulmaz anti-kompleman tedavi (Eculizumab veya Ravulizumab) birinci basamak tedavi olmalıdır. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
-                <em>— Loirat C, et al. Pediatric Nephrology. 2016</em>
-            </div>
-            <div class="ref-citation warning">
-                <strong>⚠️ Güvenlik: Meningokok Profilaksisi Zorunludur</strong>
-                Terminal kompleman inhibisyonu <em>Neisseria meningitidis</em> enfeksiyonu riskini artırır. Tedavi başlanmadan en az 2 hafta önce meningokok aşısı (ACWY + B) yapılmalı; acil başlanması gerekirse profilaktik antibiyotik eş zamanlı uygulanmalıdır.
-                <em>— Soliris KÜB; Ultomiris KÜB; ECDC Meningococcal Disease Guidelines</em>
-            </div>
-            <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
-        </div>
+<!-- =================== CASE CONTAINER =================== -->
+<div id="case-container">
+    <button class="back-btn" onclick="backToLanding()">← Vaka Listesine Dön</button>
 
-        <!-- OUTCOME: KBY -->
-        <div class="screen outcome-screen" id="outcome_ckd">
-            <span class="outcome-icon outcome-moderate">⚠️</span>
-            <h2 class="outcome-title outcome-moderate">Kalıcı Böbrek Hasarı</h2>
-            <p class="outcome-desc">
-                Tedaviye rağmen kortikal nekroz gözleniyor.<br>
-                Hematolojik değerler düzelme eğiliminde ancak GFR 40 ml/dk civarında stabil seyrediyor.
-            </p>
-            <div class="ref-citation">
-                <strong>📚 Kritik Uyarı:</strong>
-                Özellikle çocuk hasta grubunda aHÜS tanısı ile erken anti-kompleman tedavisine başlanması böbrek fonksiyon kazanımı için kritiktir.
-                <em>— KDIGO 2017 Clinical Practice Guideline Update (TMA focus)</em>
-            </div>
-            <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
+    <!-- ====================================================
+         VAKA 1: PEDİATRİK aHÜS
+    ===================================================== -->
+    <div class="screen" id="ahus-ped-scene1">
+        <h1>Vaka Sunumu</h1>
+        <span class="status-badge status-stable">Çocuk Acil Başvurusu</span>
+        <div class="case-header">
+            <h3>4 Yaşında Erkek Hasta</h3>
+            <p>Annesi tarafından halsizlik ve son 24 saattir idrar çıkışı olmaması şikayetiyle getirildi. Öyküde 1 hafta önce ateşli üst solunum yolu enfeksiyonu var. <strong>Kanlı ishal öyküsü yok.</strong></p>
         </div>
-
-        <!-- OUTCOME: NAKİL BAŞARILI -->
-        <div class="screen outcome-screen" id="outcome_transplant_success">
-            <span class="outcome-icon outcome-good">✅</span>
-            <h2 class="outcome-title outcome-good">Başarılı Pediatrik Nakil</h2>
-            <p class="outcome-desc">
-                Profilaktik anti-kompleman tedavisi sayesinde greft fonksiyonları korundu.<br>
-                Hasta diyaliz bağımsız takip ediliyor ve büyüme eğrisi normal izleniyor.
-            </p>
-            <div class="ref-citation">
-                <strong>📚 Transplantasyon Verisi:</strong>
-                CFH mutasyonu gibi yüksek riskli genotiplerde profilaktik anti-kompleman tedavinin greft kaybını dramatik şekilde azalttığı raporlanmıştır (< %10). Profilaksi uygulanmaması halinde nüks oranı %80'e ulaşabilmektedir. 
-                <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
-            </div>
-            <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
+        <div class="lab-grid">
+            <div class="lab-item">Hb: <span class="lab-val">7.2 g/dL</span></div>
+            <div class="lab-item">Plt: <span class="lab-val">45.000/mm³</span></div>
+            <div class="lab-item">Kreatinin: <span class="lab-val">1.9 mg/dL</span> (ABY)</div>
+            <div class="lab-item">LDH: <span class="lab-val">1800 U/L</span></div>
+            <div class="lab-item">Periferik Yayma: <span class="lab-val">Şistosit (+)</span></div>
         </div>
-
-        <!-- OUTCOME: NAKİL BAŞARISIZ -->
-        <div class="screen outcome-screen" id="outcome_transplant_fail">
-            <span class="outcome-icon outcome-bad">❌</span>
-            <h2 class="outcome-title outcome-bad">Greft Kaybı ve Nüks</h2>
-            <p class="outcome-desc">
-                Cerrahi stres ile kompleman sistemi aktivasyonu gerçekleşti.<br>
-                Nakil sonrası aHÜS nüksü ile greft fonksiyonu kaybedildi.
-            </p>
-            <div class="ref-citation">
-                <strong>📚 Neden Başarısız Oldu?</strong>
-                CFH mutasyonu pozitif hastalarda kompleman disregülasyonu sistemik olarak devam eder; nakil tek başına hastalığı tedavi etmez. Profilaktik anti-kompleman tedavisi uygulanmayan yüksek riskli hastalarda nüks ve greft kaybı riski %80 civarındadır.
-                <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
-            </div>
-            <button class="restart-btn" onclick="resetCase()">Vakayı Tekrar Başlat</button>
-        </div>
-
-        <div class="footer-row">
-            <div class="footer-links">
-                <a href="https://az.box.com/shared/static/knwd88xwnh6vay5ozkj4xo035tpd75od.pdf" target="_blank">▼ Soliris KÜB özeti için tıklayınız</a>
-                <a href="https://az.box.com/s/d643itwunmtvm091rfx5r6ssba2w7c53" target="_blank">▼ Ultomiris KÜB özeti için tıklayınız</a>
-                <span>M/TR/UNB-a/0174</span>
-            </div>
-            <div class="footer-logo">
-                <img src="https://raw.githubusercontent.com/oguzkizilkaya/vaka-uygulamasi/975869699dcc9ab42518c7e13c0720dd082a5689/Alexion%20Logo.png" alt="Alexion Logo" onerror="this.style.display='none'">
-            </div>
+        <p class="question">Mevcut bulgular ile hastaya ilk yaklaşımınız nasıl olur?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-ped',1,'A')"><strong>A)</strong> Gaita kültürü ve kompleman panel (C3, anti-FH antikoru) isterim; ADAMTS13 testi ister, hidrasyona başlarım.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-ped',1,'B')"><strong>B)</strong> Viral enfeksiyon sonrası geçici bir tablo olduğunu düşünür, destek tedavisi ve antibiyotik ile izlerim.</button>
         </div>
     </div>
 
-    <button class="admin-btn" onclick="window.location.href='admin.html'">📊 Vaka Analizi (Admin)</button>
+    <div class="screen" id="ahus-ped-scene2a">
+        <h1>Tanısal Değerlendirme</h1>
+        <span class="status-badge status-stable">İlk Sonuçlar Çıktı</span>
+        <div class="case-header">
+            <h3>Kritik Ayrım</h3>
+            <p>Gaita kültürü: <strong>Negatif</strong><br>
+            ADAMTS13 aktivitesi: <strong>%65</strong><br>
+            C3: <strong class="lab-val-low">62 mg/dL (↓)</strong><br>
+            Anti-FH antikoru: <strong>(-)</strong><br>
+            Hasta halen anürik. Kreatinin 2.4 mg/dL'ye yükseldi, yaşa göre hipertansif (130/90 mmHg).</p>
+        </div>
+        <p class="question">Mevcut durumda tedavi planınız nasıl olur?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-ped',2,'A')"><strong>A)</strong> Santral kateterizasyon ile plazma değişimi, yanıt alınmazsa ilaç tedavisi.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-ped',2,'B')"><strong>B)</strong> Eculizumab + Meningokok aşı ve profilaksisi.</button>
+        </div>
+    </div>
 
-    <!-- SCRIPT 1: Navigasyon — Firebase'den bağımsız -->
-    <script>
+    <div class="screen" id="ahus-ped-scene2b">
+        <h1>Klinik Kötüleşme</h1>
+        <span class="status-badge status-critical">Durum: Kritik</span>
+        <div class="case-header">
+            <h3>15 Gün Sonra</h3>
+            <p>Hasta nöbet geçirdi (aHÜS santral tutulumu?).<br>
+            <strong>Yeni Lab:</strong> Hb: 6.0 g/dL, Plt: 20.000, <strong>Kreatinin: 3.5 mg/dL</strong>.</p>
+        </div>
+        <p class="question">Mevcut klinik durumda kararınız ne yönde olur?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-ped',2,'C')"><strong>A)</strong> Acil Diyaliz + Eculizumab tedavisi</button>
+            <button class="option-btn" onclick="makeDecision('ahus-ped',2,'D')"><strong>B)</strong> Sadece Diyaliz ve Taze Donmuş Plazma infüzyonu.</button>
+        </div>
+    </div>
+
+    <div class="screen" id="ahus-ped-scene3">
+        <h1>1 Yıl Sonra...</h1>
+        <span class="status-badge status-chronic">Son Dönem Böbrek Yetmezliği (SDBY)</span>
+        <div class="case-header">
+            <h3>Poliklinik Kontrolü</h3>
+            <p>Hasta periton diyalizi ile takip ediliyor. Büyüme-gelişme geriliği başladı. Annesinden canlı böbrek nakli planlanıyor.<br><br>
+            <strong>Genetik Panel:</strong> <span class="lab-val">CFH mutasyonu (+)</span> — Yüksek nüks riski grubu<br>
+            <small style="color:#888;">CFH/C3/CFB mutasyon pozitifliğinin nakil sonrası nüks riskini artırdığı raporlanmıştır.</small></p>
+        </div>
+        <p class="question">CFH mutasyonu pozitif bu hastada nakil stratejiniz ne yönde olur?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-ped',3,'A')"><strong>A)</strong> Nakil öncesi profilaktik Eculizumab, sonra nakil.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-ped',3,'B')"><strong>B)</strong> Sadece nakil yapıp nüks gözlenirse tedavi başlayalım.</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="ahus-ped-out-perfect">
+        <span class="outcome-icon">🌟</span>
+        <h2 class="outcome-title outcome-good">Tam İyileşme (Renal Recovery)</h2>
+        <p class="outcome-desc">Hızlı Eculizumab tedavisi sonucunda böbrek fonksiyonları tamamen normale döndü.<br>Diyaliz bağımsız. Normal büyüme ve gelişme.<br>Genetik panelde <em>CFH</em> mutasyonu saptandı.</p>
+        <div class="ref-citation">
+            <strong>📚 Kanıt Temelli Yaklaşım</strong>
+            Çocuklarda aHÜS tanısı konulur konulmaz Eculizumab birinci basamak tedavi olmalıdır. Plazma tedavisi teknik zorluklar ve düşük etkinlik nedeniyle önerilmez.
+            <em>— Loirat C, et al. Pediatric Nephrology. 2016</em>
+        </div>
+        <div class="ref-citation warning">
+            <strong>⚠️ Güvenlik: Meningokok Profilaksisi Zorunludur</strong>
+            Terminal kompleman inhibisyonu <em>Neisseria meningitidis</em> riskini artırır. Tedavi başlanmadan en az 2 hafta önce aşı (ACWY + B) yapılmalı; acil başlangıçta profilaktik antibiyotik uygulanmalıdır.
+            <em>— Soliris KÜB; ECDC Meningococcal Disease Guidelines</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('ahus-ped')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="ahus-ped-out-ckd">
+        <span class="outcome-icon">⚠️</span>
+        <h2 class="outcome-title outcome-moderate">Kalıcı Böbrek Hasarı</h2>
+        <p class="outcome-desc">Tedaviye rağmen kortikal nekroz gözleniyor.<br>Hematolojik değerler düzelme eğiliminde ancak GFR 40 ml/dk civarında stabil seyrediyor.</p>
+        <div class="ref-citation">
+            <strong>📚 Kritik Uyarı</strong>
+            Özellikle çocuk hasta grubunda aHÜS tanısında erken Eculizumab başlanması böbrek fonksiyon kazanımı için kritiktir.
+            <em>— KDIGO 2017 Clinical Practice Guideline Update (TMA focus)</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('ahus-ped')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="ahus-ped-out-tx-success">
+        <span class="outcome-icon">✅</span>
+        <h2 class="outcome-title outcome-good">Başarılı Pediatrik Nakil</h2>
+        <p class="outcome-desc">Profilaktik Eculizumab sayesinde greft fonksiyonları korundu.<br>Hasta diyaliz bağımsız takip ediliyor, büyüme eğrisi normal izleniyor.</p>
+        <div class="ref-citation">
+            <strong>📚 Transplantasyon Verisi</strong>
+            CFH mutasyonu gibi yüksek riskli genotiplerde profilaktik Eculizumab greft kaybını dramatik şekilde azaltır (&lt;%10). Profilaksi uygulanmaması halinde nüks oranı %80'e ulaşabilmektedir.
+            <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('ahus-ped')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="ahus-ped-out-tx-fail">
+        <span class="outcome-icon">❌</span>
+        <h2 class="outcome-title outcome-bad">Greft Kaybı ve Nüks</h2>
+        <p class="outcome-desc">Cerrahi stres kompleman sistemini aktive etti.<br>Nakil sonrası aHÜS nüksü ile greft fonksiyonu kaybedildi.</p>
+        <div class="ref-citation">
+            <strong>📚 Neden Başarısız Oldu?</strong>
+            CFH mutasyonu pozitif hastalarda kompleman disregülasyonu sistemik devam eder; nakil tek başına hastalığı tedavi etmez. Profilaksi yapılmayan yüksek riskli hastalarda nüks riski %80 civarındadır.
+            <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('ahus-ped')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+
+    <!-- ====================================================
+         VAKA 2: ERİŞKİN aHÜS
+    ===================================================== -->
+    <div class="screen" id="ahus-adult-scene1">
+        <h1>Vaka Sunumu</h1>
+        <span class="status-badge status-stable">Erişkin Acil Başvurusu</span>
+        <div class="case-header">
+            <h3>38 Yaşında Kadın Hasta</h3>
+            <p>3 günlük ilerleyici halsizlik, konfüzyon ve oligüri şikayetiyle başvurdu. <strong>İshal öyküsü yok.</strong> Oral kontraseptif kullanıyor. 4 hafta önce viral ÜSYE geçirdi.</p>
+        </div>
+        <div class="lab-grid">
+            <div class="lab-item">Hb: <span class="lab-val">8.1 g/dL</span></div>
+            <div class="lab-item">Plt: <span class="lab-val">38.000/mm³</span></div>
+            <div class="lab-item">Kreatinin: <span class="lab-val">3.2 mg/dL</span> (ABY)</div>
+            <div class="lab-item">LDH: <span class="lab-val">2100 U/L</span></div>
+            <div class="lab-item">Periferik Yayma: <span class="lab-val">Şistosit (+)</span></div>
+        </div>
+        <p class="question">TMA triadı mevcut. İlk yaklaşımınız nasıl olur?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-adult',1,'A')"><strong>A)</strong> Gaita kültürü, kompleman panel (C3, anti-FH) ve ADAMTS13 ister; hidrasyon başlarım.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-adult',1,'B')"><strong>B)</strong> Otoimmün süreç düşünür; ANA, ANCA bakarım ve kortikosteroid başlarım.</button>
+        </div>
+    </div>
+
+    <div class="screen" id="ahus-adult-scene2a">
+        <h1>Tanısal Değerlendirme</h1>
+        <span class="status-badge status-stable">İlk Sonuçlar Çıktı</span>
+        <div class="case-header">
+            <h3>Kritik Ayrım</h3>
+            <p>Gaita kültürü: <strong>Negatif</strong><br>
+            ADAMTS13 aktivitesi: <strong>%72</strong> — TTP dışlandı<br>
+            C3: <strong class="lab-val-low">54 mg/dL (↓)</strong><br>
+            Anti-FH antikoru: <strong>(-)</strong> &nbsp;|&nbsp; ANA/ANCA: <strong>Negatif</strong><br>
+            Hasta halen oligurik. Kreatinin 4.1 mg/dL, KB: 165/100 mmHg.</p>
+        </div>
+        <p class="question">TTP ve otoimmün nedenler dışlandı. Tedavi planınız?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-adult',2,'A')"><strong>A)</strong> Plazma değişimi başlayalım, yanıt alınmazsa ilaç tedavisi.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-adult',2,'B')"><strong>B)</strong> Eculizumab + Meningokok aşı ve profilaksisi.</button>
+        </div>
+    </div>
+
+    <div class="screen" id="ahus-adult-scene2b">
+        <h1>Klinik Kötüleşme</h1>
+        <span class="status-badge status-critical">Durum: Kritik</span>
+        <div class="case-header">
+            <h3>10 Gün Sonra</h3>
+            <p>Kortikosteroid tedavisine yanıt alınamadı. Pulmoner ödem gelişti.<br>
+            <strong>Yeni Lab:</strong> Hb: 6.0 g/dL, Plt: 15.000, <strong>Kreatinin: 5.9 mg/dL</strong>. Acil diyaliz gerekiyor.</p>
+        </div>
+        <p class="question">Diyaliz ihtiyacı doğdu. Ek tedavi kararınız?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-adult',2,'C')"><strong>A)</strong> Diyaliz + Eculizumab başla.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-adult',2,'D')"><strong>B)</strong> Sadece Diyaliz ve Taze Donmuş Plazma infüzyonu.</button>
+        </div>
+    </div>
+
+    <div class="screen" id="ahus-adult-scene3">
+        <h1>1 Yıl Sonra...</h1>
+        <span class="status-badge status-chronic">Hemodiyaliz Bağımlı</span>
+        <div class="case-header">
+            <h3>Nefroloji Polikliniği</h3>
+            <p>Hasta haftada 3 hemodiyaliz ile takip ediliyor. Kadavradan böbrek nakli bekleme listesine alındı.<br><br>
+            <strong>Genetik Panel:</strong> <span class="lab-val">CFI mutasyonu (+)</span> — Yüksek nüks riski<br>
+            <small style="color:#888;">CFH, CFI, C3 mutasyonlarında nakil sonrası yüksek nüks riski; profilaktik anti-kompleman tedavisi gereklidir.</small></p>
+        </div>
+        <p class="question">CFI mutasyonu pozitif hastada nakil stratejiniz?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('ahus-adult',3,'A')"><strong>A)</strong> Nakil öncesi profilaktik Eculizumab başla, sonra nakil.</button>
+            <button class="option-btn" onclick="makeDecision('ahus-adult',3,'B')"><strong>B)</strong> Nakil yap, nüks gözlenirse Eculizumab başlayalım.</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="ahus-adult-out-perfect">
+        <span class="outcome-icon">🌟</span>
+        <h2 class="outcome-title outcome-good">Tam İyileşme (Renal Recovery)</h2>
+        <p class="outcome-desc">Erken Eculizumab tedavisi ile böbrek fonksiyonları tamamen normalize oldu.<br>Diyaliz bağımsız. Oral kontraseptif kesildi, alternatif kontrasepsiyon planlandı.<br>Genetik panelde <em>CFI</em> mutasyonu saptandı.</p>
+        <div class="ref-citation">
+            <strong>📚 Kanıt Temelli Yaklaşım</strong>
+            Erişkin aHÜS'te ADAMTS13 normal saptandığında ve otoimmün nedenler dışlandığında Eculizumab ilk basamak tedavi olmalıdır. Oral kontraseptifler tetikleyici olarak tanımlanmıştır.
+            <em>— Fakhouri F, et al. Lancet. 2017</em>
+        </div>
+        <div class="ref-citation warning">
+            <strong>⚠️ Güvenlik: Meningokok Profilaksisi Zorunludur</strong>
+            Terminal kompleman inhibisyonu <em>Neisseria meningitidis</em> riskini artırır. Tedavi öncesi aşılama (ACWY + B) ve gerekirse eş zamanlı profilaktik antibiyotik uygulanmalıdır.
+            <em>— Soliris KÜB; ECDC Meningococcal Disease Guidelines</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('ahus-adult')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="ahus-adult-out-ckd">
+        <span class="outcome-icon">⚠️</span>
+        <h2 class="outcome-title outcome-moderate">Kronik Böbrek Hastalığı</h2>
+        <p class="outcome-desc">Tedaviye rağmen kortikal nekroz ilerledi.<br>Eculizumab ile hematolojik düzelme sağlandı ancak GFR kalıcı olarak 35 ml/dk'da kaldı.</p>
+        <div class="ref-citation">
+            <strong>📚 Kritik Uyarı</strong>
+            Erişkin aHÜS'te otoimmün süreç yanılgısı (kortikosteroid) tanı ve tedavide gecikmeye yol açar. ADAMTS13 ve kompleman paneli en kısa sürede çalışılmalıdır.
+            <em>— Fakhouri F, et al. Lancet. 2017</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('ahus-adult')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="ahus-adult-out-tx-success">
+        <span class="outcome-icon">✅</span>
+        <h2 class="outcome-title outcome-good">Başarılı Böbrek Nakli</h2>
+        <p class="outcome-desc">Profilaktik Eculizumab ile greft fonksiyonları korundu.<br>Hasta diyaliz bağımsız, normal yaşamına döndü.</p>
+        <div class="ref-citation">
+            <strong>📚 Transplantasyon Verisi</strong>
+            CFI mutasyonu gibi yüksek riskli genotiplerde profilaktik Eculizumab greft kaybını dramatik şekilde azaltır. Profilaksi yapılmayan hastalarda nüks ve greft kaybı riski %80'e ulaşabilmektedir.
+            <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('ahus-adult')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="ahus-adult-out-tx-fail">
+        <span class="outcome-icon">❌</span>
+        <h2 class="outcome-title outcome-bad">Greft Kaybı</h2>
+        <p class="outcome-desc">Cerrahi stres kompleman sistemini aktive etti.<br>Nakil sonrası aHÜS nüksü ile greft fonksiyonu kaybedildi. Hasta yeniden diyalize girdi.</p>
+        <div class="ref-citation">
+            <strong>📚 Neden Başarısız Oldu?</strong>
+            CFI mutasyonu taşıyan hastalarda kompleman disregülasyonu nakil sonrası devam eder. Profilaksi yapılmayan yüksek riskli hastalarda nüks riski %80 civarındadır.
+            <em>— Zuber J, et al. Nature Reviews Nephrology. 2012</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('ahus-adult')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+
+    <!-- ====================================================
+         VAKA 3: ERİŞKİN PNH
+    ===================================================== -->
+    <div class="screen" id="pnh-adult-scene1">
+        <h1>Vaka Sunumu</h1>
+        <span class="status-badge status-stable">Hematoloji Polikliniği</span>
+        <div class="case-header">
+            <h3>28 Yaşında Erkek Hasta</h3>
+            <p>6 aydır ilerleyici yorgunluk, sabahları koyu renkli idrar (hemoglobinüri) ve aralıklı karın ağrısı şikayetiyle başvurdu. Ateş yok, kilo kaybı yok.</p>
+        </div>
+        <div class="lab-grid">
+            <div class="lab-item">Hb: <span class="lab-val">7.8 g/dL</span></div>
+            <div class="lab-item">Retikülosit: <span class="lab-val">%8 (↑)</span></div>
+            <div class="lab-item">LDH: <span class="lab-val">2800 U/L</span></div>
+            <div class="lab-item">Total Bilirubin: <span class="lab-val">3.1 mg/dL (↑)</span></div>
+            <div class="lab-item">Haptoglobin: <span class="lab-val">&lt;10 mg/dL (↓)</span></div>
+            <div class="lab-item">Periferik Yayma: <span class="lab-val">Normokromik</span></div>
+        </div>
+        <p class="question">İntravaskular hemoliz bulguları mevcut. Tanısal yaklaşımınız?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('pnh-adult',1,'A')"><strong>A)</strong> Akış sitometrisi (FLAER + CD55/CD59) ile PNH klonu araştırırım.</button>
+            <button class="option-btn" onclick="makeDecision('pnh-adult',1,'B')"><strong>B)</strong> Direkt Coombs testi ve ozmotik frajilite ile otoimmün/konjenital hemoliz araştırırım.</button>
+        </div>
+    </div>
+
+    <div class="screen" id="pnh-adult-scene2a">
+        <h1>Tanısal Doğrulama</h1>
+        <span class="status-badge status-stable">PNH Tanısı Konuldu</span>
+        <div class="case-header">
+            <h3>Akış Sitometrisi Sonucu</h3>
+            <p>GPI-eksik eritrosit klonu: <strong class="lab-val">%62</strong><br>
+            GPI-eksik granülosit klonu: <strong class="lab-val">%74</strong><br>
+            LDH: <strong class="lab-val">2800 U/L</strong> (belirgin yüksek)<br>
+            Son 3 ayda 3 ünite eritrosit transfüzyonu gerekti.<br>
+            Abdominal Doppler: <strong>Tromboz yok</strong></p>
+        </div>
+        <p class="question">Semptomatik PNH tanısı kesinleşti. Tedavi kararınız?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('pnh-adult',2,'A')"><strong>A)</strong> Folik asit + demir desteği ile izlemde klona göre karar.</button>
+            <button class="option-btn" onclick="makeDecision('pnh-adult',2,'B')"><strong>B)</strong> Ravulizumab + Meningokok aşı ve profilaksisi.</button>
+        </div>
+    </div>
+
+    <div class="screen" id="pnh-adult-scene2b">
+        <h1>Geç Tanı — Trombotik Komplikasyon</h1>
+        <span class="status-badge status-critical">Durum: Kritik</span>
+        <div class="case-header">
+            <h3>3 Ay Sonra — Acil Başvurusu</h3>
+            <p>Direkt Coombs negatif, ozmotik frajilite normal — PNH tanısı atlandı.<br>
+            Hasta akut karın ağrısı ve asit ile başvurdu.<br>
+            <strong>BT:</strong> Hepatik ven trombozu (Budd-Chiari sendromu)<br>
+            <strong>Yeni Lab:</strong> Hb: 5.9 g/dL, LDH: <span class="lab-val">3600 U/L</span></p>
+        </div>
+        <p class="question">PNH zemininde Budd-Chiari gelişti. Tedavi kararınız?</p>
+        <div class="options">
+            <button class="option-btn" onclick="makeDecision('pnh-adult',2,'C')"><strong>A)</strong> Antikoagülasyon + Ravulizumab başla.</button>
+            <button class="option-btn" onclick="makeDecision('pnh-adult',2,'D')"><strong>B)</strong> Sadece antikoagülasyon yeterlidir.</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="pnh-adult-out-perfect">
+        <span class="outcome-icon">🌟</span>
+        <h2 class="outcome-title outcome-good">Hemoliz Kontrolü Sağlandı</h2>
+        <p class="outcome-desc">Ravulizumab ile LDH normalizasyonu ve transfüzyon bağımsızlığı elde edildi.<br>8 haftada bir uygulama ile hasta tedaviye uyumlu. Trombotik komplikasyon gelişmedi.</p>
+        <div class="ref-citation">
+            <strong>📚 Kanıt Temelli Yaklaşım</strong>
+            Semptomatik PNH'de (yüksek LDH, transfüzyon bağımlılığı, büyük klon) C5 inhibitörü endikedir. Ravulizumab'ın 8 haftada bir uygulanması daha stabil C5 inhibisyonu ve daha az "breakthrough hemolysis" sağlar.
+            <em>— Kulasekararaj AG, et al. Blood. 2019 (ALXN1210-PNH-301)</em>
+        </div>
+        <div class="ref-citation warning">
+            <strong>⚠️ Güvenlik: Meningokok Profilaksisi Zorunludur</strong>
+            Terminal kompleman inhibisyonu <em>Neisseria meningitidis</em> riskini artırır. Tedavi başlanmadan en az 2 hafta önce aşı (ACWY + B) yapılmalı; acil başlangıçta profilaktik antibiyotik uygulanmalıdır.
+            <em>— Ultomiris KÜB; ECDC Meningococcal Disease Guidelines</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('pnh-adult')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="pnh-adult-out-watchwait">
+        <span class="outcome-icon">⚠️</span>
+        <h2 class="outcome-title outcome-moderate">Hastalık Progresyonu</h2>
+        <p class="outcome-desc">6 ay izlem kararıyla geçti. Transfüzyon ihtiyacı ayda 1'den 3'e çıktı.<br>Renal ven trombozu gelişti. LDH 3400 U/L. Geç başlanan Ravulizumab ile hemoliz kontrol altına alındı ancak trombotik hasar kalıcı oldu.</p>
+        <div class="ref-citation">
+            <strong>📚 Kritik Uyarı</strong>
+            Büyük klonlu (&gt;%10) semptomatik PNH'de izlem yaklaşımı tromboz, organ hasarı ve yaşam kalitesinde bozulmaya yol açar. C5 inhibitörü endikasyonu gecikilmemelidir.
+            <em>— de Latour RP, et al. Blood. 2021 (PNH Treatment Guidelines)</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('pnh-adult')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="pnh-adult-out-late">
+        <span class="outcome-icon">⚠️</span>
+        <h2 class="outcome-title outcome-moderate">Geç Tedavi — Parsiyel İyileşme</h2>
+        <p class="outcome-desc">Antikoagülasyon + Ravulizumab ile hemoliz kontrol altına alındı.<br>Hepatik ven rekanalizasyonu kısmi sağlandı ancak portal hipertansiyon kronikleşti. Hematoloji + hepatoloji ortak takibinde.</p>
+        <div class="ref-citation">
+            <strong>📚 PNH ve Tromboz</strong>
+            PNH'de tromboz en önemli mortalite nedenidir. C5 inhibitörü tromboz riskini dramatik şekilde azaltır (%15'ten &lt;%1'e). Tromboz gelişiminden sonra başlanan tedavi tam iyileşmeyi garantilemez.
+            <em>— Hillmen P, et al. NEJM. 2004; Brodsky RA. NEJM. 2014</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('pnh-adult')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+    <div class="screen outcome-screen" id="pnh-adult-out-noc5">
+        <span class="outcome-icon">❌</span>
+        <h2 class="outcome-title outcome-bad">Kronik Organ Hasarı</h2>
+        <p class="outcome-desc">Antikoagülasyona rağmen kompleman aktivasyonu durdurulamadı.<br>Hemoliz devam etti. Karaciğer yetmezliği ilerledi ve böbrek tutulumu eklendi.</p>
+        <div class="ref-citation">
+            <strong>📚 Neden Başarısız Oldu?</strong>
+            PNH'de tromboz ve organ hasarının temelinde kompleman aracılı endotel aktivasyonu yatar. Antikoagülasyon tek başına yetersizdir; kompleman inhibisyonu olmadan hemoliz ve tromboz riski devam eder.
+            <em>— Hillmen P, et al. NEJM. 2004</em>
+        </div>
+        <div class="btn-group">
+            <button class="restart-btn" onclick="restartCase('pnh-adult')">Vakayı Tekrar Başlat</button>
+            <button class="home-btn" onclick="backToLanding()">← Vaka Listesi</button>
+        </div>
+    </div>
+
+
+    <!-- FOOTER -->
+    <div class="footer-row">
+        <div class="footer-links">
+            <a id="footer-soliris"   href="https://az.box.com/shared/static/knwd88xwnh6vay5ozkj4xo035tpd75od.pdf" target="_blank">▼ Soliris KÜB özeti için tıklayınız</a>
+            <a id="footer-ultomiris" href="https://az.box.com/s/d643itwunmtvm091rfx5r6ssba2w7c53"                       target="_blank">▼ Ultomiris KÜB özeti için tıklayınız</a>
+            <span id="footer-code">M/TR/UNB-a/0174</span>
+        </div>
+        <div class="footer-logo">
+            <img src="https://raw.githubusercontent.com/oguzkizilkaya/vaka-uygulamasi/975869699dcc9ab42518c7e13c0720dd082a5689/Alexion%20Logo.png" alt="Alexion Logo" onerror="this.style.display='none'">
+        </div>
+    </div>
+</div><!-- /case-container -->
+
+<button class="admin-btn" onclick="window.location.href='admin.html'">📊 Vaka Analizi (Admin)</button>
+
+<!-- SCRIPT 1: Navigation -->
+<script>
+    let activeCase = null;
+
+    window.currentSession = { id:'', caseId:'', startTime:'', path:[], outcome:'' };
+
+    function newSession(caseId) {
         window.currentSession = {
-            id: 'user_' + Math.random().toString(36).slice(2, 11),
+            id: 'user_' + Math.random().toString(36).slice(2,11),
+            caseId: caseId,
             startTime: new Date().toISOString(),
-            path: [],
-            outcome: ''
+            path: [], outcome: ''
         };
+    }
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    const FOOTER_CFG = {
+        'ahus-ped':   { soliris: true,  ultomiris: false },
+        'ahus-adult': { soliris: true,  ultomiris: false },
+        'pnh-adult':  { soliris: false, ultomiris: true  }
+    };
+
+    window.loadCase = function(caseId) {
+        activeCase = caseId;
+        newSession(caseId);
+        document.getElementById('landing').style.display = 'none';
+        const c = document.getElementById('case-container');
+        c.style.display = 'flex';
+        const ft = FOOTER_CFG[caseId];
+        document.getElementById('footer-soliris').style.display   = ft.soliris   ? 'block' : 'none';
+        document.getElementById('footer-ultomiris').style.display = ft.ultomiris ? 'block' : 'none';
+        showScreen(caseId + '-scene1');
+    };
+
+    window.backToLanding = function() {
+        document.getElementById('case-container').style.display = 'none';
+        document.getElementById('landing').style.display = 'block';
+        activeCase = null;
+    };
+
+    window.restartCase = function(caseId) {
+        newSession(caseId);
+        showScreen(caseId + '-scene1');
+    };
+
+    window.makeDecision = function(caseId, step, choice) {
+        window.currentSession.path.push('Step' + step + ':' + choice);
+        const p = window.currentSession.path;
+
+        if (caseId === 'ahus-ped') {
+            if (step === 1) {
+                showScreen(choice === 'A' ? 'ahus-ped-scene2a' : 'ahus-ped-scene2b');
+            } else if (step === 2) {
+                if (p.includes('Step1:A')) {
+                    choice === 'B'
+                        ? finish('Tam İyileşme — Eculizumab', 'ahus-ped-out-perfect')
+                        : showScreen('ahus-ped-scene3');
+                } else {
+                    choice === 'C'
+                        ? finish('KBY — Geç Eculizumab', 'ahus-ped-out-ckd')
+                        : showScreen('ahus-ped-scene3');
+                }
+            } else if (step === 3) {
+                choice === 'A'
+                    ? finish('Başarılı Nakil — Eculizumab Profilaksisi', 'ahus-ped-out-tx-success')
+                    : finish('Greft Rejeksiyonu', 'ahus-ped-out-tx-fail');
+            }
         }
 
-        window.makeDecision = function(step, choice) {
-            window.currentSession.path.push('Step' + step + ':' + choice);
-
+        else if (caseId === 'ahus-adult') {
             if (step === 1) {
-                showScreen(choice === 'A' ? 'scene2a' : 'scene2b');
-            }
-            else if (step === 2) {
-                if (window.currentSession.path.includes('Step1:A')) {
-                    if (choice === 'B') finishCase('Mükemmel İyileşme — Eculizumab', 'outcome_perfect');
-                    else if (choice === 'C') finishCase('Mükemmel İyileşme — Ravulizumab', 'outcome_perfect');
-                    else showScreen('scene3_dialysis');
+                showScreen(choice === 'A' ? 'ahus-adult-scene2a' : 'ahus-adult-scene2b');
+            } else if (step === 2) {
+                if (p.includes('Step1:A')) {
+                    choice === 'B'
+                        ? finish('Tam İyileşme — Eculizumab', 'ahus-adult-out-perfect')
+                        : showScreen('ahus-adult-scene3');
                 } else {
-                    if (choice === 'E') finishCase('Kalıcı Hasarlı İyileşme (KBY) — Eculizumab', 'outcome_ckd');
-                    else if (choice === 'G') finishCase('Kalıcı Hasarlı İyileşme (KBY) — Ravulizumab', 'outcome_ckd');
-                    else showScreen('scene3_dialysis');
+                    choice === 'C'
+                        ? finish('KBY — Geç Eculizumab', 'ahus-adult-out-ckd')
+                        : showScreen('ahus-adult-scene3');
+                }
+            } else if (step === 3) {
+                choice === 'A'
+                    ? finish('Başarılı Nakil — Eculizumab Profilaksisi', 'ahus-adult-out-tx-success')
+                    : finish('Greft Rejeksiyonu', 'ahus-adult-out-tx-fail');
+            }
+        }
+
+        else if (caseId === 'pnh-adult') {
+            if (step === 1) {
+                showScreen(choice === 'A' ? 'pnh-adult-scene2a' : 'pnh-adult-scene2b');
+            } else if (step === 2) {
+                if (p.includes('Step1:A')) {
+                    choice === 'B'
+                        ? finish('Hemoliz Kontrolü — Ravulizumab', 'pnh-adult-out-perfect')
+                        : finish('İzlem — Hastalık Progresyonu', 'pnh-adult-out-watchwait');
+                } else {
+                    choice === 'C'
+                        ? finish('Geç Tedavi — Parsiyel İyileşme', 'pnh-adult-out-late')
+                        : finish('Kronik Organ Hasarı', 'pnh-adult-out-noc5');
                 }
             }
-            else if (step === 3) {
-                if (choice === 'A') finishCase('Başarılı Nakil — Eculizumab Profilaksisi', 'outcome_transplant_success');
-                else if (choice === 'C') finishCase('Başarılı Nakil — Ravulizumab Profilaksisi', 'outcome_transplant_success');
-                else finishCase('Greft Rejeksiyonu', 'outcome_transplant_fail');
-            }
-        };
-
-        function finishCase(outcomeName, screenId) {
-            window.currentSession.outcome = outcomeName;
-            window.currentSession.endTime = new Date().toISOString();
-            showScreen(screenId);
-            if (typeof window.logToFirebase === 'function') {
-                window.logToFirebase(window.currentSession);
-            }
         }
+    };
 
-        window.resetCase = function() {
-            window.currentSession = {
-                id: 'user_' + Math.random().toString(36).slice(2, 11),
-                startTime: new Date().toISOString(),
-                path: [],
-                outcome: ''
-            };
-            showScreen('scene1');
-        };
-    </script>
+    function finish(outcomeName, screenId) {
+        window.currentSession.outcome  = outcomeName;
+        window.currentSession.endTime  = new Date().toISOString();
+        showScreen(screenId);
+        if (typeof window.logToFirebase === 'function') window.logToFirebase(window.currentSession);
+    }
+</script>
 
-   <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // Firebase ayarlarınızı buraya açıkça (hardcoded) yazıyoruz. 
-        // Güvenlik kısıtlamalarını Google Cloud'dan yaptığımız için bu tamamen güvenlidir.
-        const firebaseConfig = {
-            apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
-            authDomain: "medicom-ai.firebaseapp.com",
-            projectId: "medicom-ai",
-            storageBucket: "medicom-ai.firebasestorage.app",
-            messagingSenderId: "330987426994",
-            appId: "1:330987426994:web:587bc3e397ec376e5565ab"
-        };
-
-        try {
+<!-- SCRIPT 2: Firebase logging -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    const firebaseConfig = {
+        apiKey: "%%FIREBASE_API_KEY%%",
+        authDomain: "%%FIREBASE_AUTH_DOMAIN%%",
+        projectId: "%%FIREBASE_PROJECT_ID%%",
+        storageBucket: "%%FIREBASE_STORAGE_BUCKET%%",
+        messagingSenderId: "%%FIREBASE_MESSAGING_SENDER_ID%%",
+        appId: "%%FIREBASE_APP_ID%%"
+    };
+    try {
+        if (firebaseConfig.apiKey.startsWith('%%')) {
+            console.warn('Firebase config inject edilmedi, loglama devre dışı.');
+        } else {
             const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-
+            const db  = getFirestore(app);
             window.logToFirebase = async function(session) {
                 try {
-                    await addDoc(collection(db, "vaka_kayitlari"), {
-                        ...session,
-                        createdAt: Timestamp.now()
-                    });
-                    console.log("Kayıt Firebase'e başarıyla gönderildi. ✅");
-                } catch (err) {
-                    console.error("Firebase yazma hatası:", err);
-                }
+                    await addDoc(collection(db, "vaka_kayitlari"), { ...session, createdAt: Timestamp.now() });
+                    console.log("Kayıt Firebase'e gönderildi.");
+                } catch (err) { console.error("Firebase yazma hatası:", err); }
             };
-        } catch (err) {
-            console.error("Firebase başlatılamadı:", err);
         }
-    </script>
+    } catch (err) { console.warn("Firebase başlatılamadı:", err); }
+</script>
+
 </body>
 </html>
