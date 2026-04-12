@@ -195,6 +195,7 @@
         .dx-btn .dx-reasoning { font-size: 12.5px; color: #888; }
         /* ========== OUTCOMES ========== */
         .outcome-screen { text-align: center; padding: 20px 10px; }
+        #pnh-adult-out-death.outcome-screen { padding: 0; }
         .outcome-icon  { font-size: 58px; margin-bottom: 16px; display: block; }
         .outcome-title { font-size: 22px; font-weight: 700; margin-bottom: 14px; }
         .outcome-desc  { font-size: 15px; line-height: 1.7; color: #555; margin-bottom: 24px; }
@@ -259,7 +260,7 @@
         <div class="case-card" onclick="loadCase('ahus-ped')">
             <div class="card-header" style="background: linear-gradient(135deg, #0f1d4a 0%, #1e3a8a 100%);">
                 <span class="card-icon">🧒</span>
-                <div class="card-title">Pediatric uncertainity</div>
+                <div class="card-title">Pediatric uncertainty</div>
                 <div class="card-subtitle">4-Year-Old Male</div>
             </div>
             <div class="card-body">
@@ -458,7 +459,7 @@
     </div>
     <div class="screen outcome-screen" id="ahus-adult-out-perfect">
         <span class="outcome-icon">🌟</span>
-        <h2 class="outcome-title outcome-good">Full Recovery (Renal Recovery)</h2>
+        <h2 class="outcome-title outcome-good">Full Renal Recovery</h2>
         <p class="outcome-desc">Early Eculizumab therapy led to complete normalization of renal function.<br>Dialysis-independent. Oral contraceptives discontinued.<br>Subsequent genetic panel identified a <em>CFI</em> mutation — underlining the importance of genotyping all aHUS patients for long-term risk stratification.</p>
         <div class="ref-citation"><strong>📚 Evidence-Based Approach</strong>In adult aHUS, when ADAMTS13 is normal and autoimmune causes are excluded, Eculizumab should be the first-line treatment.<em>— Fakhouri F, et al. Lancet. 2017</em></div>
         <div class="ref-citation warning"><strong>⚠️ Safety: Meningococcal Prophylaxis Is Mandatory</strong>Terminal complement inhibition increases the risk of <em>Neisseria meningitidis</em> infection.<em>— Soliris SmPC; ECDC Meningococcal Disease Guidelines</em></div>
@@ -752,13 +753,6 @@
         <h2 class="outcome-title outcome-moderate">Late Treatment — Partial Recovery</h2>
         <p class="outcome-desc">Anticoagulation + Ravulizumab brought hemolysis under control.<br>Further thrombotic events were prevented, but the neurological deficits from the initial stroke remained. Patient requires long-term rehabilitation under hematology and neurology co-management.</p>
         <div class="ref-citation"><strong>📚 PNH and Thrombosis</strong>Thrombosis is the leading cause of mortality in PNH. C5 inhibition dramatically reduces thrombosis risk (from ~15% to &lt;1% annually). Treatment initiated after thrombosis controls ongoing complement activation but cannot reverse existing damage.<em>— Hillmen P, et al. NEJM. 2004; Brodsky RA. NEJM. 2014</em></div>
-        <div class="btn-group"><button class="restart-btn" onclick="restartCase('pnh-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
-    </div>
-    <div class="screen outcome-screen" id="pnh-adult-out-noc5">
-        <span class="outcome-icon">❌</span>
-        <h2 class="outcome-title outcome-bad">Chronic Organ Damage</h2>
-        <p class="outcome-desc">Despite anticoagulation, complement activation continued unchecked.<br>Hemolysis progressed, triggering renal involvement and recurrent thrombotic events. The patient developed chronic organ failure requiring multi-specialty management.</p>
-        <div class="ref-citation"><strong>📚 Why Did It Fail?</strong>Thrombosis and organ damage in PNH are complement-mediated. Anticoagulation alone cannot stop this process — hemolysis and thrombosis risk persist without complement inhibition.<em>— Hillmen P, et al. NEJM. 2004</em></div>
         <div class="btn-group"><button class="restart-btn" onclick="restartCase('pnh-adult')">Restart Case</button><button class="home-btn" onclick="backToLanding()">← Case List</button></div>
     </div>
     <div class="screen outcome-screen" id="pnh-adult-out-death">
