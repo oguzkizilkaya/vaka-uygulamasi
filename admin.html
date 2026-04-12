@@ -54,7 +54,6 @@
         <button onclick="adminLogin()">Giriş Yap</button>
         <span class="error" id="errorMsg"></span>
     </div>
-
     <div class="container" id="dataScreen" style="display:none;">
         <div class="header-actions">
             <h2>📊 Vaka Kayıtları</h2>
@@ -77,12 +76,10 @@
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
         const firebaseConfig = {
             apiKey: "AIzaSyDQqQ5yd4o07A8Is2Z5UWGnGXuGOcDCCho",
             authDomain: "medicom-ai.firebaseapp.com",
@@ -91,24 +88,34 @@
             messagingSenderId: "330987426994",
             appId: "1:330987426994:web:587bc3e397ec376e5565ab"
         };
-
         const app  = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db   = getFirestore(app);
 
-        // caseId → okunabilir etiket
         const CASE_LABELS = {
             'ahus-ped':   'Pediatrik aHÜS',
             'ahus-adult': 'Erişkin aHÜS',
             'pnh-adult':  'Erişkin PNH'
         };
 
-        // Outcome string'ine göre renk
         function outcomeColor(outcome) {
             if (!outcome) return '#dc3545';
             const o = outcome.toLowerCase();
-            if (o.includes('tam iyileşme') || o.includes('başarılı') || o.includes('hemoliz kontrolü')) return '#28a745';
-            if (o.includes('kby') || o.includes('kronik') || o.includes('parsiyel') || o.includes('progresyon')) return '#fd7e14';
+            if (
+                o.includes('full recovery') ||
+                o.includes('successful') ||
+                o.includes('hemolysis controlled') ||
+                o.includes('hemolysis under control')
+            ) return '#28a745';
+            if (
+                o.includes('ckd') ||
+                o.includes('chronic') ||
+                o.includes('partial recovery') ||
+                o.includes('permanent') ||
+                o.includes('disease progression') ||
+                o.includes('late treatment') ||
+                o.includes('watch and wait')
+            ) return '#fd7e14';
             return '#dc3545';
         }
 
@@ -149,8 +156,8 @@
                 snap.forEach((doc) => {
                     const data  = doc.data();
                     const date  = data.createdAt ? new Date(data.createdAt.seconds * 1000).toLocaleString('tr-TR') : 'Belirsiz';
-                    const caseId    = data.caseId || '';
-                    const caseLabel = CASE_LABELS[caseId] || (caseId || 'Bilinmiyor');
+                    const caseId     = data.caseId || '';
+                    const caseLabel  = CASE_LABELS[caseId] || (caseId || 'Bilinmiyor');
                     const badgeClass = caseId ? 'badge-' + caseId : 'badge-unknown';
                     const color  = outcomeColor(data.outcome);
                     const path   = Array.isArray(data.path) ? data.path.join(' ➝ ') : (data.path || '');
@@ -174,7 +181,6 @@
             rows.forEach(row => {
                 const cols = row.querySelectorAll("td");
                 if (cols.length > 1) {
-                    // col 1 (Vaka) içindeki badge span'ının text'ini al
                     const vakaTxt = cols[1].querySelector('.case-badge')
                         ? cols[1].querySelector('.case-badge').innerText
                         : cols[1].innerText;
